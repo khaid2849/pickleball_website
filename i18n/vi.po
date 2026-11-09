@@ -3268,3 +3268,46 @@ msgstr "OVR từ %s trở lên"
 msgid "Open to everyone"
 msgstr "Ai cũng đạt được"
 
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "<i class=\"fa fa-user\"/> Players"
+msgstr "<i class=\"fa fa-user\"/> Cá nhân"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "<i class=\"fa fa-users\"/> Pairs"
+msgstr "<i class=\"fa fa-users\"/> Cặp đôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid ""
+"Doubles pairs ranked by their matches together. The rating is the win rate, "
+"pulled towards 50% while a pair has few matches."
+msgstr "Các cặp đôi được xếp hạng theo các trận đánh cùng nhau. Điểm xếp hạng là tỉ lệ thắng, được kéo về 50% khi cặp còn ít trận."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "No pair yet"
+msgstr "Chưa có cặp đôi nào"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Pair"
+msgstr "Cặp đôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Pairs show up here once doubles matches are recorded in a session."
+msgstr "Các cặp đôi sẽ hiện ở đây khi có trận đánh đôi được ghi trong buổi chơi."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Rating"
+msgstr "Điểm xếp hạng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Win rate pulled towards 50% while a pair has few matches"
+msgstr "Tỉ lệ thắng được kéo về 50% khi cặp còn ít trận"

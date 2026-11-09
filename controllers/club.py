@@ -64,6 +64,15 @@ TRANSFER_STATES = {
 TIERS = [('icon', 'Icon'), ('gold', 'Gold'), ('silver', 'Silver'), ('bronze', 'Bronze')]
 PLAYER_SORTS = [('ovr', 'OVR'), ('name', _lt('Name')), ('matches', _lt('Matches')), ('winrate', _lt('Win rate'))]
 RANKING_SORTS = [('ovr', 'OVR'), ('winrate', _lt('Win rate')), ('wins', _lt('Wins')), ('bet', _lt('Bet winnings'))]
+PAIR_SORTS = [('rating', _lt('Rating')), ('winrate', _lt('Win rate')), ('wins', _lt('Wins')),
+              ('matches', _lt('Matches')), ('bet', _lt('Bet winnings'))]
+PAIR_SORT_KEYS = {
+    'rating': lambda p: (-p.score, -p.wins, -p.matches),
+    'winrate': lambda p: (-p.win_rate, -p.matches),
+    'wins': lambda p: (-p.wins, -p.score),
+    'matches': lambda p: (-p.matches, -p.score),
+    'bet': lambda p: (-p.bet_net, -p.score),
+}
 
 
 # ── Formatting helpers (also passed to the templates) ─────────────────────────
@@ -557,10 +566,12 @@ class PickleballClub(http.Controller):
         return request.render('pickleball_website.club_player', values)
 
     @http.route('/club/rankings', type='http', auth='user', website=True, sitemap=False)
-    def club_rankings(self, by='ovr', **kwargs):
+    def club_rankings(self, by='ovr', kind='players', **kwargs):
         denied = self._check_club_access()
         if denied:
             return denied
+        if kind == 'pairs':
+            return self._club_pair_rankings(by)
         by = by if by in dict(RANKING_SORTS) else 'ovr'
         members = self._active_members()
         values = self._values(
@@ -568,6 +579,20 @@ class PickleballClub(http.Controller):
             players=self._sort_players(members.filtered('total_matches'), by),
             unranked=members.filtered(lambda m: not m.total_matches),
             by=by, sorts=[(key, str(label)) for key, label in RANKING_SORTS],
+            kind='players',
+        )
+        return request.render('pickleball_website.club_rankings', values)
+
+    def _club_pair_rankings(self, by):
+        """Doubles pairs of active members, ranked by their results together."""
+        by = by if by in dict(PAIR_SORTS) else 'rating'
+        pairs = request.env['pickleball.pair.ranking'].sudo().search([]).filtered(
+            lambda p: p.member1_id.active and p.member2_id.active)
+        values = self._values(
+            'rankings',
+            pairs=pairs.sorted(PAIR_SORT_KEYS[by]),
+            by=by, sorts=[(key, str(label)) for key, label in PAIR_SORTS],
+            kind='pairs',
         )
         return request.render('pickleball_website.club_rankings', values)
 

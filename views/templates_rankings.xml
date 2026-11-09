@@ -5,10 +5,99 @@
         <t t-call="pickleball_website.club_layout">
             <t t-set="page_kicker">Rankings</t>
             <t t-set="page_title">Who's on top?</t>
-            <t t-set="page_subtitle">Members who have played, ranked. OVR combines the six ratings of the player card.</t>
+            <t t-if="kind == 'pairs'" t-set="page_subtitle">Doubles pairs ranked by their matches together. The rating is the win rate, pulled towards 50% while a pair has few matches.</t>
+            <t t-else="" t-set="page_subtitle">Members who have played, ranked. OVR combines the six ratings of the player card.</t>
 
             <section class="o_pbw_section">
                 <div class="container">
+                    <nav class="o_pbw_filter o_pbw_rank_kind mb-4" aria-label="Rankings">
+                        <a href="/club/rankings" t-attf-class="{{ 'active' if kind != 'pairs' else '' }}"><i class="fa fa-user"/> Players</a>
+                        <a href="/club/rankings?kind=pairs" t-attf-class="{{ 'active' if kind == 'pairs' else '' }}"><i class="fa fa-users"/> Pairs</a>
+                    </nav>
+                    <t t-if="kind == 'pairs'">
+                    <!-- Podium -->
+                    <div t-if="len(pairs) &gt;= 3" class="o_pbw_podium o_pbw_podium_compact o_pbw_pair_podium mb-5">
+                        <t t-foreach="pairs[:3]" t-as="pair">
+                            <div t-attf-class="o_pbw_podium_spot o_pbw_podium_{{ pair_index + 1 }}">
+                                <span class="o_pbw_podium_rank" t-out="pair_index + 1"/>
+                                <span class="o_pbw_avatar_stack o_pbw_pair_avatars">
+                                    <t t-call="pickleball_website.avatar"><t t-set="member" t-value="pair.member1_id"/><t t-set="size" t-value="'lg'"/></t>
+                                    <t t-call="pickleball_website.avatar"><t t-set="member" t-value="pair.member2_id"/><t t-set="size" t-value="'lg'"/></t>
+                                </span>
+                                <b class="o_pbw_podium_name"><t t-out="pair.member1_id.name"/> &amp; <t t-out="pair.member2_id.name"/></b>
+                                <span class="o_pbw_podium_value">
+                                    <t t-if="by == 'wins'"><t t-out="pair.wins"/> wins</t>
+                                    <t t-elif="by == 'matches'"><t t-out="pair.matches"/> matches</t>
+                                    <t t-elif="by == 'bet'" t-out="vnd(pair.bet_net, signed=True)"/>
+                                    <t t-else=""><t t-out="round(pair.win_rate)"/>% · <t t-out="pair.wins"/>-<t t-out="pair.losses"/></t>
+                                </span>
+                                <span class="o_pbw_podium_block"/>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div class="o_pbw_toolbar">
+                        <div class="o_pbw_filter" role="group" aria-label="Rank by">
+                            <span class="o_pbw_muted me-1">Rank by:</span>
+                            <t t-foreach="sorts" t-as="option">
+                                <a t-attf-href="/club/rankings?kind=pairs&amp;by={{ option[0] }}" t-attf-class="{{ 'active' if by == option[0] else '' }}" t-out="option[1]"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div t-if="pairs" class="o_pbw_panel p-0">
+                        <div class="table-responsive">
+                            <table class="table o_pbw_table o_pbw_table_hover o_pbw_standings mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Pair</th>
+                                        <th class="text-center">Played</th>
+                                        <th class="text-center">W</th>
+                                        <th class="text-center">L</th>
+                                        <th class="text-center">Win %</th>
+                                        <th class="text-center d-none d-sm-table-cell" title="Win rate pulled towards 50% while a pair has few matches">Rating</th>
+                                        <th class="text-center d-none d-md-table-cell">Form</th>
+                                        <th class="text-end">Bets</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="pairs" t-as="pair" t-attf-class="{{ 'o_pbw_row_me' if me and me in (pair.member1_id | pair.member2_id) else '' }}">
+                                        <td class="text-center"><span t-attf-class="o_pbw_rank o_pbw_rank_{{ pair_index + 1 if pair_index &lt; 3 else 'n' }}" t-out="pair_index + 1"/></td>
+                                        <td>
+                                            <span class="o_pbw_player_cell o_pbw_pair_cell">
+                                                <span class="o_pbw_avatar_stack">
+                                                    <t t-call="pickleball_website.avatar"><t t-set="member" t-value="pair.member1_id"/></t>
+                                                    <t t-call="pickleball_website.avatar"><t t-set="member" t-value="pair.member2_id"/></t>
+                                                </span>
+                                                <span>
+                                                    <a t-attf-href="/club/players/{{ pair.member1_id.id }}" t-out="pair.member1_id.name"/> &amp;
+                                                    <a t-attf-href="/club/players/{{ pair.member2_id.id }}" t-out="pair.member2_id.name"/>
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td class="text-center" t-out="pair.matches"/>
+                                        <td class="text-center" t-out="pair.wins"/>
+                                        <td class="text-center" t-out="pair.losses"/>
+                                        <td class="text-center fw-bold"><t t-out="round(pair.win_rate)"/>%</td>
+                                        <td class="text-center d-none d-sm-table-cell"><b class="o_pbw_ovr_badge" t-out="round(pair.score)"/></td>
+                                        <td class="text-center d-none d-md-table-cell">
+                                            <t t-call="pickleball_website.form_dots"><t t-set="results" t-value="pair.recent_results"/></t>
+                                        </td>
+                                        <td t-attf-class="text-end text-nowrap fw-bold {{ 'o_pbw_pos' if pair.bet_net &gt; 0 else ('o_pbw_neg' if pair.bet_net &lt; 0 else '') }}"
+                                            t-out="vnd(pair.bet_net, signed=True) if pair.bet_net else '0đ'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div t-else="" class="o_pbw_panel o_pbw_empty">
+                        <i class="fa fa-users"/>
+                        <h3>No pair yet</h3>
+                        <p>Pairs show up here once doubles matches are recorded in a session.</p>
+                    </div>
+                    </t>
+                    <t t-else="">
                     <!-- Podium -->
                     <div t-if="len(players) &gt;= 3" class="o_pbw_podium o_pbw_podium_compact mb-5">
                         <t t-foreach="players[:3]" t-as="member">
@@ -82,6 +171,7 @@
                     <p t-if="unranked" class="o_pbw_muted mt-3">
                         No match yet: <t t-foreach="unranked" t-as="member"><a t-attf-href="/club/players/{{ member.id }}" t-out="member.name"/><t t-if="not member_last">, </t></t>
                     </p>
+                    </t>
                 </div>
             </section>
         </t>
