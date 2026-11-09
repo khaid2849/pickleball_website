@@ -1839,6 +1839,8 @@ msgid "Saturday"
 msgstr "Thứ 7"
 
 #. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
 #: model:website.menu,name:pickleball_website.menu_club_schedule
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
@@ -2401,6 +2403,8 @@ msgid "settled"
 msgstr "đã xong"
 
 #. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
 msgid "wins"
 msgstr "trận thắng"
@@ -3233,3 +3237,34 @@ msgstr "Vòng tròn"
 #: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_bracket
 msgid "Wins-Losses"
 msgstr "Thắng-Thua"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "%s%% win rate"
+msgstr "tỉ lệ thắng %s%%"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "%s+ matches"
+msgstr "%s+ trận"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Getting started"
+msgstr "Mới bắt đầu"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "OVR %s and up"
+msgstr "OVR từ %s trở lên"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Open to everyone"
+msgstr "Ai cũng đạt được"
+

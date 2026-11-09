@@ -259,10 +259,10 @@
                             <p class="o_pbw_lead_dark">Win rate, form, experience, attendance, betting and fair play: six ratings,
                                 recalculated after every session, give your overall rating — and your card tier.</p>
                             <ul class="o_pbw_tier_list">
-                                <li><span class="o_pbw_tier_badge o_pbw_tier_bronze">BRONZE</span> Getting started</li>
-                                <li><span class="o_pbw_tier_badge o_pbw_tier_silver">SILVER</span> OVR 65 and up</li>
-                                <li><span class="o_pbw_tier_badge o_pbw_tier_gold">GOLD</span> OVR 75 and up</li>
-                                <li><span class="o_pbw_tier_badge o_pbw_tier_icon">ICON</span> OVR 85 and up — the legends</li>
+                                <li t-foreach="card_levels" t-as="level">
+                                    <span t-attf-class="o_pbw_tier_badge o_pbw_tier_{{ level['tier'] }}" t-out="level['name']"/>
+                                    <t t-out="level['text']"/>
+                                </li>
                             </ul>
                             <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary mt-3">Get my card</a>
                         </div>

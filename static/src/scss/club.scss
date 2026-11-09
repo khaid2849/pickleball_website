@@ -1048,9 +1048,9 @@ header#top .navbar-brand.o_pbw_brand {
 
 $pbw-tiers: (
     bronze: (#f2e4cf, #8a5a2e),
-    silver: ($pbw-coral, #fff),
+    silver: (#d5dae2, $pbw-navy),
     gold: ($pbw-yellow, $pbw-navy),
-    icon: ($pbw-blue, #fff),
+    icon: (#3d1a7e, #fff),
 );
 
 @each $tier, $colors in $pbw-tiers {
@@ -1060,7 +1060,34 @@ $pbw-tiers: (
         color: nth($colors, 2);
     }
     .o_pbw_tier_text.o_pbw_tier_#{$tier} {
-        color: if($tier == bronze, #8a5a2e, if($tier == gold, darken($pbw-yellow, 28%), nth($colors, 1)));
+        color: if($tier == bronze, #8a5a2e, if($tier == gold, darken($pbw-yellow, 28%),
+            if($tier == silver, #7a8597, nth($colors, 1))));
+    }
+}
+
+// Silver: brushed metal. Icon: holographic, like the player card.
+.o_pbw_tier_badge.o_pbw_tier_silver,
+.o_pbw_avatar.o_pbw_tier_silver {
+    background: linear-gradient(135deg, #f4f6f9, #c4cbd6 45%, #eef1f5 60%, #b2bac7);
+}
+.o_pbw_tier_badge.o_pbw_tier_icon,
+.o_pbw_avatar.o_pbw_tier_icon {
+    background: linear-gradient(135deg, #ff6fd8, #7cf0ff 35%, #ffe66d 65%, #b388ff);
+    background-size: 300% 300%;
+    color: $pbw-navy;
+    box-shadow: 0 0 0 2px #ffd54f, 0 0 10px rgba(255, 213, 79, 0.6);
+    animation: o_pb_holo_shift 5s ease-in-out infinite;
+}
+.o_pbw_tier_text.o_pbw_tier_icon {
+    background: linear-gradient(90deg, #d63fb0, #2a9fd6, #c79a00, #7c4dff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+@media (prefers-reduced-motion: reduce) {
+    .o_pbw_avatar.o_pbw_tier_icon,
+    .o_pbw_tier_badge.o_pbw_tier_icon {
+        animation: none;
     }
 }
 

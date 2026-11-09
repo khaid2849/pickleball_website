@@ -302,6 +302,32 @@ class PickleballClub(http.Controller):
             return ''
         return f'/pickleball/payment-qr/{company.pickleball_payment_qr_token}.jpg'
 
+    @staticmethod
+    def _card_level_rows():
+        """Card levels and what it takes to reach them (Configuration >
+        Card Levels), lowest first, for the home page."""
+        rows = []
+        Level = request.env['pickleball.card.level'].sudo()
+        for level in Level.search([], order='rank asc'):
+            if level.tier == 'bronze':
+                text = level.description or _('Getting started')
+            else:
+                parts = []
+                if level.min_overall:
+                    parts.append(_('OVR %s and up', level.min_overall))
+                if level.min_matches:
+                    parts.append(_('%s+ matches', level.min_matches))
+                if level.min_win_rate:
+                    parts.append(_('%s%% win rate', f'{level.min_win_rate:g}'))
+                parts += [f'{label} {level[fname]}+' for fname, label in (
+                    ('min_win', 'WIN'), ('min_form', 'FRM'), ('min_exp', 'EXP'), ('min_att', 'ATT'),
+                    ('min_bet', 'BET'), ('min_pay', 'PAY')) if level[fname]]
+                text = ', '.join(parts) or _('Open to everyone')
+                if level.description:
+                    text = f'{text} — {level.description}'
+            rows.append({'tier': level.tier, 'name': (level.name or '').upper(), 'text': text})
+        return rows
+
     # ── Public home page ────────────────────────────────────────────────────
 
     @http.route('/club', type='http', auth='public', website=True, sitemap=True)
@@ -309,7 +335,8 @@ class PickleballClub(http.Controller):
         if not (self._is_admin() or self._me()):
             # Visitors (and accounts not approved yet) get the showcase home
             # page, with made-up data only: no real member nor number.
-            values = self._values('home', demo_players=demo_players(), demo_rows=DEMO_RANKING)
+            values = self._values('home', demo_players=demo_players(), demo_rows=DEMO_RANKING,
+                                  card_levels=self._card_level_rows())
             return request.render('pickleball_website.club_home_public', values)
         members = self._active_members()
         played = self._Session.search([('state', 'in', PLAYED_STATES)])
