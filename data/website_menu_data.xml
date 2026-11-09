@@ -31,6 +31,14 @@
         <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
         <field name="sequence">50</field>
     </record>
+    <!-- Tournaments: information only, for everyone (each tournament says
+         whether visitors may see it). -->
+    <record id="menu_club_tournaments" model="website.menu">
+        <field name="name">Tournaments</field>
+        <field name="url">/club/tournaments</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">55</field>
+    </record>
     <record id="menu_club_finance" model="website.menu">
         <field name="name">Finance</field>
         <field name="url">/club/finance</field>

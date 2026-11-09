@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="pickleball_website.MatchBuilderAvatar">
+        <span t-attf-class="o_pbw_avatar o_pbw_avatar_sm o_pbw_tier_{{ p.tier }}" t-att-title="p.name">
+            <img t-if="p.photo" t-att-src="p.photo" t-att-alt="p.name" loading="lazy"/>
+            <t t-else="" t-esc="p.initials"/>
+        </span>
+    </t>
+
+    <t t-name="pickleball_website.SessionMatchBuilder">
+        <div class="o_pbw_builder" t-att-class="{'o_pbw_builder_locked': props.locked}">
+            <div t-if="props.locked" class="o_pbw_builder_note">
+                <i class="fa fa-lock"/> This session is settled: its matches can't be changed any more.
+            </div>
+
+            <!-- Players: drag source, and drop here to take a player out of a team -->
+            <div class="o_pbw_builder_pool"
+                 t-att-class="{'o_pbw_drop_over': state.dragOver === 'pool'}"
+                 t-on-dragover="(ev) => this.onDragOver(ev, 'pool')"
+                 t-on-dragleave="() => this.onDragLeave('pool')"
+                 t-on-drop="(ev) => this.onDropPool(ev)"
+                 t-on-click.self="onPoolClick">
+                <div class="o_pbw_builder_pool_head">
+                    <b>Players</b>
+                    <small class="o_pbw_muted">Drag a player into a team, or tap a player then a team.</small>
+                </div>
+                <div class="o_pbw_builder_chips" t-on-click.self="onPoolClick">
+                    <t t-set="counts" t-value="playCount"/>
+                    <button t-foreach="players" t-as="p" t-key="p.id" type="button"
+                            class="o_pbw_builder_chip"
+                            t-att-class="{'o_pbw_builder_chip_selected': isSelected(p.id), 'o_pbw_builder_chip_guest': p.guest}"
+                            t-att-draggable="props.locked ? 'false' : 'true'"
+                            t-on-dragstart="(ev) => this.onDragStart(ev, p.id)"
+                            t-on-click="() => this.onPlayerClick(p.id)">
+                        <t t-call="pickleball_website.MatchBuilderAvatar"/>
+                        <span class="o_pbw_builder_chip_name" t-esc="p.short || p.name"/>
+                        <span class="o_pbw_builder_count" t-att-class="{'o_pbw_builder_count_zero': !counts[p.id]}"
+                              title="Matches in this session" t-esc="counts[p.id] || 0"/>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Matches -->
+            <div class="o_pbw_builder_matches">
+                <div t-foreach="state.matches" t-as="match" t-key="match.key" class="o_pbw_builder_match">
+                    <div class="o_pbw_builder_match_head">
+                        <b t-esc="matchLabel(match_index)"/>
+                        <span class="o_pbw_builder_tools" t-if="!props.locked">
+                            <button type="button" title="Move up" t-on-click="() => this.moveMatch(match.key, -1)"
+                                    t-att-disabled="match_first"><i class="fa fa-arrow-up"/></button>
+                            <button type="button" title="Move down" t-on-click="() => this.moveMatch(match.key, 1)"
+                                    t-att-disabled="match_last"><i class="fa fa-arrow-down"/></button>
+                            <button type="button" title="Swap sides" t-on-click="() => this.swapSides(match.key)"><i class="fa fa-exchange"/></button>
+                            <button type="button" title="Delete match" class="o_pbw_builder_delete"
+                                    t-on-click="() => this.removeMatch(match.key)"><i class="fa fa-trash"/></button>
+                        </span>
+                    </div>
+                    <div class="o_pbw_builder_court">
+                        <t t-foreach="['team1', 'team2']" t-as="side" t-key="side">
+                            <t t-set="zone" t-value="match.key + side"/>
+                            <div class="o_pbw_builder_team"
+                                 t-att-class="{
+                                    'o_pbw_drop_over': state.dragOver === zone,
+                                    'o_pbw_builder_team_win': match.winner === side,
+                                    'o_pbw_builder_team_lose': match.winner and match.winner !== side,
+                                    'o_pbw_builder_team_target': state.selected,
+                                 }"
+                                 t-on-dragover="(ev) => this.onDragOver(ev, zone)"
+                                 t-on-dragleave="() => this.onDragLeave(zone)"
+                                 t-on-drop="(ev) => this.onDrop(ev, match.key, side)"
+                                 t-on-click="() => this.onZoneClick(match.key, side)">
+                                <span class="o_pbw_builder_team_label">
+                                    <t t-if="side === 'team1'">Team 1</t><t t-else="">Team 2</t>
+                                    <i t-if="match.winner === side" class="fa fa-trophy"/>
+                                </span>
+                                <t t-foreach="match[side]" t-as="pid" t-key="pid">
+                                    <t t-set="p" t-value="player(pid)"/>
+                                    <span t-if="p" class="o_pbw_builder_chip o_pbw_builder_chip_in"
+                                          t-att-class="{'o_pbw_builder_chip_selected': isSelected(pid, {key: match.key, side: side})}"
+                                          t-att-draggable="props.locked ? 'false' : 'true'"
+                                          t-on-dragstart="(ev) => this.onDragStart(ev, pid, {key: match.key, side: side})"
+                                          t-on-click.stop="() => this.onPlayerClick(pid, {key: match.key, side: side})">
+                                        <t t-call="pickleball_website.MatchBuilderAvatar"/>
+                                        <span class="o_pbw_builder_chip_name" t-esc="p.short || p.name"/>
+                                        <button t-if="!props.locked" type="button" class="o_pbw_builder_remove" title="Remove"
+                                                t-on-click.stop="() => this.removeFrom(pid, {key: match.key, side: side})">×</button>
+                                    </span>
+                                </t>
+                                <span t-if="!match[side].length" class="o_pbw_builder_placeholder">Drop players here</span>
+                            </div>
+                            <div t-if="side_first" class="o_pbw_builder_vs">VS</div>
+                        </t>
+                    </div>
+                    <div class="o_pbw_builder_match_foot">
+                        <label class="o_pbw_builder_bet">
+                            <span>Bet / player</span>
+                            <input type="number" min="0" step="5000" class="form-control form-control-sm"
+                                   t-att-value="match.bet" t-att-disabled="props.locked"
+                                   t-on-change="(ev) => this.onBetInput(match, ev)"/>
+                        </label>
+                        <div class="o_pbw_builder_winner" role="group" aria-label="Winner">
+                            <span>Winner</span>
+                            <button type="button" t-att-class="{'active': match.winner === 'team1'}" t-att-disabled="props.locked"
+                                    t-on-click="() => this.setWinner(match, 'team1')">Team 1</button>
+                            <button type="button" t-att-class="{'active': match.winner === 'team2'}" t-att-disabled="props.locked"
+                                    t-on-click="() => this.setWinner(match, 'team2')">Team 2</button>
+                        </div>
+                    </div>
+                    <div t-if="matchError(match)" class="o_pbw_builder_match_error">
+                        <i class="fa fa-exclamation-triangle"/> <t t-esc="matchError(match)"/>
+                    </div>
+                </div>
+
+                <div t-if="!props.locked" class="o_pbw_builder_new"
+                     t-att-class="{'o_pbw_drop_over': state.dragOver === 'new'}"
+                     t-on-dragover="(ev) => this.onDragOver(ev, 'new')"
+                     t-on-dragleave="() => this.onDragLeave('new')"
+                     t-on-drop="(ev) => this.onDropNewMatch(ev)"
+                     t-on-click="onNewMatchClick">
+                    <i class="fa fa-plus-circle"/>
+                    <span>New match <small>(drop a player here to start one)</small></span>
+                </div>
+            </div>
+
+            <div t-if="!props.locked" class="o_pbw_builder_bar">
+                <button type="button" class="btn o_pbw_btn o_pbw_btn_light" t-on-click="suggestMatch">
+                    <i class="fa fa-magic"/> Suggest a match
+                </button>
+                <span class="o_pbw_builder_status">
+                    <span t-if="state.error" class="o_pbw_neg"><i class="fa fa-exclamation-circle"/> <t t-esc="state.error"/></span>
+                    <span t-elif="state.message" class="o_pbw_pos"><i class="fa fa-check"/> <t t-esc="state.message"/></span>
+                    <span t-elif="state.dirty" class="o_pbw_muted">Unsaved changes</span>
+                </span>
+                <button type="button" class="btn o_pbw_btn o_pbw_btn_primary" t-att-disabled="!canSave" t-on-click="save">
+                    <i t-if="state.saving" class="fa fa-spinner fa-spin"/>
+                    <i t-else="" class="fa fa-save"/> Save matches
+                </button>
+            </div>
+            <div t-if="(state.needsRecalc or props.needsRecalc) and !props.locked" class="o_pbw_builder_note">
+                <i class="fa fa-info-circle"/> This session is already split: after changing bets or winners, use
+                "Recalculate Settlements" on the session in the backend.
+            </div>
+        </div>
+    </t>
+
+</templates>

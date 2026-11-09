@@ -115,8 +115,16 @@
 
                     <div class="row g-4">
                         <div class="col-lg-7">
-                            <!-- Matches -->
-                            <div class="o_pbw_panel">
+                            <!-- Matches: admins build them by drag & drop (until the session is settled) -->
+                            <div t-if="match_builder_props and not match_builder_props['locked']" class="o_pbw_panel">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-flag-checkered"/> Matches</h3>
+                                    <span class="o_pbw_muted">Admin · drag &amp; drop</span>
+                                </div>
+                                <owl-component name="pickleball_website.session_match_builder"
+                                               t-att-props="json.dumps(match_builder_props)"/>
+                            </div>
+                            <div t-else="" class="o_pbw_panel">
                                 <div class="o_pbw_panel_head">
                                     <h3><i class="fa fa-flag-checkered"/> Matches</h3>
                                 </div>

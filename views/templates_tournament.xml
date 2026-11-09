@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Tournaments: list
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_tournaments" name="Club: Tournaments">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Compete</t>
+            <t t-set="page_title">Tournaments</t>
+            <t t-set="page_subtitle">Club tournaments: rules, teams, schedule, standings and brackets.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <t t-if="ongoing">
+                        <t t-call="pickleball_website.section_title">
+                            <t t-set="kicker">Live</t>
+                            <t t-set="title">Ongoing</t>
+                        </t>
+                        <div class="row g-4 mb-5">
+                            <div t-foreach="ongoing" t-as="tournament" class="col-md-6 col-xl-4">
+                                <t t-call="pickleball_website.tournament_card"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="upcoming">
+                        <t t-call="pickleball_website.section_title">
+                            <t t-set="kicker">Coming up</t>
+                            <t t-set="title">Upcoming</t>
+                        </t>
+                        <div class="row g-4 mb-5">
+                            <div t-foreach="upcoming" t-as="tournament" class="col-md-6 col-xl-4">
+                                <t t-call="pickleball_website.tournament_card"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="finished">
+                        <t t-call="pickleball_website.section_title">
+                            <t t-set="kicker">Hall of fame</t>
+                            <t t-set="title">Finished</t>
+                        </t>
+                        <div class="row g-4">
+                            <div t-foreach="finished" t-as="tournament" class="col-md-6 col-xl-4">
+                                <t t-call="pickleball_website.tournament_card"/>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="not (ongoing or upcoming or finished)" class="o_pbw_panel o_pbw_empty">
+                        <i class="fa fa-trophy"/>
+                        <h3>No tournament yet</h3>
+                        <p t-if="shows_members">Tournaments show up here as soon as the organizers publish one.</p>
+                        <p t-else="">Members: log in to see the club's tournaments.</p>
+                        <a t-if="not shows_members and user_id._is_public()" href="/web/login?redirect=/club/tournaments"
+                           class="btn o_pbw_btn o_pbw_btn_primary">Log in</a>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- Card of a tournament. Param: tournament. -->
+    <template id="tournament_card" name="Club: Tournament Card">
+        <a t-attf-href="/club/tournaments/{{ tournament.id }}" class="o_pbw_tcard">
+            <div class="o_pbw_tcard_banner">
+                <img t-if="tournament.image" t-attf-src="/club/tournaments/{{ tournament.id }}/banner?unique={{ int(tournament.write_date.timestamp()) }}"
+                     t-att-alt="tournament.name" loading="lazy"/>
+                <svg t-else="" class="o_pbw_chevrons" viewBox="0 0 96 40" aria-hidden="true">
+                    <polyline points="6,6 20,20 6,34"/><polyline points="36,6 50,20 36,34"/><polyline points="66,6 80,20 66,34"/>
+                </svg>
+                <span t-attf-class="o_pbw_pill o_pbw_tstate o_pbw_tstate_{{ tournament.state }}" t-out="tournament_states.get(tournament.state)"/>
+            </div>
+            <div class="o_pbw_tcard_body">
+                <h3 t-out="tournament.name"/>
+                <span><i class="fa fa-calendar"/> <t t-out="fmt_date(tournament.date_start)"/>
+                    <t t-if="tournament.date_end and tournament.date_end != tournament.date_start"> – <t t-out="fmt_date(tournament.date_end)"/></t></span>
+                <span t-if="tournament.court_id or tournament.location"><i class="fa fa-map-marker"/>
+                    <t t-out="tournament.court_id.name or tournament.location"/></span>
+                <span><i class="fa fa-sitemap"/> <t t-out="tournament_formats.get(tournament.format)"/> · <t t-out="play_types.get(tournament.play_type)"/></span>
+                <span><i class="fa fa-users"/> <t t-out="tournament.team_count"/> teams</span>
+                <span t-if="tournament.state == 'done' and tournament.champion_id" class="o_pbw_tcard_champion">
+                    <i class="fa fa-trophy"/> <t t-out="tournament.champion_id.name"/></span>
+            </div>
+            <i class="fa fa-chevron-right o_pbw_fixture_go"/>
+        </a>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Tournament page (tabs: overview, teams, schedule, standings, bracket)
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_tournament" name="Club: Tournament">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker"><t t-out="tournament_formats.get(tournament.format)"/> · <t t-out="play_types.get(tournament.play_type)"/></t>
+            <t t-set="page_title" t-value="tournament.name"/>
+            <t t-set="page_subtitle" t-value="' · '.join(filter(None, [fmt_date(tournament.date_start) + ((' – ' + fmt_date(tournament.date_end)) if tournament.date_end and tournament.date_end != tournament.date_start else ''), tournament.court_id.name or tournament.location or '']))"/>
+            <t t-set="hero_extra">
+                <div class="o_pbw_hero_facts">
+                    <div><b t-out="tournament.team_count"/><span>Teams</span></div>
+                    <div><b><t t-out="tournament.match_done_count"/>/<t t-out="tournament.match_count"/></b><span>Matches</span></div>
+                    <div><b t-out="tournament_states.get(tournament.state)"/><span>Status</span></div>
+                </div>
+            </t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                        <a href="/club/tournaments" class="o_pbw_back"><i class="fa fa-arrow-left"/> Tournaments</a>
+                    </div>
+                    <nav class="o_pbw_filter o_pbw_ttabs mb-4" aria-label="Tournament">
+                        <t t-foreach="tabs" t-as="item">
+                            <a t-attf-href="/club/tournaments/{{ tournament.id }}?tab={{ item[0] }}"
+                               t-attf-class="{{ 'active' if current_tab == item[0] else '' }}">
+                                <i t-attf-class="fa {{ item[2] }}"/> <t t-out="item[1]"/></a>
+                        </t>
+                    </nav>
+
+                    <t t-if="current_tab == 'overview'" t-call="pickleball_website.tournament_overview"/>
+                    <t t-elif="current_tab == 'teams'" t-call="pickleball_website.tournament_teams"/>
+                    <t t-elif="current_tab == 'schedule'" t-call="pickleball_website.tournament_schedule"/>
+                    <t t-elif="current_tab == 'standings'" t-call="pickleball_website.tournament_standings"/>
+                    <t t-elif="current_tab == 'bracket'" t-call="pickleball_website.tournament_bracket"/>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- Overview: podium, how it's played, info, rules, prizes, next matches. -->
+    <template id="tournament_overview" name="Club: Tournament Overview">
+        <div t-if="tournament.champion_id" class="o_pbw_tpodium mb-4">
+            <t t-foreach="podium" t-as="spot">
+                <div t-if="spot[1]" t-attf-class="o_pbw_tpodium_spot o_pbw_tpodium_{{ spot[0] }}">
+                    <i class="fa fa-trophy"/>
+                    <span class="o_pbw_tpodium_rank">
+                        <t t-if="spot[0] == 1">Champion</t>
+                        <t t-elif="spot[0] == 2">Runner-up</t>
+                        <t t-else="">3rd place</t>
+                    </span>
+                    <b t-out="spot[1].name"/>
+                </div>
+            </t>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="o_pbw_panel">
+                    <div class="o_pbw_panel_head">
+                        <h3><i class="fa fa-sitemap"/> How it's played</h3>
+                    </div>
+                    <ul class="o_pbw_tsummary">
+                        <li t-foreach="summary_lines" t-as="line" t-out="line"/>
+                    </ul>
+                    <div class="o_pbw_tformat">
+                        <span class="o_pbw_tformat_game"><i class="fa fa-circle"/> <t t-out="game_format"/></span>
+                        <span t-foreach="best_of_rows" t-as="row"><b t-out="row[0]"/> <t t-out="row[1]"/></span>
+                    </div>
+                </div>
+                <div t-if="tournament.description" class="o_pbw_panel mt-4">
+                    <div class="o_pbw_panel_head"><h3><i class="fa fa-bullhorn"/> About</h3></div>
+                    <div class="o_pbw_richtext" t-out="tournament.description"/>
+                </div>
+                <div t-if="tournament.rules" class="o_pbw_panel mt-4">
+                    <div class="o_pbw_panel_head"><h3><i class="fa fa-book"/> Rules</h3></div>
+                    <div class="o_pbw_richtext" t-out="tournament.rules"/>
+                </div>
+                <div t-if="tournament.prizes" class="o_pbw_panel mt-4">
+                    <div class="o_pbw_panel_head"><h3><i class="fa fa-gift"/> Prizes</h3></div>
+                    <div class="o_pbw_richtext" t-out="tournament.prizes"/>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="o_pbw_panel">
+                    <div class="o_pbw_panel_head"><h3><i class="fa fa-info-circle"/> Information</h3></div>
+                    <dl class="o_pbw_tinfo">
+                        <dt>Dates</dt>
+                        <dd><t t-out="weekday_name(tournament.date_start)"/>, <t t-out="fmt_date(tournament.date_start)"/>
+                            <t t-if="tournament.date_end and tournament.date_end != tournament.date_start"> – <t t-out="fmt_date(tournament.date_end)"/></t></dd>
+                        <t t-if="tournament.court_id or tournament.location">
+                            <dt>Venue</dt>
+                            <dd>
+                                <b t-if="tournament.court_id" t-out="tournament.court_id.name"/>
+                                <span t-if="tournament.court_id.address" class="d-block" t-out="tournament.court_id.address"/>
+                                <span t-if="tournament.location" class="d-block" t-out="tournament.location"/>
+                            </dd>
+                        </t>
+                        <dt>Format</dt>
+                        <dd><t t-out="tournament_formats.get(tournament.format)"/> · <t t-out="play_types.get(tournament.play_type)"/></dd>
+                        <t t-if="tournament.registration_deadline">
+                            <dt>Registration until</dt>
+                            <dd t-out="fmt_date(tournament.registration_deadline)"/>
+                        </t>
+                        <t t-if="tournament.entry_fee">
+                            <dt>Entry fee</dt>
+                            <dd>
+                                <t t-out="vnd(tournament.entry_fee)"/>
+                                <t t-if="tournament.play_type == 'doubles'">/ team</t><t t-else="">/ player</t>
+                            </dd>
+                        </t>
+                        <dt>Teams</dt>
+                        <dd><t t-out="tournament.team_count"/><t t-if="tournament.max_teams"> / <t t-out="tournament.max_teams"/></t></dd>
+                        <t t-if="tournament.organizer_id">
+                            <dt>Organizer</dt>
+                            <dd t-out="tournament.organizer_id.name"/>
+                        </t>
+                        <t t-if="total_count">
+                            <dt>Progress</dt>
+                            <dd>
+                                <t t-out="done_count"/>/<t t-out="total_count"/> matches played
+                                <span class="o_pbw_tprogress"><i t-attf-style="width: {{ int(100 * done_count / total_count) }}%"/></span>
+                            </dd>
+                        </t>
+                    </dl>
+                </div>
+                <div t-if="next_matches" class="o_pbw_panel mt-4">
+                    <div class="o_pbw_panel_head">
+                        <h3><i class="fa fa-clock-o"/> Next matches</h3>
+                        <a t-attf-href="/club/tournaments/{{ tournament.id }}?tab=schedule" class="o_pbw_more">Schedule <i class="fa fa-arrow-right"/></a>
+                    </div>
+                    <div class="o_pbw_tmatches">
+                        <t t-foreach="next_matches" t-as="m" t-call="pickleball_website.tournament_match_row"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Team players: avatars + names. Param: team. -->
+    <template id="tournament_team_players" name="Club: Tournament Team Players">
+        <span class="o_pbw_tteam_players">
+            <t t-foreach="team.member_ids" t-as="member">
+                <a t-if="shows_members" t-attf-href="/club/players/{{ member.id }}" class="o_pbw_chip">
+                    <t t-call="pickleball_website.avatar"><t t-set="size" t-value="'sm'"/></t>
+                    <span t-out="member.name"/>
+                </a>
+                <span t-else="" class="o_pbw_chip">
+                    <t t-call="pickleball_website.avatar"><t t-set="size" t-value="'sm'"/></t>
+                    <span t-out="member.name"/>
+                </span>
+            </t>
+            <span t-foreach="team._guest_list()" t-as="guest" class="o_pbw_chip">
+                <span class="o_pbw_avatar o_pbw_avatar_sm o_pbw_tier_bronze" t-out="initials(guest)"/>
+                <span t-out="guest"/> <small class="o_pbw_muted">(guest)</small>
+            </span>
+        </span>
+    </template>
+
+    <template id="tournament_teams" name="Club: Tournament Teams">
+        <div t-if="teams" class="row g-3">
+            <div t-foreach="teams" t-as="team" class="col-md-6 col-xl-4">
+                <div class="o_pbw_panel o_pbw_tteam">
+                    <div class="o_pbw_tteam_head">
+                        <b t-out="team.name"/>
+                        <span t-if="team.seed" class="o_pbw_tseed" title="Seed">#<t t-out="team.seed"/></span>
+                        <span t-if="team.group_id" class="o_pbw_pill o_pbw_pill_confirmed" t-out="group_name(team.group_id)"/>
+                    </div>
+                    <t t-call="pickleball_website.tournament_team_players"/>
+                </div>
+            </div>
+        </div>
+        <div t-else="" class="o_pbw_panel o_pbw_empty">
+            <i class="fa fa-users"/>
+            <h3>No team yet</h3>
+            <p>Teams show up here once registrations are in.</p>
+        </div>
+    </template>
+
+    <!-- One match line. Param: m (from _match_view). -->
+    <template id="tournament_match_row" name="Club: Tournament Match Row">
+        <div t-attf-class="o_pbw_tmatch {{ 'o_pbw_tmatch_done' if m['state'] == 'done' else '' }}">
+            <div class="o_pbw_tmatch_meta">
+                <b t-if="m['number']">#<t t-out="m['number']"/></b>
+                <span t-if="m['time'] or m['date']" t-out="hm(m['time'])"/>
+                <span t-if="m['court']" class="o_pbw_muted" t-out="m['court']"/>
+            </div>
+            <div class="o_pbw_tmatch_body">
+                <span class="o_pbw_tmatch_round"><t t-if="m['group']"><t t-out="m['group']"/> · </t><t t-out="m['round']"/></span>
+                <div class="o_pbw_tmatch_teams">
+                    <span t-attf-class="o_pbw_tmatch_team {{ 'o_pbw_tmatch_win' if m['winner'] == 'team1' else '' }} {{ 'o_pbw_tmatch_tbd' if not m['team1'] else '' }}"
+                          t-out="m['label1']"/>
+                    <span class="o_pbw_tmatch_score">
+                        <t t-if="m['walkover']">W/O</t>
+                        <t t-elif="m['games']">
+                            <t t-foreach="m['games']" t-as="game"><span><t t-out="game[0]"/>-<t t-out="game[1]"/></span></t>
+                        </t>
+                        <t t-else="">vs</t>
+                    </span>
+                    <span t-attf-class="o_pbw_tmatch_team o_pbw_tmatch_team2 {{ 'o_pbw_tmatch_win' if m['winner'] == 'team2' else '' }} {{ 'o_pbw_tmatch_tbd' if not m['team2'] else '' }}"
+                          t-out="m['label2']"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tournament_schedule" name="Club: Tournament Schedule">
+        <div t-foreach="days" t-as="day" class="o_pbw_panel mb-4">
+            <div class="o_pbw_panel_head">
+                <h3 t-if="day['date']"><i class="fa fa-calendar"/> <t t-out="weekday_name(day['date'])"/>, <t t-out="fmt_date(day['date'])"/></h3>
+                <h3 t-else=""><i class="fa fa-calendar-o"/> Time to be announced</h3>
+                <span class="o_pbw_muted"><t t-out="len(day['matches'])"/> matches</span>
+            </div>
+            <div class="o_pbw_tmatches">
+                <t t-foreach="day['matches']" t-as="m" t-call="pickleball_website.tournament_match_row"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="tournament_standings" name="Club: Tournament Standings">
+        <div class="row g-4">
+            <div t-foreach="tables" t-as="table" t-attf-class="{{ 'col-xl-6' if len(tables) &gt; 1 else 'col-12' }}">
+                <div class="o_pbw_panel p-0">
+                    <div class="o_pbw_tstand_head" t-out="table['title']"/>
+                    <div class="table-responsive">
+                        <table class="table o_pbw_table o_pbw_standings mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Team</th>
+                                    <th class="text-center" title="Played">P</th>
+                                    <th class="text-center" title="Wins">W</th>
+                                    <th class="text-center" title="Losses">L</th>
+                                    <th class="text-center d-none d-sm-table-cell" title="Games won-lost">Games</th>
+                                    <th class="text-center" title="Point difference">+/-</th>
+                                    <th class="text-center d-none d-md-table-cell">Form</th>
+                                    <th class="text-center" title="Points">Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="table['rows']" t-as="row" t-attf-class="{{ 'o_pbw_tstand_q' if row['qualified'] else '' }}">
+                                    <td class="text-center"><span t-attf-class="o_pbw_rank o_pbw_rank_{{ row['rank'] if row['rank'] &lt;= 3 else 'n' }}" t-out="row['rank']"/></td>
+                                    <td>
+                                        <b t-out="row['team'].name"/>
+                                        <small t-if="row['wildcard']" class="o_pbw_muted"> · wildcard</small>
+                                    </td>
+                                    <td class="text-center" t-out="row['played']"/>
+                                    <td class="text-center" t-out="row['wins']"/>
+                                    <td class="text-center" t-out="row['losses']"/>
+                                    <td class="text-center d-none d-sm-table-cell"><t t-out="row['games_won']"/>-<t t-out="row['games_lost']"/></td>
+                                    <td class="text-center" t-out="'%+d' % row['point_diff']"/>
+                                    <td class="text-center d-none d-md-table-cell">
+                                        <t t-call="pickleball_website.form_dots"><t t-set="results" t-value="row['form']"/></t>
+                                    </td>
+                                    <td class="text-center"><b class="o_pbw_ovr_badge" t-out="row['points']"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p t-if="tournament._knockout_matches()" class="o_pbw_muted mt-3"><span class="o_pbw_tstand_key"/> Qualified for the knockout stage</p>
+    </template>
+
+    <!-- One bracket box. Param: m. -->
+    <template id="tournament_bracket_match" name="Club: Bracket Match">
+        <div t-attf-class="o_pbw_bmatch {{ 'o_pbw_bmatch_bye' if m['state'] == 'bye' else '' }}">
+            <span t-if="m['number']" class="o_pbw_bmatch_no">#<t t-out="m['number']"/>
+                <t t-if="m['time'] and m['date']"> · <t t-out="hm(m['time'])"/></t></span>
+            <t t-foreach="['1', '2']" t-as="n">
+                <t t-set="side" t-value="'team' + n"/>
+                <div t-attf-class="o_pbw_bmatch_team {{ 'o_pbw_bmatch_win' if m['winner'] == side and m['state'] != 'bye' else '' }} {{ 'o_pbw_bmatch_tbd' if not m[side] else '' }}">
+                    <span class="o_pbw_bmatch_name" t-out="m['label' + n]"/>
+                    <b class="o_pbw_bmatch_games" t-if="m['state'] == 'done'">
+                        <t t-if="m['walkover']" t-out="'W' if m['winner'] == side else '-'"/>
+                        <t t-elif="len(m['games']) == 1" t-out="m['games'][0][0 if n == '1' else 1]"/>
+                        <t t-else="" t-out="m['games' + n]"/>
+                    </b>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <template id="tournament_bracket" name="Club: Tournament Bracket">
+        <div class="o_pbw_panel o_pbw_bracket_wrap">
+            <div class="o_pbw_bracket">
+                <!-- Group stage / league: tables, matches and where the qualifiers go -->
+                <div t-if="first_stage" class="o_pbw_bround o_pbw_bround_groups">
+                    <div class="o_pbw_bround_name" t-out="first_stage_name"/>
+                    <div class="o_pbw_bround_matches">
+                        <div t-foreach="first_stage" t-as="block" class="o_pbw_bgroup">
+                            <div class="o_pbw_bgroup_head" t-out="block['title']"/>
+                            <table class="o_pbw_bgroup_table">
+                                <tr t-foreach="block['rows']" t-as="row"
+                                    t-attf-class="{{ 'o_pbw_bgroup_q' if block['played'] and row['qualified'] else '' }}">
+                                    <td class="o_pbw_bgroup_rank" t-out="row['rank']"/>
+                                    <td class="o_pbw_bgroup_team" t-att-title="row['team'].name" t-out="row['team'].name"/>
+                                    <td class="o_pbw_bgroup_wl" title="Wins-Losses"><t t-out="row['wins']"/>-<t t-out="row['losses']"/></td>
+                                    <td class="o_pbw_bgroup_pts" title="Points" t-out="row['points']"/>
+                                </tr>
+                            </table>
+                            <div class="o_pbw_bgroup_matches">
+                                <div t-foreach="block['matches']" t-as="m"
+                                     t-attf-class="o_pbw_bgroup_match {{ 'o_pbw_bgroup_match_done' if m['state'] == 'done' else '' }}">
+                                    <span class="o_pbw_bgroup_no">#<t t-out="m['number']"/></span>
+                                    <span t-attf-class="o_pbw_bgroup_side {{ 'o_pbw_bgroup_win' if m['winner'] == 'team1' else '' }}"
+                                          t-att-title="m['label1']" t-out="m['label1']"/>
+                                    <span class="o_pbw_bgroup_score">
+                                        <t t-if="m['walkover']">W/O</t>
+                                        <t t-elif="m['games']" t-out="', '.join(['%s-%s' % game for game in m['games']])"/>
+                                        <t t-else="">vs</t>
+                                    </span>
+                                    <span t-attf-class="o_pbw_bgroup_side o_pbw_bgroup_side2 {{ 'o_pbw_bgroup_win' if m['winner'] == 'team2' else '' }}"
+                                          t-att-title="m['label2']" t-out="m['label2']"/>
+                                </div>
+                            </div>
+                            <div t-if="block['exits']" class="o_pbw_bgroup_exits">
+                                <span t-foreach="block['exits']" t-as="exit" class="o_pbw_bexit">
+                                    <t t-out="exit[0]"/> <i class="fa fa-long-arrow-right"/> #<t t-out="exit[1]"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div t-if="wildcard_exits" class="o_pbw_bgroup_exits o_pbw_bgroup_wild">
+                            <span t-foreach="wildcard_exits" t-as="exit" class="o_pbw_bexit">
+                                <t t-out="exit[0]"/> <i class="fa fa-long-arrow-right"/> #<t t-out="exit[1]"/>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div t-foreach="rounds" t-as="rnd" class="o_pbw_bround">
+                    <div class="o_pbw_bround_name" t-out="rnd['name']"/>
+                    <div class="o_pbw_bround_matches">
+                        <div t-foreach="rnd['matches']" t-as="m" class="o_pbw_bslot">
+                            <t t-call="pickleball_website.tournament_bracket_match"/>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="tournament.champion_id" class="o_pbw_bround o_pbw_bround_champion">
+                    <div class="o_pbw_bround_name">Champion</div>
+                    <div class="o_pbw_bround_matches">
+                        <div class="o_pbw_bslot">
+                            <div class="o_pbw_bchampion"><i class="fa fa-trophy"/> <b t-out="tournament.champion_id.name"/></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div t-if="third" class="o_pbw_panel mt-4 o_pbw_bthird">
+            <div class="o_pbw_panel_head"><h3><i class="fa fa-trophy"/> 3rd place match</h3></div>
+            <t t-set="m" t-value="third"/>
+            <t t-call="pickleball_website.tournament_bracket_match"/>
+        </div>
+    </template>
+
+</odoo>

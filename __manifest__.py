@@ -1,6 +1,6 @@
 {
     'name': 'Pickleball Club Website',
-    'version': '18.0.1.3.0',
+    'version': '18.0.1.10.0',
     'category': 'Website',
     'summary': 'Members-only club website: schedule, player cards, rankings, matches and finance',
     'description': """
@@ -12,6 +12,8 @@ member player cards:
 - Public club home page (next session, club numbers, top players)
 - Members area (login required): dashboard, schedule and session details,
   player cards and profiles, rankings, match results, team finance
+- Tournaments (information only): rules, teams, schedule, standings, bracket
+- Session page: admins build the matches by dragging players into teams
 - Website accounts for members (portal users linked to pickleball.member),
   granted by an admin with the "Grant Website Access" wizard
     """,
@@ -33,11 +35,16 @@ member player cards:
         'views/templates_rankings.xml',
         'views/templates_finance.xml',
         'views/templates_register.xml',
+        'views/templates_tournament.xml',
     ],
     'assets': {
         'web.assets_frontend': [
             'pickleball-team/static/src/scss/player_card.scss',
             'pickleball_website/static/src/scss/club.scss',
+            'pickleball_website/static/src/scss/tournament.scss',
+            'pickleball_website/static/src/scss/match_builder.scss',
+            'pickleball_website/static/src/js/session_match_builder.js',
+            'pickleball_website/static/src/js/session_match_builder.xml',
         ],
     },
     'post_init_hook': 'post_init_hook',

@@ -2414,3 +2414,822 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer_copyright
 msgid "· Pickleball Club"
 msgstr "· Câu lạc bộ Pickleball"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid " (%s legs)"
+msgstr " (%s lượt)"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "#%(rank)s of %(group)s"
+msgstr "Hạng %(rank)s %(group)s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "#%s of the league"
+msgstr "Hạng %s bảng xếp hạng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid ""
+"%(teams)s teams are drawn into %(groups)s groups of %(sizes)s; every team "
+"plays every other team of its group%(legs)s."
+msgstr "%(teams)s đội được bốc thăm vào %(groups)s bảng, mỗi bảng %(sizes)s đội; các đội trong bảng đấu vòng tròn với nhau%(legs)s."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "%(teams)s teams, every team plays every other team%(legs)s."
+msgstr "%(teams)s đội, mỗi đội gặp tất cả các đội còn lại%(legs)s."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "%s matches in total."
+msgstr "Tổng cộng %s trận."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "%s teams, single elimination: lose once and you're out."
+msgstr "%s đội, đấu loại trực tiếp: thua một trận là bị loại."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "%s top-seeded teams get a bye in the first round."
+msgstr "%s đội hạt giống cao nhất được miễn đấu vòng đầu."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "(drop a player here to start one)"
+msgstr "(thả người chơi vào đây để tạo trận)"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "/ player"
+msgstr "/ người"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "/ team"
+msgstr "/ đội"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "1 game"
+msgstr "1 game"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "3rd of %s"
+msgstr "Ba %s"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "3rd place"
+msgstr "Hạng ba"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "3rd place match"
+msgstr "Tranh hạng ba"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "; ties broken by %s"
+msgstr "; bằng điểm thì xét %s"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournament
+msgid "<i class=\"fa fa-arrow-left\"/> Tournaments"
+msgstr "<i class=\"fa fa-arrow-left\"/> Giải đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "<i class=\"fa fa-book\"/> Rules"
+msgstr "<i class=\"fa fa-book\"/> Thể lệ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "<i class=\"fa fa-bullhorn\"/> About"
+msgstr "<i class=\"fa fa-bullhorn\"/> Giới thiệu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_schedule
+msgid "<i class=\"fa fa-calendar-o\"/> Time to be announced"
+msgstr "<i class=\"fa fa-calendar-o\"/> Chưa xếp lịch"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "<i class=\"fa fa-clock-o\"/> Next matches"
+msgstr "<i class=\"fa fa-clock-o\"/> Trận sắp tới"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "<i class=\"fa fa-gift\"/> Prizes"
+msgstr "<i class=\"fa fa-gift\"/> Giải thưởng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "<i class=\"fa fa-info-circle\"/> Information"
+msgstr "<i class=\"fa fa-info-circle\"/> Thông tin"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "<i class=\"fa fa-sitemap\"/> How it's played"
+msgstr "<i class=\"fa fa-sitemap\"/> Thể thức thi đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-sitemap\"/><span>Tournaments</span>"
+msgstr "<i class=\"fa fa-sitemap\"/><span>Giải đấu</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_bracket
+msgid "<i class=\"fa fa-trophy\"/> 3rd place match"
+msgstr "<i class=\"fa fa-trophy\"/> Tranh hạng ba"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_team_players
+msgid "<small class=\"o_pbw_muted\">(guest)</small>"
+msgstr "<small class=\"o_pbw_muted\">(khách)</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<span class=\"o_pbw_muted\">Admin · drag &amp; drop</span>"
+msgstr "<span class=\"o_pbw_muted\">Admin · kéo &amp; thả</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "<span class=\"o_pbw_tstand_key\"/> Qualified for the knockout stage"
+msgstr "<span class=\"o_pbw_tstand_key\"/> Vào vòng loại trực tiếp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournament
+msgid "<span>Status</span>"
+msgstr "<span>Trạng thái</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournament
+msgid "<span>Teams</span>"
+msgstr "<span>Đội</span>"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.js:0
+msgid "A side has %s players at most."
+msgstr "Mỗi bên tối đa %s người."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Best next-placed #%s"
+msgstr "Đội xếp sau tốt nhất #%s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Best of 3"
+msgstr "Thắng 2/3 game"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Best of 5"
+msgstr "Thắng 3/5 game"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Bet / player"
+msgstr "Cược / người"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Bracket"
+msgstr "Nhánh đấu"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Bye"
+msgstr "Miễn đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_bracket
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Champion"
+msgstr "Vô địch"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Club tournaments: rules, teams, schedule, standings and brackets."
+msgstr "Các giải đấu của CLB: thể lệ, đội, lịch thi đấu, bảng xếp hạng và nhánh đấu."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Coming soon"
+msgstr "Sắp diễn ra"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Compete"
+msgstr "Thi đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Dates"
+msgstr "Thời gian"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Delete match"
+msgstr "Xóa trận"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Doubles"
+msgstr "Đánh đôi"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Drag a player into a team, or tap a player then a team."
+msgstr "Kéo người chơi vào một đội, hoặc chạm vào người chơi rồi chạm vào đội."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Drop players here"
+msgstr "Thả người chơi vào đây"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.js:0
+msgid "Each side needs at least one player."
+msgstr "Mỗi bên cần ít nhất một người."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Entry fee"
+msgstr "Lệ phí"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Final"
+msgstr "Chung kết"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Finished"
+msgstr "Đã kết thúc"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Format"
+msgstr "Thể thức"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Games"
+msgstr "Game"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Games to %(points)s, win by %(win_by)s"
+msgstr "Game %(points)s điểm, cách %(win_by)s"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Games won-lost"
+msgstr "Game thắng-thua"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Group %s"
+msgstr "Bảng %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Group matches"
+msgstr "Trận vòng bảng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Group stage + knockout"
+msgstr "Vòng bảng + loại trực tiếp"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Invalid match data."
+msgstr "Dữ liệu trận đấu không hợp lệ."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Knockout matches"
+msgstr "Trận loại trực tiếp"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Knockout: %s."
+msgstr "Loại trực tiếp: %s."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "League matches"
+msgstr "Trận vòng tròn"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "League table"
+msgstr "Bảng xếp hạng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Live"
+msgstr "Đang diễn ra"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Loser of match %s"
+msgstr "Thua trận %s"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Losses"
+msgstr "Thua"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.js:0
+msgid "Match %s"
+msgstr "Trận %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Match %s needs at least one player on each side."
+msgstr "Trận %s cần ít nhất một người mỗi bên."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Matches in this session"
+msgstr "Số trận trong buổi này"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.js:0
+msgid "Matches saved."
+msgstr "Đã lưu các trận."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Members: log in to see the club's tournaments."
+msgstr "Thành viên: đăng nhập để xem các giải đấu của CLB."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Move down"
+msgstr "Xuống"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Move up"
+msgstr "Lên"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "New match"
+msgstr "Trận mới"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "No playoffs: the top of the table is champion."
+msgstr "Không đá playoff: đội đứng đầu bảng xếp hạng vô địch."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_teams
+msgid "No team yet"
+msgstr "Chưa có đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "No tournament yet"
+msgstr "Chưa có giải đấu"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.js:0
+msgid "Not enough players for a match."
+msgstr "Không đủ người cho một trận."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Ongoing"
+msgstr "Đang diễn ra"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Only the players of this session can play its matches."
+msgstr "Chỉ người chơi của buổi này mới có thể đấu các trận của buổi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Organizer"
+msgstr "Ban tổ chức"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Overview"
+msgstr "Tổng quan"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Point difference"
+msgstr "Hiệu số điểm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Points"
+msgstr "Điểm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Progress"
+msgstr "Tiến độ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Pts"
+msgstr "Điểm"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Quarter-finals"
+msgstr "Tứ kết"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Registration open"
+msgstr "Đang nhận đăng ký"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Registration until"
+msgstr "Hạn đăng ký"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Round %s"
+msgstr "Lượt %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Round of %s"
+msgstr "Vòng %s đội"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Round robin"
+msgstr "Vòng tròn tính điểm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Runner-up"
+msgstr "Á quân"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Runner-up of %s"
+msgstr "Nhì %s"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Save matches"
+msgstr "Lưu các trận"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_teams
+msgid "Seed"
+msgstr "Hạt giống"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Semi-finals"
+msgstr "Bán kết"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Single elimination"
+msgstr "Loại trực tiếp"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Singles"
+msgstr "Đánh đơn"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Standings"
+msgstr "Xếp hạng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Standings: %(win)s points per win, %(loss)s per loss"
+msgstr "Tính điểm: thắng %(win)s điểm, thua %(loss)s điểm"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Suggest a match"
+msgstr "Gợi ý một trận"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Swap sides"
+msgstr "Đổi bên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "Team"
+msgstr "Đội"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Team 1"
+msgstr "Đội 1"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Team 2"
+msgstr "Đội 2"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Teams"
+msgstr "Đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_teams
+msgid "Teams show up here once registrations are in."
+msgstr "Danh sách đội sẽ hiện ở đây khi có đăng ký."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.js:0
+msgid "The matches could not be saved."
+msgstr "Không lưu được các trận."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "The teams are not known yet."
+msgstr "Chưa có danh sách đội."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid ""
+"The top %(top)s of each group and the %(wild)s best next-placed teams go "
+"through to the knockout stage."
+msgstr "%(top)s đội đầu mỗi bảng và %(wild)s đội xếp sau có thành tích tốt nhất vào vòng loại trực tiếp."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "The top %s of each group go through to the knockout stage."
+msgstr "%s đội đầu mỗi bảng vào vòng loại trực tiếp."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "The top %s of the table play the playoffs."
+msgstr "%s đội đầu bảng xếp hạng vào vòng playoff."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid ""
+"This session is already split: after changing bets or winners, use\n"
+"                \"Recalculate Settlements\" on the session in the backend."
+msgstr "Buổi này đã chia tiền: sau khi đổi cược hoặc đội thắng, hãy bấm\n                \"Recalculate Settlements\" ở buổi chơi trong backend."
+
+#. module: pickleball_website
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "This session is settled: its matches can't be changed any more."
+msgstr "Buổi này đã quyết toán xong: không thể sửa các trận nữa."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "To be decided"
+msgstr "Chưa xác định"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournament
+msgid "Tournament"
+msgstr "Giải đấu"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_tournaments
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Tournaments"
+msgstr "Giải đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Tournaments show up here as soon as the organizers publish one."
+msgstr "Các giải đấu sẽ hiện ở đây ngay khi ban tổ chức công bố."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Unsaved changes"
+msgstr "Thay đổi chưa được lưu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_tournaments
+msgid "Upcoming"
+msgstr "Sắp diễn ra"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "VS"
+msgstr "VS"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "Venue"
+msgstr "Địa điểm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_match_row
+msgid "W/O"
+msgstr "Xử thắng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Winner of %s"
+msgstr "Nhất %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Winner of match %s"
+msgstr "Thắng trận %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "game difference"
+msgstr "hiệu số game"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "head-to-head"
+msgstr "đối đầu trực tiếp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_schedule
+msgid "matches"
+msgstr "trận"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_overview
+msgid "matches played"
+msgstr "trận đã đấu"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "point difference"
+msgstr "hiệu số điểm"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "points scored"
+msgstr "tổng điểm ghi được"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "seed"
+msgstr "hạt giống"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_card
+msgid "teams"
+msgstr "đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_match_row
+msgid "vs"
+msgstr "vs"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_standings
+msgid "· wildcard"
+msgstr "· vé vớt"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "1st"
+msgstr "Nhất"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "2nd"
+msgstr "Nhì"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "3rd"
+msgstr "Ba"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "#%s"
+msgstr "Hạng %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "Group stage"
+msgstr "Vòng bảng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/tournament.py:0
+msgid "League"
+msgstr "Vòng tròn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.tournament_bracket
+msgid "Wins-Losses"
+msgstr "Thắng-Thua"

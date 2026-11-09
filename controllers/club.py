@@ -13,9 +13,10 @@ is Vietnamese by default, English under /en.
 """
 from types import SimpleNamespace
 
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import _, fields, http
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
 
@@ -397,8 +398,92 @@ class PickleballClub(http.Controller):
             expense_types=labels(EXPENSE_TYPES),
             settlements=settlements.sorted(lambda s: (s.amount >= 0, s.amount)),
             per_person=(session.total_expense / session.total_player_count) if session.total_player_count else 0.0,
+            match_builder_props=self._match_builder_props(session) if self._is_admin() else None,
         )
         return request.render('pickleball_website.club_session', values)
+
+    # ── Match builder (admins): drag players into teams ────────────────────
+
+    def _match_builder_props(self, session):
+        """Props of the drag & drop match builder of the session page."""
+        bets = session.match_bet_ids.sorted('sequence')
+        players = session.participant_ids | bets.team1_member_ids | bets.team2_member_ids
+        return {
+            'sessionId': session.id,
+            'locked': session.state == 'settled',
+            'needsRecalc': session.state == 'done',
+            'defaultBet': bets[-1:].bet_amount or 0,
+            'players': [{
+                'id': member.id,
+                'name': member.name,
+                'short': short_name(member.name),
+                'initials': initials(member.name),
+                'photo': self._photo_url(member),
+                'tier': member.card_tier or 'bronze',
+                'ovr': member.card_overall,
+                'guest': member not in session.participant_ids,
+            } for member in players.sorted(lambda m: (m.name or '').lower())],
+            'matches': self._builder_matches(bets),
+        }
+
+    @staticmethod
+    def _builder_matches(bets):
+        return [{
+            'id': bet.id,
+            'team1': bet.team1_member_ids.ids,
+            'team2': bet.team2_member_ids.ids,
+            'bet': bet.bet_amount,
+            'winner': bet.winner or '',
+        } for bet in bets]
+
+    @http.route('/club/schedule/<int:session_id>/matches', type='json', auth='user', website=True,
+                methods=['POST'])
+    def club_session_save_matches(self, session_id, matches=None, **kwargs):
+        """Save the matches of the builder: `matches` is the full list
+        (in order), each {id (missing for a new one), team1, team2, bet,
+        winner}. Matches of the session left out are deleted."""
+        if not self._is_admin():
+            raise Forbidden()
+        # Admins are internal users: no sudo, their own access rights apply.
+        session = request.env['pickleball.session'].browse(session_id).exists()
+        if not session:
+            raise NotFound()
+        if session.state == 'settled':
+            raise UserError(_("This session is settled: its matches can't be changed any more."))
+        allowed = session.participant_ids | session.match_bet_ids.team1_member_ids | \
+            session.match_bet_ids.team2_member_ids
+        Bet = request.env['pickleball.match.bet']
+        kept = Bet
+        try:
+            for sequence, item in enumerate(matches or [], start=1):
+                team1 = [int(i) for i in item.get('team1') or []]
+                team2 = [int(i) for i in item.get('team2') or []]
+                if not set(team1 + team2) <= set(allowed.ids):
+                    raise UserError(_("Only the players of this session can play its matches."))
+                if not team1 or not team2:
+                    raise UserError(_("Match %s needs at least one player on each side.", sequence))
+                vals = {
+                    'sequence': sequence,
+                    'team1_member_ids': [fields.Command.set(team1)],
+                    'team2_member_ids': [fields.Command.set(team2)],
+                    'bet_amount': max(0.0, float(item.get('bet') or 0)),
+                    'winner': item.get('winner') if item.get('winner') in ('team1', 'team2') else False,
+                }
+                bet = session.match_bet_ids.filtered(lambda b: b.id == item.get('id'))
+                if bet:
+                    bet.write(vals)
+                else:
+                    bet = Bet.create(dict(vals, session_id=session.id))
+                kept |= bet
+            (session.match_bet_ids - kept).unlink()
+        except (TypeError, ValueError):
+            raise UserError(_("Invalid match data."))
+        except ValidationError as error:
+            raise UserError(error.args[0]) from error
+        return {
+            'matches': self._builder_matches(session.match_bet_ids.sorted('sequence')),
+            'needsRecalc': session.state == 'done',
+        }
 
     @http.route('/club/players', type='http', auth='user', website=True, sitemap=False)
     def club_players(self, sort='ovr', tier=None, **kwargs):

@@ -58,6 +58,10 @@
                                     <i class="fa fa-flag-checkered"/><span>Results</span></a>
                             </li>
                             <li>
+                                <a href="/club/tournaments" t-attf-class="{{ 'active' if club_tab == 'tournaments' else '' }}">
+                                    <i class="fa fa-sitemap"/><span>Tournaments</span></a>
+                            </li>
+                            <li>
                                 <a href="/club/finance" t-attf-class="{{ 'active' if club_tab == 'finance' else '' }}">
                                     <i class="fa fa-money"/><span>Finance</span></a>
                             </li>
@@ -141,6 +145,7 @@
                             <h6>The club</h6>
                             <ul class="list-unstyled">
                                 <li><a href="/club">Home</a></li>
+                                <li><a href="/club/tournaments">Tournaments</a></li>
                                 <t t-if="user_id._is_public()">
                                     <li><a href="/club/register">Sign up</a></li>
                                     <li><a href="/web/login?redirect=/club/me">Log in</a></li>

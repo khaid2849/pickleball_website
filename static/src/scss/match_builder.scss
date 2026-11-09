@@ -1,0 +1,324 @@
+// ════════════════════════════════════════════════════════════════════════════
+// Session page: drag & drop match builder (admins).
+// ════════════════════════════════════════════════════════════════════════════
+
+.o_pbw_builder {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.o_pbw_builder_note {
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(247, 201, 72, 0.25);
+    color: #6b4f00;
+    font-size: 0.85rem;
+}
+
+.o_pbw_drop_over {
+    box-shadow: 0 0 0 3px $pbw-blue !important;
+    background: rgba(61, 85, 232, 0.08) !important;
+}
+
+// ── Player pool ─────────────────────────────────────────────────────────────
+
+.o_pbw_builder_pool {
+    padding: 12px;
+    border-radius: 12px;
+    background: $pbw-cream;
+    transition: box-shadow 0.1s;
+}
+
+.o_pbw_builder_pool_head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    margin-bottom: 8px;
+
+    b {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+    small {
+        font-size: 0.75rem;
+    }
+}
+
+.o_pbw_builder_chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.o_pbw_builder_chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    padding: 3px 8px 3px 3px;
+    border: 0;
+    border-radius: 20px;
+    background: #fff;
+    color: $pbw-navy;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 0 0 0 2px rgba(27, 32, 112, 0.12);
+
+    &:active {
+        cursor: grabbing;
+    }
+    &.o_pbw_builder_chip_selected {
+        background: $pbw-navy;
+        color: #fff;
+        box-shadow: 0 0 0 2px $pbw-navy, 0 3px 0 $pbw-navy-2;
+    }
+    &.o_pbw_builder_chip_guest {
+        opacity: 0.7;
+    }
+    .o_pbw_builder_locked & {
+        cursor: default;
+    }
+}
+
+.o_pbw_builder_chip_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_pbw_builder_count {
+    min-width: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: $pbw-coral;
+    color: #fff;
+    font-size: 0.68rem;
+    text-align: center;
+
+    &.o_pbw_builder_count_zero {
+        background: $pbw-sand;
+        color: $pbw-muted;
+    }
+}
+
+.o_pbw_builder_remove {
+    margin-left: 2px;
+    padding: 0 4px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.55;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// ── Matches ─────────────────────────────────────────────────────────────────
+
+.o_pbw_builder_matches {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.o_pbw_builder_match {
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px rgba(27, 32, 112, 0.1);
+}
+
+.o_pbw_builder_match_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    b {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+}
+
+.o_pbw_builder_tools {
+    display: flex;
+    gap: 2px;
+
+    button {
+        width: 30px;
+        height: 30px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: $pbw-muted;
+
+        &:hover:not(:disabled) {
+            background: $pbw-cream;
+            color: $pbw-navy;
+        }
+        &:disabled {
+            opacity: 0.3;
+        }
+        &.o_pbw_builder_delete:hover {
+            color: $pbw-red;
+        }
+    }
+}
+
+.o_pbw_builder_court {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.o_pbw_builder_vs {
+    display: flex;
+    align-items: center;
+    color: $pbw-coral;
+    font-weight: 900;
+    font-style: italic;
+}
+
+.o_pbw_builder_team {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 6px;
+    min-height: 76px;
+    padding: 8px;
+    border: 2px dashed rgba(27, 32, 112, 0.2);
+    border-radius: 10px;
+    transition: box-shadow 0.1s, background 0.1s;
+
+    &.o_pbw_builder_team_target {
+        border-color: $pbw-blue;
+        cursor: pointer;
+    }
+    &.o_pbw_builder_team_win {
+        border-style: solid;
+        border-color: $pbw-green;
+        background: rgba(29, 138, 82, 0.07);
+    }
+    &.o_pbw_builder_team_lose {
+        opacity: 0.7;
+    }
+}
+
+.o_pbw_builder_team_label {
+    flex: 0 0 100%;
+    color: $pbw-muted;
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+
+    .fa {
+        color: #c99a12;
+    }
+}
+
+.o_pbw_builder_placeholder {
+    color: $pbw-muted;
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+.o_pbw_builder_match_foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 0.78rem;
+}
+
+.o_pbw_builder_bet {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+
+    input {
+        width: 120px;
+    }
+}
+
+.o_pbw_builder_winner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    button {
+        padding: 4px 12px;
+        border: 0;
+        border-radius: 20px;
+        background: $pbw-cream;
+        color: $pbw-navy;
+        font-weight: 800;
+
+        &.active {
+            background: $pbw-green;
+            color: #fff;
+        }
+    }
+}
+
+.o_pbw_builder_match_error {
+    margin-top: 8px;
+    color: $pbw-red;
+    font-size: 0.78rem;
+}
+
+.o_pbw_builder_new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    border: 2px dashed rgba(27, 32, 112, 0.25);
+    border-radius: 12px;
+    color: $pbw-muted;
+    font-weight: 800;
+    cursor: pointer;
+
+    &:hover {
+        color: $pbw-navy;
+        border-color: $pbw-navy;
+    }
+    .fa {
+        font-size: 1.2rem;
+    }
+}
+
+.o_pbw_builder_bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0 2px;
+    background: #fff;
+}
+
+.o_pbw_builder_status {
+    flex: 1 1 auto;
+    font-size: 0.82rem;
+}
+
+@media (max-width: 575.98px) {
+    .o_pbw_builder_court {
+        grid-template-columns: 1fr;
+    }
+    .o_pbw_builder_vs {
+        justify-content: center;
+    }
+}

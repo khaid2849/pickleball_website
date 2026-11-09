@@ -1,0 +1,655 @@
+// ════════════════════════════════════════════════════════════════════════════
+// Tournament pages (uses the variables of club.scss, same bundle).
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── List cards ──────────────────────────────────────────────────────────────
+
+.o_pbw_tcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: $pbw-radius;
+    background: #fff;
+    color: $pbw-navy !important;
+    text-decoration: none;
+    box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.06);
+    transition: transform 0.15s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+    .o_pbw_fixture_go {
+        position: absolute;
+        right: 16px;
+        bottom: 18px;
+    }
+}
+
+.o_pbw_tcard_banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 132px;
+    background: $pbw-navy;
+    @include pbw-dots();
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .o_pbw_chevrons {
+        width: 96px;
+        height: 40px;
+    }
+    .o_pbw_tstate {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+    }
+}
+
+.o_pbw_tcard_body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 40px 18px 18px;
+    font-size: 0.86rem;
+
+    h3 {
+        margin: 0 0 6px;
+        font-size: 1.1rem;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+    .fa {
+        width: 16px;
+        color: $pbw-coral;
+    }
+}
+
+.o_pbw_tcard_champion {
+    margin-top: 6px;
+    font-weight: 800;
+
+    .fa {
+        color: #c99a12 !important;
+    }
+}
+
+.o_pbw_pill.o_pbw_tstate {
+    background: #fff;
+    color: $pbw-navy;
+
+    &.o_pbw_tstate_open {
+        background: $pbw-yellow;
+    }
+    &.o_pbw_tstate_ongoing {
+        background: $pbw-coral;
+        color: #fff;
+    }
+    &.o_pbw_tstate_done {
+        background: $pbw-green;
+        color: #fff;
+    }
+}
+
+// ── Tabs & overview ─────────────────────────────────────────────────────────
+
+.o_pbw_ttabs a .fa {
+    margin-right: 4px;
+}
+
+.o_pbw_tsummary {
+    margin: 0 0 16px;
+    padding-left: 1.1rem;
+
+    li {
+        margin-bottom: 6px;
+    }
+    li::marker {
+        color: $pbw-coral;
+    }
+}
+
+.o_pbw_tformat {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    span {
+        padding: 5px 12px;
+        border-radius: 20px;
+        background: $pbw-cream;
+        font-size: 0.8rem;
+    }
+    .o_pbw_tformat_game .fa {
+        color: $pbw-yellow;
+    }
+}
+
+.o_pbw_richtext {
+    overflow-wrap: anywhere;
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    > :last-child {
+        margin-bottom: 0;
+    }
+}
+
+.o_pbw_tinfo {
+    display: grid;
+    grid-template-columns: minmax(110px, auto) 1fr;
+    gap: 10px 16px;
+    margin: 0;
+
+    dt {
+        color: $pbw-muted;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+    dd {
+        margin: 0;
+    }
+}
+
+.o_pbw_tprogress {
+    display: block;
+    height: 6px;
+    margin-top: 6px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: $pbw-sand;
+
+    i {
+        display: block;
+        height: 100%;
+        background: $pbw-coral;
+    }
+}
+
+.o_pbw_tpodium {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.o_pbw_tpodium_spot {
+    display: flex;
+    flex: 1 1 200px;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 18px 12px;
+    border-radius: $pbw-radius;
+    background: #fff;
+    text-align: center;
+    box-shadow: $pbw-shadow;
+
+    .fa {
+        font-size: 1.6rem;
+    }
+    b {
+        font-size: 1.05rem;
+    }
+    &.o_pbw_tpodium_1 {
+        order: 2;
+        background: $pbw-yellow;
+
+        .fa {
+            font-size: 2.2rem;
+        }
+    }
+    &.o_pbw_tpodium_2 {
+        order: 1;
+
+        .fa {
+            color: #9aa0b8;
+        }
+    }
+    &.o_pbw_tpodium_3 {
+        order: 3;
+
+        .fa {
+            color: #b07a43;
+        }
+    }
+}
+
+.o_pbw_tpodium_rank {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+// ── Teams ───────────────────────────────────────────────────────────────────
+
+.o_pbw_tteam {
+    height: 100%;
+    padding: 16px 18px;
+}
+
+.o_pbw_tteam_head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+
+    b {
+        flex: 1 1 auto;
+        font-size: 1rem;
+    }
+}
+
+.o_pbw_tseed {
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: $pbw-navy;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.o_pbw_tteam_players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+// ── Matches (schedule) ──────────────────────────────────────────────────────
+
+.o_pbw_tmatches {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.o_pbw_tmatch {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: $pbw-cream;
+}
+
+.o_pbw_tmatch_meta {
+    display: flex;
+    flex: 0 0 64px;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 0.78rem;
+    line-height: 1.3;
+}
+
+.o_pbw_tmatch_body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.o_pbw_tmatch_round {
+    display: block;
+    color: $pbw-muted;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.o_pbw_tmatch_teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.o_pbw_tmatch_team {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.o_pbw_tmatch_team2 {
+        text-align: right;
+    }
+    &.o_pbw_tmatch_win {
+        color: $pbw-green;
+        font-weight: 900;
+    }
+    &.o_pbw_tmatch_tbd {
+        color: $pbw-muted;
+        font-weight: 600;
+        font-style: italic;
+    }
+}
+
+.o_pbw_tmatch_score {
+    display: flex;
+    gap: 4px;
+    font-size: 0.8rem;
+    font-weight: 800;
+
+    span {
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: $pbw-navy;
+        color: #fff;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .o_pbw_tmatch_teams {
+        grid-template-columns: 1fr;
+        gap: 2px;
+    }
+    .o_pbw_tmatch_team.o_pbw_tmatch_team2 {
+        text-align: left;
+    }
+}
+
+// ── Standings ───────────────────────────────────────────────────────────────
+
+.o_pbw_tstand_head {
+    padding: 12px 18px;
+    background: $pbw-coral;
+    color: #fff;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.o_pbw_tstand_q td:first-child {
+    box-shadow: inset 4px 0 0 $pbw-green;
+}
+
+.o_pbw_tstand_key {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    border-radius: 3px;
+    background: $pbw-green;
+    vertical-align: middle;
+}
+
+// ── Bracket ─────────────────────────────────────────────────────────────────
+
+.o_pbw_bracket_wrap {
+    overflow-x: auto;
+}
+
+.o_pbw_bracket {
+    display: flex;
+    gap: 28px;
+    min-width: max-content;
+}
+
+.o_pbw_bround {
+    display: flex;
+    flex-direction: column;
+    width: 210px;
+}
+
+.o_pbw_bround_name {
+    margin-bottom: 10px;
+    color: $pbw-coral;
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.o_pbw_bround_matches {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 12px;
+}
+
+.o_pbw_bslot {
+    position: relative;
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+}
+
+// Connector towards the next round.
+.o_pbw_bround:not(:last-child) .o_pbw_bslot::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -28px;
+    width: 28px;
+    border-top: 2px solid rgba(27, 32, 112, 0.2);
+}
+
+.o_pbw_bmatch {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(27, 32, 112, 0.12), 0 3px 0 rgba(27, 32, 112, 0.08);
+
+    &.o_pbw_bmatch_bye {
+        opacity: 0.55;
+    }
+}
+
+.o_pbw_bmatch_no {
+    display: block;
+    padding: 3px 10px;
+    background: $pbw-navy;
+    color: #fff;
+    font-size: 0.66rem;
+    font-weight: 800;
+}
+
+.o_pbw_bmatch_team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    font-weight: 700;
+
+    & + & {
+        border-top: 1px solid rgba(27, 32, 112, 0.1);
+    }
+    &.o_pbw_bmatch_win {
+        background: rgba(29, 138, 82, 0.1);
+        color: $pbw-green;
+        font-weight: 900;
+    }
+    &.o_pbw_bmatch_tbd {
+        color: $pbw-muted;
+        font-weight: 600;
+        font-style: italic;
+    }
+}
+
+.o_pbw_bmatch_name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_pbw_bmatch_games {
+    flex: 0 0 auto;
+}
+
+.o_pbw_bchampion {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: $pbw-yellow;
+    font-size: 0.95rem;
+    text-align: center;
+    box-shadow: $pbw-shadow;
+}
+
+.o_pbw_bthird .o_pbw_bmatch {
+    max-width: 320px;
+}
+
+// ── Bracket: group stage / league column ────────────────────────────────────
+
+.o_pbw_bround.o_pbw_bround_groups {
+    width: 330px;
+
+    .o_pbw_bround_matches {
+        justify-content: flex-start;
+        gap: 16px;
+    }
+}
+
+.o_pbw_bgroup {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(27, 32, 112, 0.12), 0 3px 0 rgba(27, 32, 112, 0.08);
+
+    // Connector towards the knockout stage.
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: -28px;
+        width: 28px;
+        border-top: 2px solid rgba(27, 32, 112, 0.2);
+    }
+}
+
+.o_pbw_bround_groups .o_pbw_bgroup {
+    overflow: visible;
+
+    .o_pbw_bgroup_head {
+        border-radius: 10px 10px 0 0;
+    }
+}
+
+.o_pbw_bgroup_head {
+    padding: 6px 10px;
+    background: $pbw-coral;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.o_pbw_bgroup_table {
+    width: 100%;
+    font-size: 0.78rem;
+    table-layout: fixed;
+
+    td {
+        padding: 4px 6px;
+        border-bottom: 1px solid rgba(27, 32, 112, 0.08);
+    }
+    .o_pbw_bgroup_rank {
+        width: 26px;
+        color: $pbw-muted;
+        font-weight: 800;
+        text-align: center;
+    }
+    .o_pbw_bgroup_team {
+        overflow: hidden;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .o_pbw_bgroup_wl {
+        width: 40px;
+        color: $pbw-muted;
+        text-align: center;
+    }
+    .o_pbw_bgroup_pts {
+        width: 34px;
+        font-weight: 900;
+        text-align: center;
+    }
+    .o_pbw_bgroup_q td {
+        background: rgba(29, 138, 82, 0.08);
+    }
+    .o_pbw_bgroup_q .o_pbw_bgroup_rank {
+        box-shadow: inset 3px 0 0 $pbw-green;
+        color: $pbw-green;
+    }
+}
+
+.o_pbw_bgroup_matches {
+    padding: 4px 0;
+    background: $pbw-cream;
+}
+
+.o_pbw_bgroup_match {
+    display: grid;
+    grid-template-columns: 30px 1fr auto 1fr;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    font-size: 0.72rem;
+}
+
+.o_pbw_bgroup_no {
+    color: $pbw-muted;
+    font-weight: 800;
+}
+
+.o_pbw_bgroup_side {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.o_pbw_bgroup_side2 {
+        text-align: right;
+    }
+    &.o_pbw_bgroup_win {
+        color: $pbw-green;
+        font-weight: 900;
+    }
+}
+
+.o_pbw_bgroup_score {
+    padding: 1px 6px;
+    border-radius: 5px;
+    background: #fff;
+    font-weight: 800;
+    white-space: nowrap;
+
+    .o_pbw_bgroup_match_done & {
+        background: $pbw-navy;
+        color: #fff;
+    }
+}
+
+.o_pbw_bgroup_exits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+
+    &.o_pbw_bgroup_wild {
+        padding: 0;
+    }
+}
+
+.o_pbw_bexit {
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: rgba(29, 138, 82, 0.12);
+    color: $pbw-green;
+    font-size: 0.7rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
