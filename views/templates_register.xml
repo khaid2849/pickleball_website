@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form field error. Param: name. -->
+    <template id="register_error" name="Club: Form Error">
+        <div t-if="errors.get(name)" class="invalid-feedback d-block" t-out="errors[name]"/>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Sign-up form
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_register" name="Sign Up">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Join the team</t>
+            <t t-set="page_title">Create your account</t>
+            <t t-set="page_subtitle">One minute, and your player card is waiting for you.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-9 col-xl-8">
+                            <form action="/club/register" method="post" class="o_pbw_panel o_pbw_form_panel" novalidate="novalidate">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <h3 class="o_pbw_form_step"><span>1</span> Your account</h3>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="pbw_login" class="form-label">Username</label>
+                                        <input type="text" id="pbw_login" name="login" t-att-value="form.get('login')" required="required"
+                                               autocapitalize="off" autocomplete="username" maxlength="40"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('login') else '' }}"/>
+                                        <div class="form-text">Not your email: e.g. <b>an.nguyen</b>. Lowercase letters, digits, dots.</div>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'login'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_email" class="form-label">Email</label>
+                                        <input type="email" id="pbw_email" name="email" t-att-value="form.get('email')" required="required"
+                                               autocomplete="email" t-attf-class="form-control {{ 'is-invalid' if errors.get('email') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'email'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_password" class="form-label">Password</label>
+                                        <input type="password" id="pbw_password" name="password" required="required" minlength="8"
+                                               autocomplete="new-password" t-attf-class="form-control {{ 'is-invalid' if errors.get('password') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'password'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_confirm" class="form-label">Confirm password</label>
+                                        <input type="password" id="pbw_confirm" name="confirm_password" required="required"
+                                               autocomplete="new-password" t-attf-class="form-control {{ 'is-invalid' if errors.get('confirm_password') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'confirm_password'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_phone" class="form-label">Phone <span class="o_pbw_muted">(optional)</span></label>
+                                        <input type="tel" id="pbw_phone" name="phone" t-att-value="form.get('phone')" autocomplete="tel"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('phone') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'phone'"/></t>
+                                    </div>
+                                </div>
+
+                                <h3 class="o_pbw_form_step mt-4"><span>2</span> Are you already on the team?</h3>
+                                <div class="o_pbw_choice_group" role="radiogroup">
+                                    <label class="o_pbw_choice">
+                                        <input type="radio" name="is_member" value="yes" t-att-checked="form.get('is_member') == 'yes'"/>
+                                        <span>
+                                            <i class="fa fa-id-badge"/>
+                                            <b>Yes, I'm a member</b>
+                                            <small>I already play with the team: I pick my name in the list.</small>
+                                        </span>
+                                    </label>
+                                    <label class="o_pbw_choice">
+                                        <input type="radio" name="is_member" value="no" t-att-checked="form.get('is_member') == 'no'"/>
+                                        <span>
+                                            <i class="fa fa-user-plus"/>
+                                            <b>No, I'm new</b>
+                                            <small>Create my player profile.</small>
+                                        </span>
+                                    </label>
+                                </div>
+                                <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'is_member'"/></t>
+
+                                <div class="o_pbw_choice_panel o_pbw_choice_yes">
+                                    <label for="pbw_member" class="form-label">Your name in the team</label>
+                                    <select id="pbw_member" name="member_id"
+                                            t-attf-class="form-select {{ 'is-invalid' if errors.get('member_id') else '' }}">
+                                        <option value="">— Pick your name —</option>
+                                        <t t-foreach="claimable_members" t-as="member">
+                                            <option t-att-value="member.id" t-att-selected="form.get('member_id') == str(member.id)" t-out="member.name"/>
+                                        </t>
+                                    </select>
+                                    <div class="form-text">Only members who don't have an account yet are listed.
+                                        An admin checks that it's really you before your account opens.</div>
+                                    <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'member_id'"/></t>
+                                </div>
+                                <div class="o_pbw_choice_panel o_pbw_choice_no">
+                                    <label for="pbw_name" class="form-label">Your full name</label>
+                                    <input type="text" id="pbw_name" name="name" t-att-value="form.get('name')" autocomplete="name"
+                                           t-attf-class="form-control {{ 'is-invalid' if errors.get('name') else '' }}"/>
+                                    <div class="form-text">We send you an email: click its link to confirm your account.</div>
+                                    <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'name'"/></t>
+                                </div>
+
+                                <div class="o_pbw_form_actions">
+                                    <button type="submit" class="btn o_pbw_btn o_pbw_btn_primary">
+                                        <i class="fa fa-user-plus me-2"/>Create my account
+                                    </button>
+                                    <span class="o_pbw_muted">Already have an account? <a href="/web/login?redirect=/club/me">Log in</a></span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Waiting page: email to confirm / admin approval
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_pending" name="Account Pending">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Almost there</t>
+            <t t-set="page_title">Your account is on its way</t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div t-if="pending_member.website_state == 'pending_email'" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-envelope-o"/>
+                                <h3>Confirm your email</h3>
+                                <p>We sent a link to <b t-out="email"/>. Click it to open your account (check your spam folder too).
+                                    The link is valid for 48 hours.</p>
+                                <div t-if="sent is False" class="alert alert-warning text-start" role="alert">
+                                    The email could not be sent right now. Try again in a moment, or ask the team admin.
+                                </div>
+                                <div t-elif="sent" class="alert alert-success text-start" role="status">Email sent.</div>
+                                <form action="/club/pending" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-refresh me-2"/>Send the email again</button>
+                                </form>
+                            </div>
+                            <div t-elif="pending_member.website_state == 'pending_approval'" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-hourglass-half"/>
+                                <h3>Waiting for the admin's approval</h3>
+                                <p>You signed up as <b t-out="pending_member.name"/>. The team admin checks it's really you, then your
+                                    account opens — come back a bit later.</p>
+                                <a href="/web/session/logout?redirect=/club" class="btn o_pbw_btn o_pbw_btn_dark">Log out</a>
+                            </div>
+                            <div t-else="" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-lock"/>
+                                <h3>Your account is not linked to a club member</h3>
+                                <p>Ask the team admin to grant website access to your member profile, then log in again.</p>
+                                <a href="/web/session/logout?redirect=/club" class="btn o_pbw_btn o_pbw_btn_primary">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- Landing of the confirmation email link. -->
+    <template id="club_register_confirmed" name="Email Confirmed">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Join the team</t>
+            <t t-set="page_title" t-if="confirmed_member">Welcome to the team!</t>
+            <t t-set="page_title" t-else="">Link expired</t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div t-if="confirmed_member" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-check-circle"/>
+                                <h3>Your email is confirmed</h3>
+                                <p>Your player card is ready, <b t-out="confirmed_member.name"/>.</p>
+                                <a href="/club/me" class="btn o_pbw_btn o_pbw_btn_primary">Go to my page</a>
+                            </div>
+                            <div t-else="" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-chain-broken"/>
+                                <h3>This link is invalid or has expired</h3>
+                                <p>Log in to get a new confirmation email.</p>
+                                <a href="/club/pending" class="btn o_pbw_btn o_pbw_btn_primary">Log in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- "Sign up" button next to "Sign in" in the header, for visitors. -->
+    <template id="club_header_sign_up" inherit_id="portal.user_sign_in" name="Club: Header Sign Up" priority="99">
+        <xpath expr="//li" position="before">
+            <li groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
+                <a href="/club/register" class="btn btn-sm o_pbw_header_signup">Sign up</a>
+            </li>
+        </xpath>
+    </template>
+
+    <!-- Link to the club sign-up under the login form. -->
+    <template id="club_login_sign_up" inherit_id="web.login" name="Club: Login Sign Up Link" priority="99">
+        <xpath expr="//div[hasclass('oe_login_buttons')]" position="after">
+            <p class="mt-3 text-center o_pbw_login_signup">
+                No account yet? <a href="/club/register">Create one</a>
+            </p>
+        </xpath>
+    </template>
+
+</odoo>

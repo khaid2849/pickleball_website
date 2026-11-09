@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Website accounts approved for the members area (granted by an admin,
+         confirmed by email, or approved after a sign-up). Only used to show
+         the members' menus: access is checked by the controllers. -->
+    <record id="group_club_member" model="res.groups">
+        <field name="name">Club Website Member</field>
+        <field name="comment">Approved club website account: sees the members' menus of the website.</field>
+    </record>
+</odoo>

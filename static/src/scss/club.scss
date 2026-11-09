@@ -1,0 +1,2164 @@
+// ════════════════════════════════════════════════════════════════════════════
+// Club website — flat sports-poster theme (same palette as the player cards:
+// pickleball-team/static/src/scss/player_card.scss, loaded in the same bundle).
+// Page content is scoped under .o_pbw; the site header/footer are themed too.
+// ════════════════════════════════════════════════════════════════════════════
+
+$pbw-navy: #1b2070;
+$pbw-navy-2: #11165a;
+$pbw-blue: #3d55e8;
+$pbw-coral: #ec5f4b;
+$pbw-yellow: #f7c948;
+$pbw-cream: #fbf6ec;
+$pbw-sand: #f3ead9;
+$pbw-ink: #1b2070;
+$pbw-muted: #5d6290;
+$pbw-green: #1d8a52;
+$pbw-red: #c7362a;
+$pbw-radius: 16px;
+$pbw-shadow: 0 6px 0 rgba(27, 32, 112, 0.12);
+$pbw-font: "PB Montserrat", "Montserrat", "Segoe UI", sans-serif;
+
+@font-face {
+    font-family: "PB Montserrat";
+    font-weight: 400;
+    src: url("/web/static/fonts/google/Montserrat/Montserrat-Regular.ttf") format("truetype");
+}
+@font-face {
+    font-family: "PB Montserrat";
+    font-weight: 500;
+    src: url("/web/static/fonts/google/Montserrat/Montserrat-Medium.ttf") format("truetype");
+}
+@font-face {
+    font-family: "PB Montserrat";
+    font-weight: 600;
+    src: url("/web/static/fonts/google/Montserrat/Montserrat-SemiBold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "PB Montserrat";
+    font-weight: 800;
+    src: url("/web/static/fonts/google/Montserrat/Montserrat-ExtraBold.ttf") format("truetype");
+}
+
+@mixin pbw-dots($color: rgba(255, 255, 255, 0.09), $size: 26px, $r: 3px) {
+    background-image: radial-gradient(circle, $color $r, transparent $r + 0.5px);
+    background-size: $size $size;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Site header & footer
+// ────────────────────────────────────────────────────────────────────────────
+
+#wrapwrap {
+    font-family: $pbw-font;
+}
+
+header#top {
+    .navbar {
+        background: $pbw-navy !important;
+        border-bottom: 4px solid $pbw-yellow;
+        font-family: $pbw-font;
+    }
+    .navbar-brand {
+        color: #fff !important;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+    .navbar-nav .nav-link {
+        color: rgba(255, 255, 255, 0.82) !important;
+        font-weight: 700;
+        font-size: 0.92rem;
+        border-radius: 8px;
+
+        &:hover,
+        &:focus,
+        &.active {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        &.active {
+            box-shadow: inset 0 -3px 0 $pbw-yellow;
+        }
+    }
+    .o_navlink_background,
+    .o_header_mobile_buttons_wrap .btn,
+    .navbar-toggler {
+        color: #fff !important;
+    }
+    .navbar-toggler-icon {
+        filter: invert(1) brightness(2);
+    }
+    .btn-primary,
+    .o_signin_link {
+        font-weight: 700;
+    }
+    // Hide the shopping/search leftovers of the default header, unused here.
+    .o_header_search_box,
+    .o_wsale_my_cart {
+        display: none !important;
+    }
+}
+
+footer#bottom {
+    font-family: $pbw-font;
+
+    .o_pbw_footer {
+        padding: 48px 0 24px;
+        background: $pbw-navy;
+        @include pbw-dots(rgba(255, 255, 255, 0.05));
+        color: rgba(255, 255, 255, 0.78);
+
+        h6 {
+            color: $pbw-yellow;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            margin-bottom: 14px;
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            line-height: 2;
+
+            &:hover {
+                color: $pbw-yellow;
+            }
+        }
+    }
+    .o_pbw_footer_brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+    .o_pbw_footer_text {
+        max-width: 420px;
+        margin-top: 12px;
+        line-height: 1.6;
+    }
+    .o_footer_copyright {
+        background: $pbw-navy-2;
+        color: rgba(255, 255, 255, 0.6);
+        border: 0;
+
+        a {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+}
+
+header#top .navbar-brand.o_pbw_brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.15rem;
+}
+
+.o_pbw_brand_ball {
+    width: 34px;
+    height: 34px;
+    filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.25));
+}
+
+.o_brand_promotion {
+    display: none !important;
+}
+
+// Login page in the club colors.
+.oe_website_login_container {
+    font-family: $pbw-font;
+
+    .oe_login_form {
+        padding: 32px 28px;
+        border-radius: $pbw-radius;
+        background: #fff;
+        box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.08);
+    }
+    .btn-primary {
+        border: 0;
+        background: $pbw-coral;
+        font-weight: 800;
+        text-transform: uppercase;
+        box-shadow: 0 4px 0 darken($pbw-coral, 18%);
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Page base
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw {
+    background: $pbw-cream;
+    color: $pbw-ink;
+    font-family: $pbw-font;
+    font-weight: 500;
+
+    a {
+        color: $pbw-blue;
+    }
+    h1,
+    h2,
+    h3,
+    h4 {
+        color: inherit;
+        font-family: $pbw-font;
+        font-weight: 900;
+    }
+    .text-muted,
+    .o_pbw_muted {
+        color: $pbw-muted !important;
+    }
+    .o_pbw_pos {
+        color: $pbw-green;
+    }
+    .o_pbw_neg {
+        color: $pbw-red;
+    }
+}
+
+.o_pbw_chevrons {
+    width: 34px;
+    height: 16px;
+    flex-shrink: 0;
+
+    polyline {
+        fill: none;
+        stroke: $pbw-coral;
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+}
+
+.o_pbw_kicker {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: $pbw-coral;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    &.o_pbw_kicker_light {
+        color: $pbw-yellow;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Hero
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_hero {
+    position: relative;
+    overflow: hidden;
+    padding: 56px 0;
+    background: $pbw-blue;
+    @include pbw-dots;
+    color: #fff;
+}
+
+.o_pbw_hero_page {
+    padding: 44px 0 40px;
+}
+
+.o_pbw_hero_deco {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.o_pbw_hero_chevrons {
+    position: absolute;
+    top: 26px;
+    right: 6%;
+    width: 120px;
+
+    polyline {
+        fill: none;
+        stroke: $pbw-yellow;
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+}
+
+.o_pbw_hero_dots {
+    position: absolute;
+    bottom: 22px;
+    left: 3%;
+    width: 110px;
+    height: 70px;
+    @include pbw-dots(rgba(255, 255, 255, 0.28), 16px, 4px);
+}
+
+.o_pbw_hero_ring {
+    position: absolute;
+    right: -120px;
+    top: -60px;
+    width: 460px;
+    height: 460px;
+    border-radius: 50%;
+    border: 26px solid rgba(255, 255, 255, 0.07);
+}
+
+.o_pbw_hero_stripe {
+    position: absolute;
+    right: 18%;
+    bottom: -30px;
+    width: 220px;
+    height: 22px;
+    border-radius: 11px;
+    background: $pbw-yellow;
+    opacity: 0.9;
+    transform: rotate(-35deg);
+
+    &.o_pbw_hero_stripe_2 {
+        right: 8%;
+        bottom: 40px;
+        width: 150px;
+        background: rgba(255, 255, 255, 0.35);
+    }
+}
+
+// Page heroes: keep the decorations clear of the title, subtitle and facts.
+.o_pbw_hero_page {
+    .o_pbw_hero_dots {
+        left: auto;
+        right: 34%;
+        bottom: 18px;
+    }
+    .o_pbw_hero_chevrons {
+        top: auto;
+        right: 36%;
+        bottom: 96px;
+        width: 90px;
+    }
+    &:has(.o_pbw_hero_facts) .o_pbw_hero_stripe {
+        display: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .o_pbw_hero_page .o_pbw_hero_dots,
+    .o_pbw_hero_page .o_pbw_hero_chevrons {
+        display: none;
+    }
+}
+
+.o_pbw_hero_title {
+    margin: 0;
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+
+    span {
+        display: inline-block;
+        padding: 4px 18px;
+        background: $pbw-coral;
+        color: #fff;
+        transform: skewX(-10deg);
+        box-shadow: 6px 6px 0 rgba(17, 22, 90, 0.35);
+    }
+}
+
+.o_pbw_hero_subtitle {
+    max-width: 640px;
+    margin: 16px 0 0;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 1.02rem;
+}
+
+.o_pbw_hero_facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    gap: 10px;
+
+    div {
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: rgba(17, 22, 90, 0.35);
+        border: 2px solid rgba(255, 255, 255, 0.14);
+    }
+    b {
+        display: block;
+        font-size: 1.35rem;
+        font-weight: 900;
+        line-height: 1.1;
+    }
+    span {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+}
+
+// Home hero
+.o_pbw_hero_home {
+    padding: 72px 0 84px;
+}
+
+.o_pbw_display {
+    margin: 6px 0 18px;
+    font-size: clamp(2.3rem, 6vw, 4.3rem);
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.o_pbw_ribbon {
+    display: inline-block;
+    padding: 10px 26px 12px;
+    background: $pbw-coral;
+    color: #fff;
+    transform: skewX(-10deg) rotate(-2deg);
+    box-shadow: 8px 8px 0 rgba(17, 22, 90, 0.35);
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.o_pbw_hero_lead {
+    max-width: 560px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.o_pbw_hero_actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+// Next session poster (home)
+.o_pbw_next {
+    position: relative;
+    padding: 22px;
+    border-radius: $pbw-radius;
+    background: $pbw-yellow;
+    color: $pbw-navy;
+    box-shadow: 0 8px 0 rgba(17, 22, 90, 0.35);
+    transform: rotate(1.5deg);
+}
+
+.o_pbw_next_label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: $pbw-navy;
+    color: $pbw-yellow;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.o_pbw_next_body {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 18px 0 8px;
+}
+
+.o_pbw_next_info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-weight: 700;
+
+    b {
+        font-size: 1.6rem;
+        font-weight: 900;
+    }
+    .fa {
+        width: 16px;
+        color: $pbw-coral;
+    }
+}
+
+.o_pbw_next_link {
+    display: inline-block;
+    margin-top: 6px;
+    color: $pbw-navy !important;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.o_pbw_next_empty {
+    margin: 16px 0 0;
+    font-weight: 700;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Buttons
+// ────────────────────────────────────────────────────────────────────────────
+
+.btn.o_pbw_btn {
+    padding: 11px 22px;
+    border: 0;
+    border-radius: 10px;
+    font-family: $pbw-font;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+    &:active {
+        transform: translateY(2px);
+        box-shadow: none !important;
+    }
+    &.btn-sm {
+        padding: 7px 14px;
+        font-size: 0.78rem;
+    }
+}
+
+// Each variant sets Bootstrap's button variables, so .btn's own :hover /
+// :focus / :active rules keep the variant colors instead of the theme's.
+@mixin pbw-btn-colors($bg, $color, $hover-bg: $bg, $border: transparent) {
+    --bs-btn-bg: #{$bg};
+    --bs-btn-color: #{$color};
+    --bs-btn-border-color: #{$border};
+    --bs-btn-hover-bg: #{$hover-bg};
+    --bs-btn-hover-color: #{$color};
+    --bs-btn-hover-border-color: #{$border};
+    --bs-btn-active-bg: #{$hover-bg};
+    --bs-btn-active-color: #{$color};
+    --bs-btn-active-border-color: #{$border};
+    --bs-btn-focus-shadow-rgb: 255, 255, 255;
+    background: var(--bs-btn-bg);
+    color: var(--bs-btn-color) !important;
+
+    &:hover,
+    &:focus-visible,
+    &:active,
+    &.active {
+        background: var(--bs-btn-hover-bg);
+        color: var(--bs-btn-hover-color) !important;
+    }
+}
+
+.btn.o_pbw_btn_primary {
+    @include pbw-btn-colors($pbw-coral, #fff, lighten($pbw-coral, 4%));
+    box-shadow: 0 5px 0 darken($pbw-coral, 20%);
+}
+
+.btn.o_pbw_btn_dark {
+    @include pbw-btn-colors($pbw-navy, #fff, lighten($pbw-navy, 6%));
+    box-shadow: 0 5px 0 $pbw-navy-2;
+}
+
+.btn.o_pbw_btn_light {
+    @include pbw-btn-colors(#fff, $pbw-navy, $pbw-cream);
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.18);
+}
+
+.btn.o_pbw_btn_ghost {
+    @include pbw-btn-colors(transparent, #fff, rgba(255, 255, 255, 0.12));
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Members' sub navigation
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_subnav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: $pbw-navy;
+    box-shadow: 0 4px 0 rgba(17, 22, 90, 0.18);
+}
+
+.o_pbw_subnav_list {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 8px 0;
+    overflow-x: auto;
+    list-style: none;
+    scrollbar-width: none;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.75) !important;
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+
+        &:hover {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        &.active {
+            background: $pbw-yellow;
+            color: $pbw-navy !important;
+            box-shadow: 0 3px 0 darken($pbw-yellow, 22%);
+        }
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Sections & panels
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_section {
+    padding: 48px 0;
+
+    &.o_pbw_section_alt {
+        background: $pbw-sand;
+        @include pbw-dots(rgba(27, 32, 112, 0.05));
+    }
+}
+
+.o_pbw_section_title {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    h2 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        text-transform: uppercase;
+    }
+}
+
+.o_pbw_more {
+    flex-shrink: 0;
+    color: $pbw-blue !important;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+
+    .fa {
+        transition: transform 0.15s ease;
+    }
+    &:hover .fa {
+        transform: translateX(3px);
+    }
+}
+
+.o_pbw_panel {
+    padding: 22px;
+    border-radius: $pbw-radius;
+    background: #fff;
+    box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.06);
+
+    &.p-0 {
+        overflow: hidden;
+    }
+}
+
+.o_pbw_panel_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0;
+        font-size: 1.05rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+
+        .fa {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: $pbw-cream;
+            color: $pbw-coral;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+.o_pbw_empty {
+    padding: 44px 24px;
+    text-align: center;
+
+    > .fa {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 14px;
+        border-radius: 50%;
+        background: $pbw-cream;
+        color: $pbw-coral;
+        font-size: 1.7rem;
+    }
+    h3 {
+        font-size: 1.15rem;
+    }
+    p {
+        color: $pbw-muted;
+    }
+    &.o_pbw_empty_inline {
+        padding: 18px;
+
+        > .fa {
+            color: $pbw-green;
+        }
+    }
+}
+
+.o_pbw_sticky {
+    position: sticky;
+    top: 84px;
+}
+
+.o_pbw_back {
+    color: $pbw-muted !important;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+        color: $pbw-navy !important;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Numbers: stat tiles, meters
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_stats_band {
+    position: relative;
+    margin-top: -36px;
+    padding-bottom: 8px;
+}
+
+.o_pbw_stat_tile {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height: 100%;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background: $pbw-navy;
+    color: #fff;
+    box-shadow: 0 6px 0 rgba(17, 22, 90, 0.3);
+
+    .fa {
+        color: $pbw-yellow;
+        font-size: 1.1rem;
+    }
+    b {
+        font-size: 1.9rem;
+        font-weight: 900;
+        line-height: 1.15;
+    }
+    span {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    &.o_pbw_stat_tile_light {
+        background: #fff;
+        color: $pbw-navy;
+        box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.06);
+
+        .fa {
+            color: $pbw-coral;
+        }
+        b {
+            font-size: 1.35rem;
+            word-break: break-word;
+        }
+        span {
+            color: $pbw-muted;
+        }
+    }
+}
+
+.o_pbw_meter {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: $pbw-cream;
+
+    small {
+        display: block;
+        margin-top: 6px;
+        color: $pbw-muted;
+        font-size: 0.74rem;
+        line-height: 1.4;
+    }
+}
+
+.o_pbw_meter_head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.86rem;
+
+    b {
+        font-weight: 900;
+    }
+}
+
+.o_pbw_meter_value {
+    font-size: 1.3rem;
+}
+
+.o_pbw_meter_bar {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: rgba(27, 32, 112, 0.1);
+
+    i {
+        display: block;
+        height: 100%;
+        border-radius: 4px;
+    }
+    .o_pbw_meter_hi {
+        background: $pbw-green;
+    }
+    .o_pbw_meter_mid {
+        background: $pbw-blue;
+    }
+    .o_pbw_meter_lo {
+        background: $pbw-coral;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Dates, fixtures, sessions
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 82px;
+    min-width: 82px;
+    padding: 8px 4px;
+    border-radius: 12px;
+    background: $pbw-navy;
+    color: #fff;
+    line-height: 1.1;
+    text-align: center;
+
+    &.o_pbw_date_accent {
+        background: $pbw-coral;
+    }
+}
+
+.o_pbw_date_wd {
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.o_pbw_date_day {
+    font-size: 1.9rem;
+    font-weight: 900;
+}
+
+.o_pbw_date_month {
+    font-size: 0.62rem;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.o_pbw_fixture {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+    padding: 16px;
+    border-radius: $pbw-radius;
+    background: #fff;
+    color: $pbw-navy !important;
+    text-decoration: none;
+    box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.06);
+    transition: transform 0.15s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+}
+
+.o_pbw_fixture_body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    font-size: 0.86rem;
+    font-weight: 600;
+
+    b {
+        font-size: 1.2rem;
+        font-weight: 900;
+    }
+    .fa {
+        width: 14px;
+        color: $pbw-coral;
+    }
+}
+
+.o_pbw_fixture_go {
+    color: $pbw-coral;
+}
+
+.o_pbw_session_row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+.o_pbw_session_info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 160px;
+    font-weight: 600;
+
+    b {
+        font-size: 1.25rem;
+        font-weight: 900;
+    }
+    .fa-map-marker {
+        color: $pbw-coral;
+    }
+}
+
+.o_pbw_session_chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.o_pbw_session_chip {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: $pbw-cream;
+    color: $pbw-navy !important;
+    font-size: 0.78rem;
+    text-decoration: none;
+
+    b {
+        font-size: 1rem;
+        font-weight: 900;
+    }
+    &:hover {
+        background: $pbw-yellow;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Pills & badges
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &.o_pbw_pill_draft {
+        background: rgba(247, 201, 72, 0.3);
+        color: #7a5a00;
+    }
+    &.o_pbw_pill_confirmed {
+        background: rgba(61, 85, 232, 0.14);
+        color: $pbw-blue;
+    }
+    &.o_pbw_pill_done {
+        background: rgba(236, 95, 75, 0.15);
+        color: $pbw-red;
+    }
+    &.o_pbw_pill_settled {
+        background: rgba(29, 138, 82, 0.14);
+        color: $pbw-green;
+    }
+    &.o_pbw_pill_unpaid {
+        background: rgba(199, 54, 42, 0.12);
+        color: $pbw-red;
+    }
+}
+
+.o_pbw_result {
+    display: inline-block;
+    min-width: 64px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    transform: skewX(-8deg);
+
+    &.o_pbw_result_W {
+        background: $pbw-green;
+    }
+    &.o_pbw_result_L {
+        background: $pbw-red;
+    }
+}
+
+$pbw-tiers: (
+    bronze: (#f2e4cf, #8a5a2e),
+    silver: ($pbw-coral, #fff),
+    gold: ($pbw-yellow, $pbw-navy),
+    icon: ($pbw-blue, #fff),
+);
+
+@each $tier, $colors in $pbw-tiers {
+    .o_pbw_tier_badge.o_pbw_tier_#{$tier},
+    .o_pbw_avatar.o_pbw_tier_#{$tier} {
+        background: nth($colors, 1);
+        color: nth($colors, 2);
+    }
+    .o_pbw_tier_text.o_pbw_tier_#{$tier} {
+        color: if($tier == bronze, #8a5a2e, if($tier == gold, darken($pbw-yellow, 28%), nth($colors, 1)));
+    }
+}
+
+.o_pbw_tier_badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+}
+
+.o_pbw_tier_text {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+}
+
+.o_pbw_ovr_badge {
+    display: inline-block;
+    min-width: 40px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    background: $pbw-navy;
+    color: #fff;
+    font-weight: 900;
+}
+
+.o_pbw_rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: $pbw-cream;
+    font-weight: 900;
+
+    &.o_pbw_rank_1 {
+        background: $pbw-yellow;
+    }
+    &.o_pbw_rank_2 {
+        background: #d9dde3;
+    }
+    &.o_pbw_rank_3 {
+        background: #e9b98a;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Avatars & chips
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 900;
+    box-shadow: 0 0 0 2px #fff;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    &.o_pbw_avatar_sm {
+        width: 28px;
+        height: 28px;
+        font-size: 0.62rem;
+    }
+    &.o_pbw_avatar_lg {
+        width: 84px;
+        height: 84px;
+        font-size: 1.6rem;
+        box-shadow: 0 0 0 4px #fff;
+    }
+    &.o_pbw_avatar_more {
+        background: $pbw-navy;
+        color: #fff;
+    }
+}
+
+.o_pbw_avatar_stack {
+    display: flex;
+    padding-left: 8px;
+
+    .o_pbw_avatar {
+        margin-left: -8px;
+    }
+}
+
+.o_pbw_chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 2px 8px 2px 0;
+    color: $pbw-navy !important;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover span {
+        text-decoration: underline;
+    }
+}
+
+.o_pbw_player_cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: $pbw-navy !important;
+    text-decoration: none;
+
+    b {
+        display: block;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Tables
+// ────────────────────────────────────────────────────────────────────────────
+
+.table.o_pbw_table {
+    --bs-table-bg: transparent;
+    color: $pbw-navy;
+    font-size: 0.9rem;
+    vertical-align: middle;
+
+    thead th {
+        border: 0;
+        background: $pbw-navy;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    td {
+        border-color: rgba(27, 32, 112, 0.07);
+        padding-top: 11px;
+        padding-bottom: 11px;
+    }
+    tbody tr:nth-child(even) td {
+        background: rgba(251, 246, 236, 0.6);
+    }
+    a {
+        color: $pbw-navy;
+        text-decoration: none;
+    }
+    &.o_pbw_table_hover tbody tr:hover td {
+        background: rgba(247, 201, 72, 0.18);
+    }
+    .o_pbw_row_me td {
+        background: rgba(61, 85, 232, 0.08) !important;
+        box-shadow: inset 3px 0 0 transparent;
+    }
+    .o_pbw_row_me td:first-child {
+        box-shadow: inset 4px 0 0 $pbw-blue;
+    }
+}
+
+.o_pbw_panel > .table-responsive > .o_pbw_table thead th:first-child {
+    border-top-left-radius: 10px;
+}
+.o_pbw_panel > .table-responsive > .o_pbw_table thead th:last-child {
+    border-top-right-radius: 10px;
+}
+.o_pbw_panel.p-0 .o_pbw_table thead th {
+    border-radius: 0 !important;
+}
+
+.o_pbw_form {
+    display: inline-flex;
+    gap: 3px;
+
+    .o_pb_card_dot {
+        box-shadow: none;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Matches (scoreboard rows)
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_match_list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.o_pbw_match {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 0 rgba(27, 32, 112, 0.1), 0 0 0 1px rgba(27, 32, 112, 0.06);
+}
+
+.o_pbw_match_team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 14px 16px;
+    font-weight: 700;
+
+    &.o_pbw_match_team2 {
+        flex-direction: row-reverse;
+        text-align: right;
+    }
+    &.o_pbw_match_win {
+        background: linear-gradient(90deg, rgba(247, 201, 72, 0.45), rgba(247, 201, 72, 0.15));
+    }
+    &.o_pbw_match_team2.o_pbw_match_win {
+        background: linear-gradient(270deg, rgba(247, 201, 72, 0.45), rgba(247, 201, 72, 0.15));
+    }
+    &.o_pbw_match_lose {
+        opacity: 0.62;
+    }
+}
+
+.o_pbw_match_avatars {
+    display: flex;
+    flex-shrink: 0;
+
+    .o_pbw_avatar + .o_pbw_avatar {
+        margin-left: -8px;
+    }
+}
+
+.o_pbw_match_names {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    a {
+        color: $pbw-navy !important;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.o_pbw_match_trophy {
+    flex-shrink: 0;
+    color: darken($pbw-yellow, 18%);
+    font-size: 1.1rem;
+}
+
+.o_pbw_match_vs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    padding: 6px 10px;
+    background: $pbw-navy;
+    color: #fff;
+
+    b {
+        font-size: 1rem;
+        font-weight: 900;
+        font-style: italic;
+        color: $pbw-yellow;
+    }
+    small {
+        font-size: 0.66rem;
+        font-weight: 700;
+        opacity: 0.8;
+    }
+}
+
+.o_pbw_match_compact .o_pbw_match_team {
+    padding: 10px 12px;
+    font-size: 0.86rem;
+}
+
+.o_pbw_match_pending .o_pbw_match_vs b {
+    color: #fff;
+}
+
+@media (max-width: 575.98px) {
+    .o_pbw_match {
+        grid-template-columns: 1fr;
+    }
+    .o_pbw_match_team.o_pbw_match_team2 {
+        flex-direction: row;
+        text-align: left;
+    }
+    .o_pbw_match_vs {
+        flex-direction: row;
+        gap: 8px;
+        padding: 4px;
+    }
+}
+
+.o_pbw_matchday {
+    margin-bottom: 36px;
+}
+
+.o_pbw_matchday_head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+
+    h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+
+        a {
+            color: $pbw-navy !important;
+            text-decoration: none;
+        }
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Podium (home + rankings)
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_podium {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 24px;
+}
+
+.o_pbw_podium_spot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+
+    // 1st in the middle, raised
+    &.o_pbw_podium_1 {
+        order: 2;
+        transform: translateY(-18px);
+    }
+    &.o_pbw_podium_2 {
+        order: 1;
+    }
+    &.o_pbw_podium_3 {
+        order: 3;
+    }
+}
+
+.o_pbw_podium_rank {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: $pbw-navy;
+    color: $pbw-yellow;
+    font-size: 1.1rem;
+    font-weight: 900;
+    transform: translateX(-50%);
+    box-shadow: 0 0 0 4px $pbw-cream;
+
+    .o_pbw_podium_1 & {
+        background: $pbw-yellow;
+        color: $pbw-navy;
+    }
+}
+
+// Compact podium (rankings): avatar + name on colored blocks.
+.o_pbw_podium_compact {
+    gap: 12px;
+
+    .o_pbw_podium_spot {
+        width: 190px;
+        padding-top: 26px;
+        color: $pbw-navy !important;
+        text-decoration: none;
+        transform: none;
+    }
+    .o_pbw_podium_rank {
+        top: 0;
+    }
+    .o_pbw_podium_name {
+        margin-top: 10px;
+        font-size: 1.05rem;
+        font-weight: 900;
+        text-align: center;
+    }
+    .o_pbw_podium_value {
+        margin-bottom: 10px;
+        color: $pbw-muted;
+        font-weight: 800;
+    }
+    .o_pbw_podium_block {
+        width: 100%;
+        height: 70px;
+        border-radius: 12px 12px 0 0;
+        background: #d9dde3;
+        @include pbw-dots(rgba(255, 255, 255, 0.35), 14px, 3px);
+    }
+    .o_pbw_podium_1 .o_pbw_podium_block {
+        height: 110px;
+        background-color: $pbw-yellow;
+    }
+    .o_pbw_podium_3 .o_pbw_podium_block {
+        height: 46px;
+        background-color: #e9b98a;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Player cards grid & links
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_card_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    justify-items: center;
+    gap: 28px 16px;
+}
+
+.o_pbw_card_link {
+    display: block;
+    color: inherit !important;
+    text-decoration: none !important;
+
+    .o_pb_card {
+        box-shadow: 0 6px 0 rgba(27, 32, 112, 0.22);
+    }
+    &.o_pbw_card_link_active:hover .o_pb_card,
+    &.o_pbw_card_link_active:focus-visible .o_pb_card {
+        transform: translateY(-5px);
+        box-shadow: 0 11px 0 rgba(27, 32, 112, 0.2);
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Toolbar filters
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.o_pbw_filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+
+    a {
+        padding: 7px 14px;
+        border-radius: 20px;
+        background: #fff;
+        color: $pbw-navy !important;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 0 0 2px rgba(27, 32, 112, 0.12);
+
+        &:hover {
+            box-shadow: 0 0 0 2px $pbw-navy;
+        }
+        &.active {
+            background: $pbw-navy;
+            color: #fff !important;
+            box-shadow: 0 3px 0 $pbw-navy-2;
+        }
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Session page: roster, costs, venue
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_roster {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+}
+
+.o_pbw_roster_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: $pbw-cream;
+    color: $pbw-navy !important;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+
+    > span:not(.o_pbw_avatar) {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .fa-ticket {
+        color: $pbw-coral;
+    }
+    &:hover {
+        background: rgba(247, 201, 72, 0.45);
+    }
+}
+
+.o_pbw_guests {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 12px;
+    font-size: 0.84rem;
+
+    .fa {
+        color: $pbw-coral;
+    }
+}
+
+.o_pbw_costs,
+.o_pbw_ledger {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(27, 32, 112, 0.12);
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+}
+
+.o_pbw_cost_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: $pbw-cream;
+    color: $pbw-blue;
+}
+
+.o_pbw_cost_text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+
+    small {
+        color: $pbw-muted;
+    }
+}
+
+.o_pbw_ledger li {
+    > a:not(.o_pbw_chip),
+    > span:first-child {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        min-width: 0;
+        color: $pbw-navy !important;
+        text-decoration: none;
+
+        small {
+            color: $pbw-muted;
+        }
+    }
+    > .o_pbw_chip {
+        flex: 1;
+    }
+}
+
+.o_pbw_venue {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 0;
+    font-size: 0.88rem;
+
+    & + & {
+        border-top: 1px dashed rgba(27, 32, 112, 0.12);
+    }
+    span {
+        color: $pbw-muted;
+        white-space: pre-line;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Balance
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_balance {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    overflow: hidden;
+    padding: 24px 26px;
+    border-radius: $pbw-radius;
+    color: #fff;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18);
+    @include pbw-dots(rgba(255, 255, 255, 0.1), 18px, 3px);
+
+    &.o_pbw_balance_owes {
+        background-color: $pbw-red;
+    }
+    &.o_pbw_balance_owed,
+    &.o_pbw_balance_paid {
+        background-color: $pbw-green;
+    }
+}
+
+.o_pbw_balance_main {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_pbw_balance_label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.o_pbw_balance_amount {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.o_pbw_balance_note {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.o_pbw_balance_actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 280px;
+
+    small {
+        opacity: 0.85;
+    }
+}
+
+.o_pbw_qr {
+    width: 100%;
+    max-width: 260px;
+    border-radius: 12px;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Home: steps, call to action, pager
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_step {
+    position: relative;
+    height: 100%;
+    padding: 28px 24px;
+    overflow: hidden;
+    border-radius: $pbw-radius;
+    background: #fff;
+    box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.06);
+
+    h3 {
+        font-size: 1.1rem;
+        text-transform: uppercase;
+    }
+    p {
+        margin: 0;
+        color: $pbw-muted;
+        line-height: 1.6;
+    }
+}
+
+.o_pbw_step_no {
+    position: absolute;
+    top: -14px;
+    right: 10px;
+    color: rgba(27, 32, 112, 0.06);
+    font-size: 6rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.o_pbw_step_icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    background: $pbw-yellow;
+    color: $pbw-navy;
+    font-size: 1.3rem;
+}
+
+.o_pbw_cta {
+    padding: 0 0 56px;
+}
+
+.o_pbw_cta_inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 32px 36px;
+    border-radius: $pbw-radius;
+    background: $pbw-coral;
+    color: #fff;
+    box-shadow: 0 8px 0 darken($pbw-coral, 22%);
+    @include pbw-dots(rgba(255, 255, 255, 0.1), 20px, 3px);
+
+    h2 {
+        margin: 0 0 4px;
+        font-size: 1.7rem;
+        text-transform: uppercase;
+    }
+    p {
+        margin: 0;
+        opacity: 0.92;
+    }
+}
+
+.o_pbw_pager {
+    margin-top: 24px;
+
+    .pagination {
+        justify-content: center;
+        gap: 6px;
+    }
+    .page-link {
+        border: 0;
+        border-radius: 8px !important;
+        background: #fff;
+        color: $pbw-navy;
+        font-weight: 800;
+        box-shadow: 0 0 0 2px rgba(27, 32, 112, 0.12);
+    }
+    .active > .page-link,
+    .page-item.active .page-link {
+        background: $pbw-navy;
+        color: #fff;
+    }
+}
+
+// Small screens: the podium stacks — show it in rank order.
+@media (max-width: 767.98px) {
+    .o_pbw_podium_spot.o_pbw_podium_1,
+    .o_pbw_podium_spot.o_pbw_podium_2,
+    .o_pbw_podium_spot.o_pbw_podium_3 {
+        order: 0;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .o_pbw_sticky {
+        position: static;
+    }
+    .o_pbw_next {
+        transform: none;
+    }
+    .o_pbw_podium_spot.o_pbw_podium_1 {
+        transform: none;
+    }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Public showcase home page
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_hero_checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 22px 0 0;
+    padding: 0;
+    list-style: none;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.88rem;
+    font-weight: 700;
+
+    .fa {
+        color: $pbw-yellow;
+    }
+}
+
+.o_pbw_showcase_card {
+    position: relative;
+    transform: rotate(4deg);
+    filter: drop-shadow(0 12px 0 rgba(17, 22, 90, 0.35));
+}
+
+.o_pbw_sample_badge {
+    position: absolute;
+    top: -12px;
+    right: -14px;
+    z-index: 5;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: $pbw-yellow;
+    color: $pbw-navy;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transform: rotate(-4deg);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.o_pbw_sample_note {
+    margin: 18px 0 0;
+    color: $pbw-muted;
+    font-size: 0.84rem;
+    text-align: center;
+}
+
+.o_pbw_lead_dark {
+    color: $pbw-muted;
+    font-size: 1.02rem;
+    line-height: 1.7;
+}
+
+.o_pbw_tier_list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 700;
+
+    .o_pbw_tier_badge {
+        display: inline-block;
+        min-width: 74px;
+        margin-right: 8px;
+        text-align: center;
+    }
+}
+
+.o_pbw_feature {
+    height: 100%;
+    padding: 26px 24px;
+    border-radius: $pbw-radius;
+    background: #fff;
+    box-shadow: $pbw-shadow, 0 0 0 1px rgba(27, 32, 112, 0.06);
+
+    > .fa {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 14px;
+        border-radius: 14px;
+        background: $pbw-blue;
+        color: #fff;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 0 $pbw-navy;
+    }
+    h3 {
+        font-size: 1.05rem;
+        text-transform: uppercase;
+    }
+    p {
+        margin: 0;
+        color: $pbw-muted;
+        line-height: 1.6;
+    }
+}
+
+// Blurred, locked preview of members-only content.
+.o_pbw_locked {
+    position: relative;
+}
+
+.o_pbw_locked_content {
+    filter: blur(5px);
+    opacity: 0.75;
+    pointer-events: none;
+    user-select: none;
+}
+
+.o_pbw_locked_overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+
+    > .fa {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 12px;
+        border-radius: 50%;
+        background: $pbw-navy;
+        color: $pbw-yellow;
+        font-size: 1.6rem;
+        box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.8);
+    }
+    h3 {
+        font-size: 1.4rem;
+        text-transform: uppercase;
+    }
+    p {
+        max-width: 440px;
+        color: $pbw-navy;
+        font-weight: 600;
+    }
+}
+
+.o_pbw_cta_spaced {
+    padding-top: 56px;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Sign-up form
+// ────────────────────────────────────────────────────────────────────────────
+
+.o_pbw_form_panel {
+    padding: 30px;
+
+    .form-label {
+        font-weight: 800;
+        font-size: 0.86rem;
+    }
+    .form-control,
+    .form-select {
+        padding: 10px 14px;
+        border: 2px solid rgba(27, 32, 112, 0.14);
+        border-radius: 10px;
+        font-weight: 600;
+
+        &:focus {
+            border-color: $pbw-blue;
+            box-shadow: 0 0 0 3px rgba(61, 85, 232, 0.15);
+        }
+        &.is-invalid {
+            border-color: $pbw-red;
+        }
+    }
+    .form-text {
+        color: $pbw-muted;
+    }
+}
+
+.o_pbw_form_step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: $pbw-coral;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+}
+
+.o_pbw_choice_group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.o_pbw_choice {
+    position: relative;
+    cursor: pointer;
+
+    input {
+        position: absolute;
+        opacity: 0;
+    }
+    > span {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        height: 100%;
+        padding: 16px 18px;
+        border: 2px solid rgba(27, 32, 112, 0.14);
+        border-radius: 14px;
+        background: $pbw-cream;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+        .fa {
+            color: $pbw-coral;
+            font-size: 1.3rem;
+        }
+        small {
+            color: $pbw-muted;
+        }
+    }
+    input:checked + span {
+        border-color: $pbw-blue;
+        background: #fff;
+        box-shadow: 0 4px 0 rgba(61, 85, 232, 0.25);
+    }
+    input:focus-visible + span {
+        outline: 3px solid rgba(61, 85, 232, 0.4);
+    }
+}
+
+// The fields of the chosen option only.
+.o_pbw_choice_panel {
+    display: none;
+    margin-top: 16px;
+}
+
+.o_pbw_form_panel:has(input[name="is_member"][value="yes"]:checked) .o_pbw_choice_yes,
+.o_pbw_form_panel:has(input[name="is_member"][value="no"]:checked) .o_pbw_choice_no {
+    display: block;
+}
+
+.o_pbw_form_actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 2px dashed rgba(27, 32, 112, 0.12);
+}
+
+// Header "Sign up" button + login page link.
+header#top .o_pbw_header_signup {
+    border: 0;
+    border-radius: 8px;
+    background: $pbw-coral;
+    color: #fff !important;
+    font-weight: 800;
+    box-shadow: 0 3px 0 darken($pbw-coral, 20%);
+
+    &:hover {
+        background: lighten($pbw-coral, 4%);
+    }
+}
+
+.o_pbw_login_signup {
+    font-weight: 600;
+
+    a {
+        color: $pbw-coral;
+        font-weight: 800;
+    }
+}

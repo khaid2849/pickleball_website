@@ -1,0 +1,2416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pickleball_website
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-08 17:31+0000\n"
+"PO-Revision-Date: 2026-11-08 17:31+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/models/pickleball_member.py:0
+msgid ""
+"%(member)s: the website account must be a portal user (not an internal "
+"user)."
+msgstr ""
+"%(member)s: tài khoản website phải là người dùng portal (không phải người "
+"dùng nội bộ)."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/models/pickleball_member.py:0
+msgid "%s has no website account to approve."
+msgstr "%s không có tài khoản website nào để duyệt."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/wizard/website_access_wizard.py:0
+msgid "%s: a password is required for a new account."
+msgstr "%s: tài khoản mới cần có mật khẩu."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.match_row
+msgid "&amp;"
+msgstr "&amp;"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid "(unchanged)"
+msgstr "(giữ nguyên)"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid ""
+". Click it to open your account (check your spam folder too).\n"
+"                                    The link is valid for 48 hours."
+msgstr ""
+". Bấm vào link để mở tài khoản (nhớ kiểm tra cả thư mục spam).\n"
+"                                    Link có hiệu lực trong 48 giờ."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid ""
+". The team admin checks it's really you, then your\n"
+"                                    account opens — come back a bit later."
+msgstr ""
+". Admin của đội sẽ kiểm tra đúng là bạn rồi mở tài khoản\n"
+"                                    — bạn quay lại sau ít phút nhé."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid ""
+"3 to 40 characters: lowercase letters, digits, dots, dashes or underscores."
+msgstr ""
+"Từ 3 đến 40 ký tự: chữ thường không dấu, số, dấu chấm, gạch ngang hoặc gạch "
+"dưới."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "50 means broke even; higher means winning bets."
+msgstr "50 là hoà vốn; càng cao càng thắng nhiều tiền kèo."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "99 means no unpaid debt; lower with more and older debts."
+msgstr "99 là không nợ; nợ càng nhiều, càng lâu thì càng thấp."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.match_row
+msgid "<b>VS</b>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "<b>Z</b>"
+msgstr ""
+
+#. module: pickleball_website
+#: model:mail.template,body_html:pickleball_website.mail_template_website_signup_confirm
+msgid ""
+"<div style=\"margin:0; padding:24px; background:#fbf6ec; font-family:Montserrat,Arial,sans-serif; color:#1b2070;\">\n"
+"    <div style=\"max-width:560px; margin:0 auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 0 rgba(27,32,112,0.12);\">\n"
+"        <div style=\"padding:22px 28px; background:#3d55e8; color:#ffffff;\">\n"
+"            <span style=\"display:inline-block; padding:6px 16px; background:#ec5f4b; font-size:20px; font-weight:900; text-transform:uppercase;\">\n"
+"                <t t-out=\"object.env['website'].get_current_website().name or object.env.company.name\"/>\n"
+"            </span>\n"
+"        </div>\n"
+"        <div style=\"padding:28px;\">\n"
+"            <p style=\"font-size:18px; font-weight:800; margin:0 0 12px;\">Xin chào <t t-out=\"object.name\"/>!</p>\n"
+"            <p style=\"margin:0 0 20px; line-height:1.6;\">\n"
+"                Cảm ơn bạn đã đăng ký tài khoản thành viên. Bấm nút dưới đây để xác nhận email\n"
+"                và bắt đầu dùng khu thành viên của đội.\n"
+"            </p>\n"
+"            <p style=\"margin:0 0 24px;\">\n"
+"                <a t-att-href=\"ctx.get('confirm_url')\" style=\"display:inline-block; padding:12px 24px; background:#ec5f4b; color:#ffffff; border-radius:10px; font-weight:800; text-decoration:none; text-transform:uppercase;\">\n"
+"                    Xác nhận email\n"
+"                </a>\n"
+"            </p>\n"
+"            <p style=\"margin:0 0 6px; color:#5d6290; font-size:13px;\">\n"
+"                Thanks for signing up! Click the button above to confirm your email.\n"
+"                The link is valid for 48 hours. If you didn't sign up, just ignore this email.\n"
+"            </p>\n"
+"            <p style=\"margin:12px 0 0; color:#5d6290; font-size:12px; word-break:break-all;\">\n"
+"                <t t-out=\"ctx.get('confirm_url')\"/>\n"
+"            </p>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-arrow-left\"/> Schedule"
+msgstr "<i class=\"fa fa-arrow-left\"/> Lịch thi đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "<i class=\"fa fa-arrow-left\"/> Squad"
+msgstr "<i class=\"fa fa-arrow-left\"/> Đội hình"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-balance-scale\"/> Bill split"
+msgstr "<i class=\"fa fa-balance-scale\"/> Chia tiền"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-balance-scale\"/> My share"
+msgstr "<i class=\"fa fa-balance-scale\"/> Phần của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "<i class=\"fa fa-bar-chart\"/> Ratings"
+msgstr "<i class=\"fa fa-bar-chart\"/> Chỉ số"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "<i class=\"fa fa-bolt\"/> Next session"
+msgstr "<i class=\"fa fa-bolt\"/> Buổi chơi tới"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-calendar\"/><span>Schedule</span>"
+msgstr "<i class=\"fa fa-calendar\"/><span>Lịch thi đấu</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "<i class=\"fa fa-calendar-check-o\"/> Recent sessions"
+msgstr "<i class=\"fa fa-calendar-check-o\"/> Buổi gần đây"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-check\"/> Done"
+msgstr "<i class=\"fa fa-check\"/> Xong"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<i class=\"fa fa-check\"/> Free for team members"
+msgstr "<i class=\"fa fa-check\"/> Miễn phí cho thành viên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<i class=\"fa fa-check\"/> Latest payments"
+msgstr "<i class=\"fa fa-check\"/> Vừa đóng tiền"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<i class=\"fa fa-check\"/> Vietnamese &amp; English"
+msgstr "<i class=\"fa fa-check\"/> Tiếng Việt &amp; tiếng Anh"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<i class=\"fa fa-check\"/> Works on your phone"
+msgstr "<i class=\"fa fa-check\"/> Dùng tốt trên điện thoại"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "<i class=\"fa fa-check\"/> You're in"
+msgstr "<i class=\"fa fa-check\"/> Bạn đã có tên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<i class=\"fa fa-exclamation-circle\"/> Owing the team"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> Đang nợ đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-file-text-o\"/> Costs"
+msgstr "<i class=\"fa fa-file-text-o\"/> Chi phí"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "<i class=\"fa fa-flag-checkered\"/> Last 10 matches"
+msgstr "<i class=\"fa fa-flag-checkered\"/> 10 trận gần nhất"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-flag-checkered\"/> Matches"
+msgstr "<i class=\"fa fa-flag-checkered\"/> Các trận đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "<i class=\"fa fa-flag-checkered\"/> My recent matches"
+msgstr "<i class=\"fa fa-flag-checkered\"/> Trận gần đây của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-flag-checkered\"/><span>Results</span>"
+msgstr "<i class=\"fa fa-flag-checkered\"/><span>Kết quả</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-id-card-o\"/><span>Players</span>"
+msgstr "<i class=\"fa fa-id-card-o\"/><span>Cầu thủ</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Sample players — sign up to see the real "
+"team."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> Cầu thủ minh hoạ — đăng ký để xem đội hình "
+"thật."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_history_panel
+msgid "<i class=\"fa fa-list\"/> My sessions"
+msgstr "<i class=\"fa fa-list\"/> Các buổi của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-map-marker\"/> Venue"
+msgstr "<i class=\"fa fa-map-marker\"/> Địa điểm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-money\"/><span>Finance</span>"
+msgstr "<i class=\"fa fa-money\"/><span>Tài chính</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid "<i class=\"fa fa-qrcode me-2\"/>Team QR code"
+msgstr "<i class=\"fa fa-qrcode me-2\"/>Mã QR của đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid "<i class=\"fa fa-qrcode me-2\"/>VietQR"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<i class=\"fa fa-qrcode\"/> Team QR code"
+msgstr "<i class=\"fa fa-qrcode\"/> Mã QR của đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "<i class=\"fa fa-refresh me-2\"/>Send the email again"
+msgstr "<i class=\"fa fa-refresh me-2\"/>Gửi lại email"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<i class=\"fa fa-reply\"/> The team owes"
+msgstr "<i class=\"fa fa-reply\"/> Đội đang nợ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "<i class=\"fa fa-sign-in me-2\"/>Member login"
+msgstr "<i class=\"fa fa-sign-in me-2\"/>Đăng nhập thành viên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "<i class=\"fa fa-star\" role=\"img\" aria-label=\"Captain\"/>"
+msgstr "<i class=\"fa fa-star\" role=\"img\" aria-label=\"Đội trưởng\"/>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "<i class=\"fa fa-telegram\" role=\"img\" aria-label=\"Telegram\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-trophy\"/><span>Rankings</span>"
+msgstr "<i class=\"fa fa-trophy\"/><span>Xếp hạng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_transfers_panel
+msgid "<i class=\"fa fa-university\"/> My bank transfers"
+msgstr "<i class=\"fa fa-university\"/> Chuyển khoản của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "<i class=\"fa fa-user-circle me-2\"/>Go to my page"
+msgstr "<i class=\"fa fa-user-circle me-2\"/>Vào trang của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+msgid "<i class=\"fa fa-user-circle\"/><span>My page</span>"
+msgstr "<i class=\"fa fa-user-circle\"/><span>Của tôi</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "<i class=\"fa fa-user-plus me-2\"/>Create my account"
+msgstr "<i class=\"fa fa-user-plus me-2\"/>Tạo tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<i class=\"fa fa-users\"/> Players"
+msgstr "<i class=\"fa fa-users\"/> Người chơi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "<option value=\"\">— Pick your name —</option>"
+msgstr "<option value=\"\">— Chọn tên của bạn —</option>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid ""
+"<small>Transfer the exact amount with your name in the message to clear it "
+"automatically.</small>"
+msgstr ""
+"<small>Chuyển đúng số tiền, ghi tên trong nội dung để tự gạch nợ.</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<span class=\"o_pbw_kicker o_pbw_kicker_light\">Pickleball club</span>"
+msgstr ""
+"<span class=\"o_pbw_kicker o_pbw_kicker_light\">Câu lạc bộ pickleball</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "<span class=\"o_pbw_muted me-1\">Rank by:</span>"
+msgstr "<span class=\"o_pbw_muted me-1\">Xếp theo:</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "<span class=\"o_pbw_muted me-1\">Sort by:</span>"
+msgstr "<span class=\"o_pbw_muted me-1\">Sắp xếp:</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "<span class=\"o_pbw_next_label\"><i class=\"fa fa-bolt\"/> Next session</span>"
+msgstr ""
+"<span class=\"o_pbw_next_label\"><i class=\"fa fa-bolt\"/> Buổi chơi "
+"tới</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<span class=\"o_pbw_sample_badge\">Sample</span>"
+msgstr "<span class=\"o_pbw_sample_badge\">Minh hoạ</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"<span class=\"o_pbw_step_no\">1</span>\n"
+"                                <i class=\"fa fa-calendar-plus-o o_pbw_step_icon\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_step_no\">1</span>\n"
+"                                <i class=\"fa fa-user-plus o_pbw_step_icon\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"<span class=\"o_pbw_step_no\">2</span>\n"
+"                                <i class=\"fa fa-bolt o_pbw_step_icon\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_step_no\">2</span>\n"
+"                                <i class=\"fa fa-id-badge o_pbw_step_icon\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_step_no\">3</span>\n"
+"                                <i class=\"fa fa-check-circle o_pbw_step_icon\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"<span class=\"o_pbw_step_no\">3</span>\n"
+"                                <i class=\"fa fa-money o_pbw_step_icon\"/>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_tier_badge o_pbw_tier_bronze\">BRONZE</span> Getting "
+"started"
+msgstr ""
+"<span class=\"o_pbw_tier_badge o_pbw_tier_bronze\">BRONZE</span> Mới bắt đầu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<span class=\"o_pbw_tier_badge o_pbw_tier_gold\">GOLD</span> OVR 75 and up"
+msgstr "<span class=\"o_pbw_tier_badge o_pbw_tier_gold\">GOLD</span> OVR từ 75"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_tier_badge o_pbw_tier_icon\">ICON</span> OVR 85 and up —"
+" the legends"
+msgstr ""
+"<span class=\"o_pbw_tier_badge o_pbw_tier_icon\">ICON</span> OVR từ 85 — "
+"huyền thoại"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_tier_badge o_pbw_tier_silver\">SILVER</span> OVR 65 and "
+"up"
+msgstr ""
+"<span class=\"o_pbw_tier_badge o_pbw_tier_silver\">SILVER</span> OVR từ 65"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid ""
+"<span>\n"
+"                                            <i class=\"fa fa-id-badge\"/>\n"
+"                                            <b>Yes, I'm a member</b>\n"
+"                                            <small>I already play with the team: I pick my name in the list.</small>\n"
+"                                        </span>"
+msgstr ""
+"<span>\n"
+"                                            <i class=\"fa fa-id-badge\"/>\n"
+"                                            <b>Có, tôi là thành viên</b>\n"
+"                                            <small>Tôi đã chơi cùng đội: chọn tên mình trong danh sách.</small>\n"
+"                                        </span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid ""
+"<span>\n"
+"                                            <i class=\"fa fa-user-plus\"/>\n"
+"                                            <b>No, I'm new</b>\n"
+"                                            <small>Create my player profile.</small>\n"
+"                                        </span>"
+msgstr ""
+"<span>\n"
+"                                            <i class=\"fa fa-user-plus\"/>\n"
+"                                            <b>Chưa, tôi là người mới</b>\n"
+"                                            <small>Tạo hồ sơ cầu thủ cho tôi.</small>\n"
+"                                        </span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "<span>1</span> Your account"
+msgstr "<span>1</span> Tài khoản của bạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "<span>2</span> Are you already on the team?"
+msgstr "<span>2</span> Bạn đã là thành viên của đội chưa?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<span>Matches</span>"
+msgstr "<span>Trận</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<span>Members owing</span>"
+msgstr "<span>Người còn nợ</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "<span>OVR</span>"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<span>Paid so far</span>"
+msgstr "<span>Đã đóng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<span>Per player</span>"
+msgstr "<span>Mỗi người</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<span>Players</span>"
+msgstr "<span>Người chơi</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "<span>Sessions</span>"
+msgstr "<span>Buổi đã chơi</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<span>Team owes</span>"
+msgstr "<span>Đội đang nợ</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<span>To collect</span>"
+msgstr "<span>Đang chờ thu</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<span>To pay</span>"
+msgstr "<span>Cần đóng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "<span>Total cost</span>"
+msgstr "<span>Tổng chi</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "<span>Unpaid sessions</span>"
+msgstr "<span>Buổi chưa đóng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "<span>Win rate</span>"
+msgstr "<span>Tỉ lệ thắng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid ""
+"<strong>Access granted.</strong> Send each member their login and password\n"
+"                    (they can change the password on the website, under My Account &gt; Security).\n"
+"                    Passwords are not shown again after you close this window."
+msgstr ""
+"<strong>Đã cấp quyền.</strong> Gửi tên đăng nhập và mật khẩu cho từng thành viên\n"
+"                    (họ có thể đổi mật khẩu trên website, trong Tài khoản &gt; Bảo mật).\n"
+"                    Mật khẩu sẽ không hiện lại sau khi đóng cửa sổ này."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid ""
+"<strong>Website sign-up to approve:</strong>\n"
+"                        someone created the account"
+msgstr ""
+"<strong>Đăng ký website cần duyệt:</strong>\n"
+"                        có người đã tạo tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"A VietQR with the exact amount: transfer it and your debt is cleared "
+"automatically."
+msgstr "Mã VietQR đúng số tiền: chuyển khoản là tự gạch nợ."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid ""
+"A pickleball team that plays hard and splits the bill fairly.\n"
+"                                Schedule, results, rankings and court fees — all in one place."
+msgstr ""
+"Đội pickleball chơi hết mình, chia tiền sòng phẳng.\n"
+"                                Lịch đánh, kết quả, bảng xếp hạng và tiền sân — tất cả ở một nơi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"A real league table: overall rating, wins, win rate, form and bet winnings."
+msgstr ""
+"Bảng xếp hạng như một giải đấu thật: OVR, số trận thắng, tỉ lệ thắng, phong "
+"độ và tiền kèo."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "All"
+msgstr "Tất cả"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "All paid"
+msgstr "Đã đóng đủ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "All results"
+msgstr "Tất cả kết quả"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "All-court player"
+msgstr "Toàn diện"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Almost there"
+msgstr "Sắp xong rồi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Already have an account?"
+msgstr "Đã có tài khoản?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Already playing with us? Pick your name in the team list. New? We create "
+"your player profile."
+msgstr ""
+"Đã chơi cùng đội? Chọn tên mình trong danh sách. Người mới? Hệ thống tạo hồ "
+"sơ cầu thủ cho bạn."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Amount"
+msgstr "Số tiền"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "An account already uses this email."
+msgstr "Email này đã được một tài khoản khác sử dụng."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "Approve"
+msgstr "Duyệt"
+
+#. module: pickleball_website
+#: model:ir.model.fields.selection,name:pickleball_website.selection__pickleball_member__website_state__approved
+msgid "Approved"
+msgstr "Đã duyệt"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Apr"
+msgstr "Th4"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Are you on the team?"
+msgstr "Bạn là thành viên của đội?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Ask the Telegram or Zalo bot for the next session, your balance or your "
+"player card."
+msgstr ""
+"Hỏi bot Telegram hoặc Zalo về buổi tới, số dư hay thẻ cầu thủ của bạn."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_no_access
+msgid ""
+"Ask the team admin to grant website access to your member profile,\n"
+"                            then log in again."
+msgstr ""
+"Nhờ admin của đội cấp quyền website cho hồ sơ thành viên của bạn,\n"
+"                            rồi đăng nhập lại."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid ""
+"Ask the team admin to grant website access to your member profile, then log "
+"in again."
+msgstr ""
+"Nhờ admin của đội cấp quyền website cho hồ sơ thành viên của bạn, rồi đăng "
+"nhập lại."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "At least %s characters."
+msgstr "Tối thiểu %s ký tự."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Attendance"
+msgstr "Chuyên cần"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Aug"
+msgstr "Th8"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Automatic bill split"
+msgstr "Chia tiền tự động"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Balls"
+msgstr "Bóng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Bank transfer QR code"
+msgstr "Mã QR chuyển khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "Bet"
+msgstr "Tiền kèo"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.match_row
+msgid "Bet per player"
+msgstr "Tiền kèo / người"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Bet winnings"
+msgstr "Tiền kèo"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Bets"
+msgstr "Tiền kèo"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Betting"
+msgstr "Kèo"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Book &amp; sign up"
+msgstr "Đặt sân &amp; điểm danh"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Booked by"
+msgstr "Người đặt sân:"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Booked the court"
+msgstr "Người đặt sân"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Bot in the group chat"
+msgstr "Bot trong nhóm chat"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "Can Log In"
+msgstr "Đăng nhập được"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid "Cancel"
+msgstr "Huỷ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "Card tier"
+msgstr "Hạng thẻ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Card tiers to climb"
+msgstr "Hạng thẻ để chinh phục"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "Change Login / Password"
+msgstr "Đổi tên đăng nhập / mật khẩu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid "Change password"
+msgstr "Đổi mật khẩu"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Checking"
+msgstr "Đang kiểm tra"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid "Close"
+msgstr "Đóng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "Club Website"
+msgstr "Website CLB"
+
+#. module: pickleball_website
+#: model:mail.template,name:pickleball_website.mail_template_website_signup_confirm
+msgid "Club Website: Confirm Sign-up"
+msgstr "Website CLB: Xác nhận đăng ký"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Coming up"
+msgstr "Sắp diễn ra"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Confirm &amp; play"
+msgstr "Xác nhận &amp; ra sân"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Confirm password"
+msgstr "Nhập lại mật khẩu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Confirm your email"
+msgstr "Xác nhận email của bạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Confirm your email (new players) or wait for the admin's OK (existing "
+"members) — then you're in."
+msgstr ""
+"Xác nhận email (người mới) hoặc chờ admin duyệt (thành viên cũ) — vậy là "
+"xong."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Confirmed"
+msgstr "Đã chốt"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Court"
+msgstr "Sân"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Court fees"
+msgstr "Tiền sân"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Court rental"
+msgstr "Tiền sân"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"Court, balls and drinks are split evenly. A bank transfer with your name "
+"clears your debt automatically through Sepay."
+msgstr ""
+"Tiền sân, bóng, nước được chia đều. Chuyển khoản đúng nội dung là tự gạch nợ"
+" qua Sepay."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Courts conquered"
+msgstr "Sân đã chinh phục"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Create my account"
+msgstr "Tạo tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Create my account <i class=\"fa fa-arrow-right ms-2\"/>"
+msgstr "Tạo tài khoản <i class=\"fa fa-arrow-right ms-2\"/>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_login_sign_up
+msgid "Create one"
+msgstr "Tạo tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Create your account"
+msgstr "Tạo tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Create your account now — your player card is waiting."
+msgstr "Tạo tài khoản ngay — thẻ cầu thủ của bạn đang chờ."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Create your account to see the team's real rankings, results and schedule."
+msgstr ""
+"Tạo tài khoản để xem bảng xếp hạng, kết quả và lịch thi đấu thật của đội."
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__create_uid
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__create_date
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "DUPR"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "DUPR rating"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "Date"
+msgstr "Ngày"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Dec"
+msgstr "Th12"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Defender"
+msgstr "Phòng thủ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "Details"
+msgstr "Chi tiết"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Dinker"
+msgstr "Dink / kiểm soát"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__display_name
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pickleball_website
+#: model:ir.model.fields.selection,name:pickleball_website.selection__pickleball_website_access_wizard__state__done
+msgid "Done"
+msgstr "Xong"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"Doubles all session long, every match and bet recorded. Scores, form and "
+"player card ratings update automatically."
+msgstr ""
+"Đánh đôi suốt buổi, ghi lại từng trận và kèo. Tỉ số, phong độ và chỉ số trên"
+" thẻ cầu thủ tự cập nhật."
+
+#. module: pickleball_website
+#: model:ir.model.fields.selection,name:pickleball_website.selection__pickleball_website_access_wizard__state__draft
+msgid "Draft"
+msgstr "Nháp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid ""
+"Each member gets a portal account to log in to the club website.\n"
+"                    Check or change the suggested logins and passwords, then click\n"
+"                    <strong>Grant Access</strong>. Existing accounts keep their password\n"
+"                    unless you type a new one."
+msgstr ""
+"Mỗi thành viên được cấp một tài khoản portal để đăng nhập website CLB.\n"
+"                    Kiểm tra hoặc sửa tên đăng nhập và mật khẩu gợi ý, rồi bấm\n"
+"                    <strong>Grant Access</strong>. Tài khoản đã có sẽ giữ mật khẩu cũ\n"
+"                    trừ khi bạn nhập mật khẩu mới."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Email"
+msgstr "Email"
+
+#. module: pickleball_website
+#: model:ir.model.fields.selection,name:pickleball_website.selection__pickleball_member__website_state__pending_email
+msgid "Email Not Confirmed"
+msgstr "Chưa xác nhận email"
+
+#. module: pickleball_website
+#: model:ir.model.fields,help:pickleball_website.field_pickleball_member__website_state
+msgid ""
+"Email Not Confirmed: a new person signed up on the website and has not clicked the link of the confirmation email yet.\n"
+"Waiting for Approval: someone signed up claiming to be this member; an admin must approve it before they can see the members area.\n"
+"Approved: the account can use the members area."
+msgstr ""
+"Chưa xác nhận email: người mới đăng ký trên website, chưa bấm link trong email xác nhận.\n"
+"Chờ duyệt: có người đăng ký và nhận là thành viên này; admin phải duyệt thì mới vào được khu thành viên.\n"
+"Đã duyệt: tài khoản dùng được khu thành viên."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Email sent."
+msgstr "Đã gửi email."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "Enter a valid email address."
+msgstr "Nhập email hợp lệ."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "Enter a valid phone number."
+msgstr "Nhập số điện thoại hợp lệ."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "Enter your full name."
+msgstr "Nhập họ tên của bạn."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Equipment"
+msgstr "Dụng cụ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Every doubles match on a scoreboard, session by session, with your partners "
+"and opponents."
+msgstr ""
+"Từng trận đánh đôi trên bảng tỉ số, theo từng buổi, với đồng đội và đối thủ."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "Every member's player card — ratings update after each session."
+msgstr "Thẻ cầu thủ của từng thành viên — chỉ số tự cập nhật sau mỗi buổi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Every player gets a card"
+msgstr "Mỗi người một thẻ cầu thủ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+msgid "Every recorded match, newest first."
+msgstr "Tất cả các trận đã ghi nhận, mới nhất trước."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Everything about the team"
+msgstr "Mọi thứ về đội"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__existing_account
+msgid "Existing Account"
+msgstr "Đã có tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Experience"
+msgstr "Kinh nghiệm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Fair and square"
+msgstr "Sòng phẳng là trên hết"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Fair play"
+msgstr "Sòng phẳng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Feb"
+msgstr "Th2"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_finance
+msgid "Finance"
+msgstr "Tài chính"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Find your name"
+msgstr "Tìm tên của bạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Form"
+msgstr "Phong độ"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Friday"
+msgstr "Thứ 6"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Get my card"
+msgstr "Nhận thẻ của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Gets"
+msgstr "Nhận"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Go to my page"
+msgstr "Vào trang của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid "Grant Access"
+msgstr "Cấp quyền"
+
+#. module: pickleball_website
+#: model:ir.model,name:pickleball_website.model_pickleball_website_access_wizard
+msgid "Grant Club Website Access"
+msgstr "Cấp quyền website CLB"
+
+#. module: pickleball_website
+#: model:ir.model,name:pickleball_website.model_pickleball_website_access_wizard_line
+msgid "Grant Club Website Access — Member"
+msgstr "Cấp quyền website CLB — Thành viên"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/models/pickleball_member.py:0
+#: model:ir.actions.act_window,name:pickleball_website.action_pickleball_website_access_wizard
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid "Grant Website Access"
+msgstr "Cấp quyền website"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Hall of fame"
+msgstr "Bảng vàng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_website_access_wizard_form
+msgid "Has Account"
+msgstr "Đã có tài khoản"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_search_website
+msgid "Has Website Access"
+msgstr "Có quyền website"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "Hello,"
+msgstr "Xin chào,"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid "Home"
+msgstr "Trang chủ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "How the team works"
+msgstr "Cách đội vận hành"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__id
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__id
+msgid "ID"
+msgstr ""
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Ignored"
+msgstr "Bỏ qua"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Jan"
+msgstr "Th1"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Jersey #%s"
+msgstr "Áo số %s"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Join the team"
+msgstr "Tham gia đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Join the team that plays hard and splits the bill fairly.\n"
+"                                Your own player card, live rankings, every match result and automatic court fee splits — all in one place."
+msgstr ""
+"Tham gia đội chơi hết mình, chia tiền sòng phẳng.\n"
+"                                Thẻ cầu thủ riêng, bảng xếp hạng trực tiếp, kết quả từng trận và tự động chia tiền sân — tất cả ở một nơi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Joining takes a minute"
+msgstr "Tham gia chỉ mất một phút"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Jul"
+msgstr "Th7"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Jun"
+msgstr "Th6"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "LOSS"
+msgstr "THUA"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__write_uid
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__write_date
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Latest results"
+msgstr "Kết quả mới nhất"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Learn more"
+msgstr "Tìm hiểu thêm"
+
+#. module: pickleball_website
+#: model:ir.model.fields,help:pickleball_website.field_pickleball_website_access_wizard_line__password
+msgid "Leave empty to keep the current password of an existing account."
+msgstr "Để trống để giữ mật khẩu hiện tại của tài khoản đã có."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Link expired"
+msgstr "Link đã hết hạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Log in"
+msgstr "Đăng nhập"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Log in <i class=\"fa fa-arrow-right ms-2\"/>"
+msgstr "Đăng nhập <i class=\"fa fa-arrow-right ms-2\"/>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Log in to get a new confirmation email."
+msgstr "Đăng nhập để nhận email xác nhận mới."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Log in to see your player card, match history and what you owe."
+msgstr "Đăng nhập để xem thẻ cầu thủ, lịch sử trận đấu và số tiền của bạn."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_no_access
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Log out"
+msgstr "Đăng xuất"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__login
+msgid "Login"
+msgstr "Tên đăng nhập"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/wizard/website_access_wizard.py:0
+msgid "Login \"%(login)s\" is already used by %(user)s."
+msgstr "Tên đăng nhập \"%(login)s\" đã được dùng bởi %(user)s."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.form_dots
+msgid "Loss"
+msgstr "Thua"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Mar"
+msgstr "Th3"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+msgid "Match results"
+msgstr "Kết quả trận đấu"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Matches"
+msgstr "Số trận"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Matches played"
+msgstr "Trận đã đấu"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "May"
+msgstr "Th5"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__member_id
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Member"
+msgstr "Thành viên"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__line_ids
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Members"
+msgstr "Thành viên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_no_access
+msgid "Members area"
+msgstr "Khu vực thành viên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_no_access
+msgid "Members only"
+msgstr "Chỉ dành cho thành viên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid ""
+"Members who have played, ranked. OVR combines the six ratings of the player "
+"card."
+msgstr ""
+"Xếp hạng các thành viên đã có trận. OVR tổng hợp từ 6 chỉ số trên thẻ cầu "
+"thủ."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Monday"
+msgstr "Thứ 2"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid "My finance"
+msgstr "Tài chính của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid "My page"
+msgstr "Trang của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "My profile <i class=\"fa fa-arrow-right\"/>"
+msgstr "Hồ sơ của tôi <i class=\"fa fa-arrow-right\"/>"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Name"
+msgstr "Tên"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Net player"
+msgstr "Lưới / volley"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Next sessions"
+msgstr "Buổi chơi tới"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Next sessions with time, courts and who's coming — and the history of every "
+"session played."
+msgstr ""
+"Các buổi sắp tới với giờ, sân và ai sẽ đi — cùng lịch sử mọi buổi đã chơi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_search_website
+msgid "No Website Access"
+msgstr "Chưa có quyền website"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_login_sign_up
+msgid "No account yet?"
+msgstr "Chưa có tài khoản?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "No costs yet."
+msgstr "Chưa có chi phí."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "No match recorded for this session."
+msgstr "Chưa có trận nào được ghi cho buổi này."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "No match yet:"
+msgstr "Chưa có trận:"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "No matches recorded yet."
+msgstr "Chưa có trận nào được ghi nhận."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "No player in this tier"
+msgstr "Không có cầu thủ nào ở hạng này"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+msgid "No results yet"
+msgstr "Chưa có kết quả nào"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "No session played yet."
+msgstr "Chưa tham gia buổi nào."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "No session scheduled yet."
+msgstr "Chưa có buổi nào được lên lịch."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "No sessions yet."
+msgstr "Chưa có buổi nào."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "No upcoming session"
+msgstr "Chưa có buổi nào sắp tới"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Nobody owes the team — great!"
+msgstr "Không ai nợ đội — tuyệt vời!"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "None yet."
+msgstr "Chưa có."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "Not signed up"
+msgstr "Bạn chưa đăng ký"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid ""
+"Not your email: e.g. <b>an.nguyen</b>. Lowercase letters, digits, dots."
+msgstr ""
+"Không cần là email: ví dụ <b>an.nguyen</b>. Chữ thường không dấu, số, dấu "
+"chấm."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"Nothing scheduled yet — the next session shows up here as soon as a court is"
+" booked."
+msgstr "Chưa có lịch — buổi tiếp theo sẽ được đăng ngay khi đặt sân."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_history_panel
+msgid "Nothing yet."
+msgstr "Chưa có khoản nào."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Nov"
+msgstr "Th11"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Number of matches played."
+msgstr "Số trận đã đánh."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "OVR"
+msgstr ""
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Oct"
+msgstr "Th10"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+msgid "On court"
+msgstr "Sân đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "One minute, and your player card is waiting for you."
+msgstr "Chỉ một phút, thẻ cầu thủ của bạn đã sẵn sàng."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid ""
+"Only members who don't have an account yet are listed.\n"
+"                                        An admin checks that it's really you before your account opens."
+msgstr ""
+"Chỉ hiện những thành viên chưa có tài khoản.\n"
+"                                        Admin sẽ kiểm tra đúng là bạn trước khi mở tài khoản."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Open"
+msgstr "Đang mở"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "Opponents"
+msgstr "Đối thủ"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Other"
+msgstr "Khác"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Over all matches (pulled towards 50% while there are few)."
+msgstr "Tính trên tất cả các trận (ít trận thì kéo về 50%)."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Overall rating"
+msgstr "Điểm tổng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Owes"
+msgstr "Còn nợ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Owing since"
+msgstr "Nợ từ buổi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Paid by"
+msgstr "Ứng trước:"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "Partner"
+msgstr "Đồng đội"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__password
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Password"
+msgstr "Mật khẩu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Past sessions"
+msgstr "Lịch sử các buổi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Pay in one scan"
+msgstr "Quét một lần là xong"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Pays"
+msgstr "Đóng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Pending"
+msgstr "Chưa xong"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Per player"
+msgstr "Mỗi người"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Phone <span class=\"o_pbw_muted\">(optional)</span>"
+msgstr "Số điện thoại <span class=\"o_pbw_muted\">(không bắt buộc)</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Pick a username and a password, give your email and, if you like, your phone"
+" number."
+msgstr "Chọn tên đăng nhập, mật khẩu, nhập email và số điện thoại nếu muốn."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "Pick your name in the list."
+msgstr "Hãy chọn tên của bạn trong danh sách."
+
+#. module: pickleball_website
+#: model:ir.model,name:pickleball_website.model_pickleball_member
+msgid "Pickleball Team Member"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Pickleball club"
+msgstr "Câu lạc bộ pickleball"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Play &amp; record"
+msgstr "Ra sân &amp; ghi kèo"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"Play hard — split the bill fairly.\n"
+"                                The whole team's schedule, results, rankings and court fees, updated after every session."
+msgstr ""
+"Chơi hết mình — chia tiền sòng phẳng.\n"
+"                                Lịch đánh, kết quả, bảng xếp hạng và tiền sân của cả đội, cập nhật theo từng buổi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Play style"
+msgstr "Lối chơi"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Played"
+msgstr "Đã chơi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Player"
+msgstr "Cầu thủ"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_players
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Players"
+msgstr "Cầu thủ"
+
+#. module: pickleball_website
+#: model:ir.model.fields,help:pickleball_website.field_pickleball_member__user_id
+msgid ""
+"Portal account this member logs in to the club website with: created by the "
+"member on the website, or granted by an admin with the \"Grant Website "
+"Access\" action."
+msgstr ""
+"Tài khoản portal thành viên dùng để đăng nhập website CLB. Cấp bằng thao tác"
+" \"Grant Website Access\"."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Power hitter"
+msgstr "Đánh mạnh"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Rank #"
+msgstr "Hạng #"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Rank by"
+msgstr "Xếp theo"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_rankings
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Rankings"
+msgstr "Bảng xếp hạng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Ratings on your card"
+msgstr "Chỉ số trên thẻ của bạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Ready to join the team?"
+msgstr "Sẵn sàng tham gia đội?"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Received"
+msgstr "Đã nhận"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.form_dots
+msgid "Recent form (newest first)"
+msgstr "Phong độ gần đây (mới nhất trước)"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "Reject"
+msgstr "Từ chối"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "Result"
+msgstr "Kết quả"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_matches
+msgid "Results"
+msgstr "Kết quả"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+msgid "Results show up here once matches are recorded in a session."
+msgstr "Kết quả sẽ hiện ở đây sau khi các trận được ghi trong buổi chơi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "Revoke"
+msgstr "Thu hồi"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Saturday"
+msgstr "Thứ 7"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_schedule
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Schedule"
+msgstr "Lịch thi đấu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "Schedule <i class=\"fa fa-arrow-right\"/>"
+msgstr "Lịch thi đấu <i class=\"fa fa-arrow-right\"/>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Season"
+msgstr "Mùa giải"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "See all"
+msgstr "Xem tất cả"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "See details <i class=\"fa fa-arrow-right\"/>"
+msgstr "Xem chi tiết <i class=\"fa fa-arrow-right\"/>"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/wizard/website_access_wizard.py:0
+msgid "Select at least one member."
+msgstr "Chọn ít nhất một thành viên."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Sep"
+msgstr "Th9"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Session ·"
+msgstr "Buổi chơi ·"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Sessions joined over the last 90 days."
+msgstr "Số buổi tham gia trong 90 ngày qua."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Sessions played"
+msgstr "Buổi đã chơi"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_history_panel
+msgid "Settled"
+msgstr "Đã chia tiền"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_header_sign_up
+msgid "Sign up"
+msgstr "Đăng ký"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "Sort"
+msgstr "Sắp xếp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_players
+msgid "Squad"
+msgstr "Đội hình"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard__state
+msgid "State"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Sunday"
+msgstr "Chủ nhật"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Team captain"
+msgstr "Đội trưởng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Team finance"
+msgstr "Tài chính đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Team owes"
+msgstr "Đội nợ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Telegram"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Telegram &amp; Zalo bot"
+msgstr "Bot Telegram &amp; Zalo"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "Tell us whether you are already a member."
+msgstr "Cho biết bạn đã là thành viên hay chưa."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid "The account is archived and unlinked from this member. Continue?"
+msgstr "Tài khoản sẽ bị lưu trữ và bỏ liên kết với thành viên này. Tiếp tục?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid "The club"
+msgstr "Câu lạc bộ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid ""
+"The email could not be sent right now. Try again in a moment, or ask the "
+"team admin."
+msgstr "Chưa gửi được email. Thử lại sau ít phút, hoặc liên hệ admin của đội."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "The next session shows up here as soon as someone books a court."
+msgstr "Buổi tiếp theo sẽ xuất hiện ở đây ngay khi có người đặt sân."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/wizard/website_access_wizard.py:0
+msgid "The same login is used twice: %s"
+msgstr "Một tên đăng nhập bị dùng hai lần: %s"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid "The team owes you"
+msgstr "Đội đang nợ bạn"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "The two passwords are different."
+msgstr "Hai mật khẩu không khớp."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "This link is invalid or has expired"
+msgstr "Link không hợp lệ hoặc đã hết hạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid ""
+"This member won't be able to log in to the club website anymore. Continue?"
+msgstr "Thành viên này sẽ không đăng nhập được website CLB nữa. Tiếp tục?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "This month"
+msgstr "Buổi tháng này"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "This session's bill hasn't been split yet."
+msgstr "Buổi này chưa được chốt chia tiền."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/register.py:0
+msgid "This username is already taken."
+msgstr "Tên đăng nhập này đã có người dùng."
+
+#. module: pickleball_website
+#: model:ir.model.constraint,message:pickleball_website.constraint_pickleball_member_user_id_uniq
+msgid "This website account is already linked to another member."
+msgstr "Tài khoản website này đã được liên kết với thành viên khác."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Three steps per session"
+msgstr "Ba bước mỗi buổi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Three steps to get in"
+msgstr "Ba bước để tham gia"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Thursday"
+msgstr "Thứ 5"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Time"
+msgstr "Giờ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "Top players"
+msgstr "Top cầu thủ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Total cost"
+msgstr "Tổng chi"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Tuesday"
+msgstr "Thứ 3"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_history_panel
+msgid "Unpaid"
+msgstr "Chưa đóng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/models/pickleball_member.py:0
+msgid "Unsupported search on Website Access."
+msgstr "Không hỗ trợ kiểu tìm kiếm này trên Quyền website."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "Upcoming sessions and every session played so far."
+msgstr "Các buổi sắp tới và lịch sử những buổi đã chơi."
+
+#. module: pickleball_website
+#: model:ir.model.fields,help:pickleball_website.field_pickleball_member__website_login
+msgid "Used to log into the system"
+msgstr ""
+
+#. module: pickleball_website
+#: model:ir.model,name:pickleball_website.model_res_users
+msgid "User"
+msgstr "Người dùng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Username"
+msgstr "Tên đăng nhập"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_matches_table
+msgid "WIN"
+msgstr "THẮNG"
+
+#. module: pickleball_website
+#: model:ir.model.fields.selection,name:pickleball_website.selection__pickleball_member__website_state__pending_approval
+msgid "Waiting for Approval"
+msgstr "Chờ duyệt"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Waiting for the admin's approval"
+msgstr "Đang chờ admin duyệt"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Water & drinks"
+msgstr "Nước uống"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "We send you an email: click its link to confirm your account."
+msgstr "Chúng tôi sẽ gửi email: bấm link trong email để xác nhận tài khoản."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "We sent a link to"
+msgstr "Chúng tôi đã gửi link tới"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_member__has_website_access
+msgid "Website Access"
+msgstr "Quyền website"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_member__user_id
+msgid "Website Account"
+msgstr "Tài khoản website"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_member__website_state
+msgid "Website Account Status"
+msgstr "Trạng thái tài khoản website"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_member__website_login
+msgid "Website Login"
+msgstr "Tên đăng nhập website"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_search_website
+msgid "Website Sign-up to Approve"
+msgstr "Đăng ký website chờ duyệt"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_member__website_signup_token
+msgid "Website Signup Token"
+msgstr ""
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_member__website_signup_token_expiry
+msgid "Website Signup Token Expiry"
+msgstr ""
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Wednesday"
+msgstr "Thứ 4"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Welcome to the team!"
+msgstr "Chào mừng bạn đến với đội!"
+
+#. module: pickleball_website
+#: model:ir.model.fields,help:pickleball_website.field_pickleball_website_access_wizard_line__login
+msgid "What the member types as \"Email / Login\" on the website."
+msgstr "Thành viên nhập vào ô \"Email / Tên đăng nhập\" trên website."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"What you owe or are owed, your payments and bank transfers — visible to you "
+"only."
+msgstr ""
+"Bạn đang nợ hay được nợ, các khoản đã đóng và chuyển khoản — chỉ mình bạn "
+"xem được."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Who owes the team and whom the team owes (admin view)."
+msgstr "Ai đang nợ đội, đội đang nợ ai (chế độ admin)."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Who's on top?"
+msgstr "Ai đang dẫn đầu?"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid ""
+"Whoever books the court sends the booking screenshot to the bot and the "
+"session is created. Players add their names."
+msgstr ""
+"Người đặt sân gửi ảnh booking cho bot, buổi chơi tự được tạo. Ai đi thì báo "
+"tên."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.form_dots
+msgid "Win"
+msgstr "Thắng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "Win %"
+msgstr "Thắng %"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Win rate"
+msgstr "Tỉ lệ thắng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Win rate over the last 10 matches."
+msgstr "Tỉ lệ thắng 10 trận gần nhất."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Win rate, form, experience, attendance, betting and fair play: six ratings,\n"
+"                                recalculated after every session, give your overall rating — and your card tier."
+msgstr ""
+"Tỉ lệ thắng, phong độ, kinh nghiệm, chuyên cần, kèo và sòng phẳng: sáu chỉ số\n"
+"                                tính lại sau mỗi buổi tạo nên điểm OVR — và hạng thẻ của bạn."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.match_row
+msgid "Winner"
+msgstr "Thắng"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/club.py:0
+msgid "Wins"
+msgstr "Số trận thắng"
+
+#. module: pickleball_website
+#: model:ir.model.fields,field_description:pickleball_website.field_pickleball_website_access_wizard_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "Won - Lost"
+msgstr "Thắng - Thua"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid "You are all paid up"
+msgstr "Bạn đã đóng đủ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "You have nothing to pay or receive for this session."
+msgstr "Buổi này bạn không phải đóng hay nhận gì."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid "You owe the team"
+msgstr "Bạn đang nợ đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "You signed up as"
+msgstr "Bạn đã đăng ký với tên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_no_access
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Your account is not linked to a club member"
+msgstr "Tài khoản của bạn chưa được liên kết với thành viên nào"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_pending
+msgid "Your account is on its way"
+msgstr "Tài khoản của bạn sắp sẵn sàng"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "Your court fees, payments and bank transfers."
+msgstr "Tiền sân, các khoản đã đóng và chuyển khoản của bạn."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Your email is confirmed"
+msgstr "Email của bạn đã được xác nhận"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Your full name"
+msgstr "Họ và tên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Your money, private"
+msgstr "Tiền của bạn, riêng tư"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register
+msgid "Your name in the team"
+msgstr "Tên của bạn trong đội"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Your player card"
+msgstr "Thẻ cầu thủ của bạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_register_confirmed
+msgid "Your player card is ready,"
+msgstr "Thẻ cầu thủ của bạn đã sẵn sàng,"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card
+msgid "Zalo"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.balance_panel
+msgid "already received by bank transfer, deducted from your debt."
+msgstr "đã nhận qua chuyển khoản, đã trừ vào số nợ."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.view_pickleball_member_form_website
+msgid ""
+"and says they are this member. Check it's really them before approving."
+msgstr "và nhận là thành viên này. Hãy kiểm tra đúng người trước khi duyệt."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+msgid "courts)"
+msgstr "sân)"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "guest(s) of"
+msgstr "khách của"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard
+msgid "in the team · OVR"
+msgstr "trong đội · OVR"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+msgid "matches ·"
+msgstr "trận ·"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_finance
+msgid "members"
+msgstr "người"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_matches
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "players"
+msgstr "người"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home
+msgid "players signed up"
+msgstr "người đã đăng ký"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+msgid "sessions"
+msgstr "buổi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "settled"
+msgstr "đã xong"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_rankings
+msgid "wins"
+msgstr "trận thắng"
+
+#. module: pickleball_website
+#: model:mail.template,subject:pickleball_website.mail_template_website_signup_confirm
+msgid "{{ object.env.company.name }} — xác nhận email / confirm your email"
+msgstr ""
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer_copyright
+msgid "· Pickleball Club"
+msgstr "· Câu lạc bộ Pickleball"

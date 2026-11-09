@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Balance panel of the logged-in member.
+         Params: member, debt (outstanding, after bank credit), team_qr_url. -->
+    <template id="balance_panel" name="Club: Balance Panel">
+        <t t-set="_balance" t-value="round(member.balance or 0)"/>
+        <div t-attf-class="o_pbw_balance o_pbw_balance_{{ 'owes' if _balance &lt; 0 else ('owed' if _balance &gt; 0 else 'paid') }}">
+            <div class="o_pbw_balance_main">
+                <span class="o_pbw_balance_label">
+                    <t t-if="_balance &lt; 0">You owe the team</t>
+                    <t t-elif="_balance &gt; 0">The team owes you</t>
+                    <t t-else="">You are all paid up</t>
+                </span>
+                <b class="o_pbw_balance_amount">
+                    <t t-if="_balance" t-out="vnd(abs(_balance))"/>
+                    <i t-else="" class="fa fa-check-circle"/>
+                </b>
+                <span t-if="member.bank_credit &gt; 0.5" class="o_pbw_balance_note">
+                    <t t-out="vnd(member.bank_credit)"/> already received by bank transfer, deducted from your debt.
+                </span>
+            </div>
+            <div t-if="debt &gt; 0.5" class="o_pbw_balance_actions">
+                <a t-if="member.payment_qr_url" t-att-href="member.payment_qr_url" target="_blank" rel="noopener"
+                   class="btn o_pbw_btn o_pbw_btn_light"><i class="fa fa-qrcode me-2"/>VietQR <t t-out="vnd(debt)"/></a>
+                <a t-elif="team_qr_url" t-att-href="team_qr_url" target="_blank" rel="noopener"
+                   class="btn o_pbw_btn o_pbw_btn_light"><i class="fa fa-qrcode me-2"/>Team QR code</a>
+                <small>Transfer the exact amount with your name in the message to clear it automatically.</small>
+            </div>
+        </div>
+    </template>
+
+    <template id="club_dashboard" name="Club: My Dashboard">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">My page</t>
+            <t t-set="page_title">Hello, <t t-out="short_name(me.name)"/>!</t>
+            <t t-set="page_subtitle"><t t-if="my_rank">Rank #<t t-out="my_rank"/> in the team · OVR <t t-out="me.card_overall"/></t></t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-xl-3 d-flex justify-content-center">
+                            <div class="o_pbw_sticky">
+                                <t t-call="pickleball_website.player_card">
+                                    <t t-set="member" t-value="me"/>
+                                    <t t-set="href" t-value="'/club/players/%s' % me.id"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-xl-9">
+                            <t t-call="pickleball_website.balance_panel">
+                                <t t-set="member" t-value="me"/>
+                                <t t-set="debt" t-value="my_debt"/>
+                            </t>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-6 col-xl-3">
+                                    <t t-call="pickleball_website.stat_tile"><t t-set="light" t-value="True"/><t t-set="value" t-value="sessions_played"/><t t-set="icon" t-value="'fa-calendar-check-o'"/>Sessions played</t>
+                                </div>
+                                <div class="col-6 col-xl-3">
+                                    <t t-call="pickleball_website.stat_tile"><t t-set="light" t-value="True"/><t t-set="value" t-value="sessions_this_month"/><t t-set="icon" t-value="'fa-calendar'"/>This month</t>
+                                </div>
+                                <div class="col-6 col-xl-3">
+                                    <t t-call="pickleball_website.stat_tile"><t t-set="light" t-value="True"/><t t-set="value" t-value="'%s-%s' % (me.total_wins, me.total_losses)"/><t t-set="icon" t-value="'fa-flag-checkered'"/>Won - Lost</t>
+                                </div>
+                                <div class="col-6 col-xl-3">
+                                    <t t-call="pickleball_website.stat_tile"><t t-set="light" t-value="True"/><t t-set="value" t-value="vnd(me.bet_net_total, signed=True)"/><t t-set="icon" t-value="'fa-money'"/>Bet winnings</t>
+                                </div>
+                            </div>
+
+                            <!-- Next session -->
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-bolt"/> Next session</h3>
+                                    <a href="/club/schedule" class="o_pbw_more">Schedule <i class="fa fa-arrow-right"/></a>
+                                </div>
+                                <t t-if="next_session">
+                                    <div class="o_pbw_session_row">
+                                        <t t-call="pickleball_website.date_block">
+                                            <t t-set="day" t-value="next_session.date"/>
+                                            <t t-set="accent" t-value="True"/>
+                                        </t>
+                                        <div class="o_pbw_session_info">
+                                            <b><t t-out="hm(next_session.time_start)"/> – <t t-out="hm(next_session.time_end)"/></b>
+                                            <span><i class="fa fa-map-marker"/> <t t-out="next_session.court_id.name"/></span>
+                                            <span t-if="in_next_session" class="o_pbw_pill o_pbw_pill_settled"><i class="fa fa-check"/> You're in</span>
+                                            <span t-else="" class="o_pbw_pill o_pbw_pill_draft">Not signed up</span>
+                                        </div>
+                                        <div class="o_pbw_avatar_stack d-none d-md-flex">
+                                            <t t-foreach="next_session.participant_ids[:8]" t-as="member">
+                                                <t t-call="pickleball_website.avatar"><t t-set="size" t-value="'sm'"/></t>
+                                            </t>
+                                            <span t-if="next_session.total_player_count &gt; 8" class="o_pbw_avatar o_pbw_avatar_sm o_pbw_avatar_more">
+                                                +<t t-out="next_session.total_player_count - 8"/>
+                                            </span>
+                                        </div>
+                                        <a t-attf-href="/club/schedule/{{ next_session.id }}" class="btn o_pbw_btn o_pbw_btn_primary btn-sm">Details</a>
+                                    </div>
+                                </t>
+                                <p t-else="" class="text-muted mb-0">No session scheduled yet.</p>
+                            </div>
+
+                            <!-- My recent matches -->
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-flag-checkered"/> My recent matches</h3>
+                                    <a t-attf-href="/club/players/{{ me.id }}" class="o_pbw_more">My profile <i class="fa fa-arrow-right"/></a>
+                                </div>
+                                <t t-call="pickleball_website.my_matches_table">
+                                    <t t-set="rows" t-value="my_matches"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- A player's matches from their point of view. Param: rows. -->
+    <template id="my_matches_table" name="Club: Player Matches Table">
+        <div t-if="rows" class="table-responsive">
+            <table class="table o_pbw_table mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Partner</th>
+                        <th>Opponents</th>
+                        <th class="text-center">Result</th>
+                        <th class="text-end">Bet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="rows" t-as="row">
+                        <td class="text-nowrap">
+                            <a t-attf-href="/club/schedule/{{ row['session'].id }}" t-out="fmt_date(row['session'].date)"/>
+                        </td>
+                        <td>
+                            <t t-foreach="row['partners']" t-as="member"><t t-call="pickleball_website.player_chip"/></t>
+                            <span t-if="not row['partners']" class="text-muted">—</span>
+                        </td>
+                        <td>
+                            <t t-foreach="row['opponents']" t-as="member"><t t-call="pickleball_website.player_chip"/></t>
+                        </td>
+                        <td class="text-center">
+                            <span t-if="row['won']" class="o_pbw_result o_pbw_result_W">WIN</span>
+                            <span t-else="" class="o_pbw_result o_pbw_result_L">LOSS</span>
+                        </td>
+                        <td t-attf-class="text-end text-nowrap fw-bold {{ 'o_pbw_pos' if row['net'] &gt; 0 else ('o_pbw_neg' if row['net'] &lt; 0 else '') }}"
+                            t-out="vnd(row['net'], signed=True) if row['net'] else '—'"/>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p t-else="" class="text-muted mb-0">No matches recorded yet.</p>
+    </template>
+
+</odoo>

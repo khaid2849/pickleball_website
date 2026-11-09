@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Player card — server-side twin of the backend OWL card
+         (pickleball-team/static/src/xml/player_card_templates.xml), same
+         markup and classes so player_card.scss styles both.
+         Params: member (sudo record), href (optional link), no_photo.
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="player_card" name="Club: Player Card">
+        <t t-set="_tier" t-value="member.card_tier or 'bronze'"/>
+        <t t-set="_positions" t-value="{'all': 'ALL', 'dink': 'DNK', 'power': 'PWR', 'net': 'NET', 'def': 'DEF'}"/>
+        <t t-set="_balance" t-value="round(member.balance or 0)"/>
+        <t t-set="_photo" t-value="not no_photo and photo_url(member)"/>
+        <t t-set="_tag" t-value="'a' if href else 'div'"/>
+        <t t-tag="_tag" t-att-href="href" t-attf-class="o_pbw_card_link {{ 'o_pbw_card_link_active' if href else '' }}"
+           t-att-aria-label="member.name if href else None">
+        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} {{ '' if member.active else 'o_pb_card_archived' }}">
+            <svg class="o_pb_deco o_pb_deco_chevrons" viewBox="0 0 96 40" aria-hidden="true">
+                <polyline points="6,6 20,20 6,34"/>
+                <polyline points="36,6 50,20 36,34"/>
+                <polyline points="66,6 80,20 66,34"/>
+            </svg>
+            <div class="o_pb_deco o_pb_deco_dots" aria-hidden="true"/>
+            <svg class="o_pb_deco o_pb_deco_shapes" viewBox="0 0 60 60" aria-hidden="true">
+                <circle cx="8" cy="10" r="5"/>
+                <path d="M30 4V18M23 11H37"/>
+                <path d="M44 44L52 30L58 44Z"/>
+            </svg>
+
+            <div class="o_pb_card_head">
+                <div class="o_pb_card_ovr" title="Overall rating">
+                    <b t-out="member.card_overall"/>
+                    <span>OVR</span>
+                </div>
+                <div class="o_pb_card_tags">
+                    <span class="o_pb_card_tag o_pb_card_tag_tier" t-out="_tier.upper()"/>
+                    <span class="o_pb_card_tag" title="Play style" t-out="_positions.get(member.play_style, 'PB')"/>
+                    <span t-if="member.dupr_rating" class="o_pb_card_tag" title="DUPR rating">DUPR <t t-out="'%.2f' % member.dupr_rating"/></span>
+                </div>
+                <div class="o_pb_card_icons">
+                    <span t-if="member.is_bot_manager" title="Team captain"><i class="fa fa-star" role="img" aria-label="Captain"/></span>
+                    <span t-if="member.telegram_chat_id" title="Telegram"><i class="fa fa-telegram" role="img" aria-label="Telegram"/></span>
+                    <span t-if="member.zalo_chat_id" title="Zalo"><b>Z</b></span>
+                </div>
+            </div>
+
+            <div class="o_pb_card_hero">
+                <div class="o_pb_card_circle" aria-hidden="true"><i/><i/><i/></div>
+                <img t-if="_photo" class="o_pb_card_photo" t-att-src="_photo" t-att-alt="member.name" loading="lazy"/>
+                <t t-else="" t-call="pickleball_website.player_figure"/>
+            </div>
+
+            <div class="o_pb_card_ribbon" t-att-title="member.name">
+                <span t-out="member.name"/>
+            </div>
+
+            <div class="o_pb_card_stats">
+                <t t-foreach="[('WIN', member.card_win), ('FRM', member.card_form), ('EXP', member.card_exp), ('ATT', member.card_att), ('BET', member.card_bet), ('PAY', member.card_pay)]" t-as="stat">
+                    <div class="o_pb_card_stat">
+                        <span class="o_pb_card_stat_label" t-out="stat[0]"/>
+                        <b t-out="stat[1]"/>
+                        <span class="o_pb_card_bar"><i t-attf-style="width: {{ stat[1] }}%"/></span>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Money is private: only the member themselves and admins see it. -->
+            <div t-if="sees_money(member)" t-attf-class="o_pb_card_debt o_pb_card_debt_{{ 'owes' if _balance &lt; 0 else ('owed' if _balance &gt; 0 else 'paid') }}">
+                <i t-attf-class="fa {{ 'fa-check-circle' if not _balance else 'fa-money' }}"/>
+                <span class="o_pb_card_debt_label">
+                    <t t-if="_balance &lt; 0">Owes</t>
+                    <t t-elif="_balance &gt; 0">Team owes</t>
+                    <t t-else="">All paid</t>
+                </span>
+                <b t-if="_balance" t-out="vnd(abs(_balance))"/>
+            </div>
+
+            <div class="o_pb_card_footer">
+                <span class="o_pb_card_record"><t t-out="member.total_wins"/>W · <t t-out="member.total_losses"/>L</span>
+                <t t-call="pickleball_website.form_dots">
+                    <t t-set="results" t-value="member.card_recent_results"/>
+                </t>
+            </div>
+        </div>
+        </t>
+    </template>
+
+    <!-- Drawn player (no photo): long hair for female members. Param: member. -->
+    <template id="player_figure" name="Club: Player Figure">
+        <t t-set="_female" t-value="member.gender == 'female'"/>
+        <svg t-attf-class="o_pb_card_figure {{ 'o_pb_card_figure_female' if _female else '' }}" viewBox="0 0 200 190"
+             role="img" t-att-aria-label="member.name">
+            <path t-if="_female" class="o_pb_fig_hair"
+                  d="M62 72C56 32 80 22 100 22C122 22 146 32 138 74C140 100 146 116 152 128C134 134 118 128 112 112L88 112C82 128 66 134 48 128C54 116 62 100 62 72Z"/>
+            <rect class="o_pb_fig_shade" x="87" y="96" width="26" height="32" rx="9"/>
+            <path class="o_pb_fig_skin" d="M28 190C28 150 50 128 80 121L120 121C150 128 172 150 172 190Z"/>
+            <path class="o_pb_fig_jersey" d="M62 190L66 142C68 130 76 124 84 121C88 140 112 140 116 121C124 124 132 130 134 142L138 190Z"/>
+            <path class="o_pb_fig_trim" d="M84 121C88 140 112 140 116 121"/>
+            <text t-if="member.jersey_number" class="o_pb_fig_number" x="100" y="161" text-anchor="middle"
+                  t-out="member.jersey_number"/>
+            <circle class="o_pb_fig_skin" cx="69" cy="74" r="7"/>
+            <circle class="o_pb_fig_skin" cx="131" cy="74" r="7"/>
+            <ellipse class="o_pb_fig_skin" cx="100" cy="70" rx="31" ry="33"/>
+            <path t-if="_female" class="o_pb_fig_hair"
+                  d="M69 66C68 40 84 32 102 32C121 32 134 44 131 66C121 52 108 46 97 46C89 53 79 60 69 66Z"/>
+            <t t-else="">
+                <path class="o_pb_fig_hair" d="M68 66C63 38 82 30 102 30C124 30 139 42 132 66C126 54 116 50 104 52C92 46 78 52 68 66Z"/>
+                <path class="o_pb_fig_hair" d="M84 38C90 20 118 20 124 36C112 30 98 30 84 38Z"/>
+            </t>
+            <ellipse class="o_pb_fig_ink" cx="89" cy="74" rx="3.2" ry="4.2"/>
+            <ellipse class="o_pb_fig_ink" cx="111" cy="74" rx="3.2" ry="4.2"/>
+            <circle class="o_pb_fig_blush" cx="81" cy="85" r="5.5"/>
+            <circle class="o_pb_fig_blush" cx="119" cy="85" r="5.5"/>
+            <path class="o_pb_fig_smile" d="M92 89Q100 96 108 89"/>
+        </svg>
+    </template>
+
+    <!-- Round avatar: photo, else initials on the tier color.
+         Params: member, size ('sm' | 'md' | 'lg', default md), no_photo. -->
+    <template id="avatar" name="Club: Avatar">
+        <t t-set="_photo" t-value="not no_photo and photo_url(member)"/>
+        <span t-attf-class="o_pbw_avatar o_pbw_avatar_{{ size or 'md' }} o_pbw_tier_{{ member.card_tier or 'bronze' }}"
+              t-att-title="member.name">
+            <img t-if="_photo" t-att-src="_photo" t-att-alt="member.name" loading="lazy"/>
+            <t t-else="" t-out="initials(member.name)"/>
+        </span>
+    </template>
+
+    <!-- Avatar + name chip linking to the player profile. Param: member. -->
+    <template id="player_chip" name="Club: Player Chip">
+        <a t-attf-href="/club/players/{{ member.id }}" class="o_pbw_chip">
+            <t t-call="pickleball_website.avatar"><t t-set="size" t-value="'sm'"/></t>
+            <span t-out="member.name"/>
+        </a>
+    </template>
+
+    <!-- Last results, newest first: 'WLWWL'. Param: results. -->
+    <template id="form_dots" name="Club: Form Dots">
+        <span t-if="results" class="o_pb_card_form o_pbw_form" title="Recent form (newest first)">
+            <t t-foreach="results" t-as="result">
+                <i t-if="result == 'W'" class="o_pb_card_dot o_pb_card_dot_W" title="Win"/>
+                <i t-else="" class="o_pb_card_dot o_pb_card_dot_L" title="Loss"/>
+            </t>
+        </span>
+        <span t-else="" class="text-muted small">—</span>
+    </template>
+
+    <!-- Calendar-style date block. Param: day (date), accent (bool). -->
+    <template id="date_block" name="Club: Date Block">
+        <div t-attf-class="o_pbw_date {{ 'o_pbw_date_accent' if accent else '' }}">
+            <span class="o_pbw_date_wd" t-out="weekday_name(day)"/>
+            <b class="o_pbw_date_day" t-out="day.strftime('%d')"/>
+            <span class="o_pbw_date_month"><t t-out="month_name(day)"/> · <t t-out="day.year"/></span>
+        </div>
+    </template>
+
+    <!-- Session status pill. Param: session. -->
+    <template id="session_status" name="Club: Session Status">
+        <span t-attf-class="o_pbw_pill o_pbw_pill_{{ session.state }}" t-out="session_states.get(session.state, session.state)"/>
+    </template>
+
+    <!-- Scoreboard row of one match. Params: row (from _match_rows), compact. -->
+    <template id="match_row" name="Club: Match Row">
+        <div t-attf-class="o_pbw_match {{ 'o_pbw_match_compact' if compact else '' }} {{ 'o_pbw_match_pending' if not row['winner'] else '' }}">
+            <t t-foreach="['team1', 'team2']" t-as="team">
+                <div t-attf-class="o_pbw_match_team o_pbw_match_{{ team }} {{ 'o_pbw_match_win' if row['winner'] == team else '' }} {{ 'o_pbw_match_lose' if row['winner'] and row['winner'] != team else '' }}">
+                    <span class="o_pbw_match_avatars">
+                        <t t-foreach="row[team]" t-as="member">
+                            <t t-call="pickleball_website.avatar"><t t-set="size" t-value="'sm'"/></t>
+                        </t>
+                    </span>
+                    <span class="o_pbw_match_names">
+                        <t t-foreach="row[team]" t-as="member">
+                            <a t-attf-href="/club/players/{{ member.id }}" t-out="member.name"/><t t-if="not member_last"> &amp; </t>
+                        </t>
+                    </span>
+                    <i t-if="row['winner'] == team" class="fa fa-trophy o_pbw_match_trophy" title="Winner"/>
+                </div>
+                <div t-if="team_first" class="o_pbw_match_vs">
+                    <b>VS</b>
+                    <small t-if="row['amount']" t-out="vnd(row['amount'])" title="Bet per player"/>
+                </div>
+            </t>
+        </div>
+    </template>
+
+    <!-- Section heading with chevrons. Params: title, kicker, link, link_label. -->
+    <template id="section_title" name="Club: Section Title">
+        <div class="o_pbw_section_title">
+            <div>
+                <span t-if="kicker" class="o_pbw_kicker" t-out="kicker"/>
+                <h2>
+                    <svg class="o_pbw_chevrons" viewBox="0 0 96 40" aria-hidden="true">
+                        <polyline points="6,6 20,20 6,34"/><polyline points="36,6 50,20 36,34"/><polyline points="66,6 80,20 66,34"/>
+                    </svg>
+                    <t t-out="title"/>
+                </h2>
+            </div>
+            <a t-if="link" t-att-href="link" class="o_pbw_more"><t t-out="link_label"/> <i class="fa fa-arrow-right"/></a>
+        </div>
+    </template>
+
+</odoo>

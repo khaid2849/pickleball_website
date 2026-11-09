@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pickleball_member_form_website" model="ir.ui.view">
+        <field name="name">pickleball.member.form.website</field>
+        <field name="model">pickleball.member</field>
+        <field name="inherit_id" ref="pickleball-team.view_pickleball_member_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0 d-flex flex-wrap align-items-center gap-2" role="alert"
+                     invisible="website_state != 'pending_approval'">
+                    <span class="me-auto">
+                        <strong>Website sign-up to approve:</strong>
+                        someone created the account <field name="website_login" class="fw-bold" readonly="1"/>
+                        and says they are this member. Check it's really them before approving.
+                    </span>
+                    <button name="action_website_approve" type="object" class="btn btn-success btn-sm"
+                            string="Approve" icon="fa-check" groups="base.group_erp_manager"/>
+                    <button name="action_website_reject" type="object" class="btn btn-secondary btn-sm"
+                            string="Reject" icon="fa-times" groups="base.group_erp_manager"
+                            confirm="The account is archived and unlinked from this member. Continue?"/>
+                </div>
+            </xpath>
+            <group name="player_profile" position="after">
+                <group string="Club Website" name="club_website">
+                    <field name="has_website_access" string="Can Log In"/>
+                    <field name="website_state" invisible="not website_state"/>
+                    <field name="website_login" invisible="not user_id"/>
+                    <field name="user_id" invisible="1"/>
+                    <div colspan="2" class="d-flex gap-2" groups="base.group_erp_manager">
+                        <button name="action_open_website_access_wizard" type="object"
+                                class="btn btn-secondary btn-sm" icon="fa-key"
+                                string="Grant Website Access" invisible="has_website_access"/>
+                        <button name="action_open_website_access_wizard" type="object"
+                                class="btn btn-secondary btn-sm" icon="fa-refresh"
+                                string="Change Login / Password" invisible="not has_website_access"/>
+                        <button name="action_revoke_website_access" type="object"
+                                class="btn btn-link btn-sm text-danger" icon="fa-ban"
+                                string="Revoke" invisible="not has_website_access"
+                                confirm="This member won't be able to log in to the club website anymore. Continue?"/>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_pickleball_member_list_website" model="ir.ui.view">
+        <field name="name">pickleball.member.list.website</field>
+        <field name="model">pickleball.member</field>
+        <field name="inherit_id" ref="pickleball-team.view_pickleball_member_list"/>
+        <field name="arch" type="xml">
+            <field name="balance" position="before">
+                <field name="website_login" optional="show"/>
+                <field name="website_state" optional="show"
+                       decoration-warning="website_state == 'pending_approval'"
+                       decoration-muted="website_state == 'pending_email'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pickleball_member_search_website" model="ir.ui.view">
+        <field name="name">pickleball.member.search.website</field>
+        <field name="model">pickleball.member</field>
+        <field name="inherit_id" ref="pickleball-team.view_pickleball_member_search"/>
+        <field name="arch" type="xml">
+            <filter name="filter_inactive" position="before">
+                <filter name="filter_website_pending" string="Website Sign-up to Approve"
+                        domain="[('website_state', '=', 'pending_approval')]"/>
+                <filter name="filter_website_access" string="Has Website Access"
+                        domain="[('has_website_access', '=', True)]"/>
+                <filter name="filter_no_website_access" string="No Website Access"
+                        domain="[('has_website_access', '=', False)]"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

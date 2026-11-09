@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Page layout of the club pages.
+         Params: page_title, page_kicker, page_subtitle, club_tab,
+         hero_extra (optional: rendered on the right of the hero).
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_layout" name="Club: Layout">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'o_pbw_page'"/>
+            <t t-set="additional_title" t-value="page_title or page_head_title"/>
+            <div id="wrap" class="o_pbw">
+                <section t-if="page_title" class="o_pbw_hero o_pbw_hero_page">
+                    <div class="o_pbw_hero_deco" aria-hidden="true">
+                        <svg class="o_pbw_hero_chevrons" viewBox="0 0 96 40">
+                            <polyline points="6,6 20,20 6,34"/><polyline points="36,6 50,20 36,34"/><polyline points="66,6 80,20 66,34"/>
+                        </svg>
+                        <span class="o_pbw_hero_dots"/>
+                        <span class="o_pbw_hero_stripe"/>
+                        <span class="o_pbw_hero_stripe o_pbw_hero_stripe_2"/>
+                    </div>
+                    <div class="container position-relative">
+                        <div class="row align-items-center g-4">
+                            <div class="col-lg">
+                                <span t-if="page_kicker" class="o_pbw_kicker o_pbw_kicker_light" t-out="page_kicker"/>
+                                <h1 class="o_pbw_hero_title"><span t-out="page_title"/></h1>
+                                <p t-if="page_subtitle" class="o_pbw_hero_subtitle" t-out="page_subtitle"/>
+                            </div>
+                            <div t-if="hero_extra" class="col-lg-auto">
+                                <t t-out="hero_extra"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <nav t-if="is_club_member and club_tab != 'home'" class="o_pbw_subnav" aria-label="Members area">
+                    <div class="container">
+                        <ul class="o_pbw_subnav_list">
+                            <li t-if="me">
+                                <a href="/club/me" t-attf-class="{{ 'active' if club_tab == 'me' else '' }}">
+                                    <i class="fa fa-user-circle"/><span>My page</span></a>
+                            </li>
+                            <li>
+                                <a href="/club/schedule" t-attf-class="{{ 'active' if club_tab == 'schedule' else '' }}">
+                                    <i class="fa fa-calendar"/><span>Schedule</span></a>
+                            </li>
+                            <li>
+                                <a href="/club/players" t-attf-class="{{ 'active' if club_tab == 'players' else '' }}">
+                                    <i class="fa fa-id-card-o"/><span>Players</span></a>
+                            </li>
+                            <li>
+                                <a href="/club/rankings" t-attf-class="{{ 'active' if club_tab == 'rankings' else '' }}">
+                                    <i class="fa fa-trophy"/><span>Rankings</span></a>
+                            </li>
+                            <li>
+                                <a href="/club/matches" t-attf-class="{{ 'active' if club_tab == 'matches' else '' }}">
+                                    <i class="fa fa-flag-checkered"/><span>Results</span></a>
+                            </li>
+                            <li>
+                                <a href="/club/finance" t-attf-class="{{ 'active' if club_tab == 'finance' else '' }}">
+                                    <i class="fa fa-money"/><span>Finance</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <t t-out="0"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Logged-in user without a member profile (e.g. another portal user). -->
+    <template id="club_no_access" name="Club: Members Only">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_title">Members area</t>
+            <t t-set="page_kicker">Members only</t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="o_pbw_panel o_pbw_empty">
+                        <i class="fa fa-lock"/>
+                        <h3>Your account is not linked to a club member</h3>
+                        <p>Ask the team admin to grant website access to your member profile,
+                            then log in again.</p>
+                        <a href="/web/session/logout?redirect=/club" class="btn o_pbw_btn o_pbw_btn_primary">Log out</a>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- Header brand: drawn pickleball + club name (instead of the
+         placeholder "YourLogo" image). -->
+    <template id="club_header_brand" inherit_id="website.option_header_brand_logo" name="Club Header Brand" priority="99">
+        <xpath expr="//a[@data-name='Navbar Logo']" position="replace">
+            <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand o_pbw_brand #{_link_class}">
+                <svg class="o_pbw_brand_ball" viewBox="0 0 40 40" aria-hidden="true">
+                    <circle cx="20" cy="20" r="18" fill="#f7c948"/>
+                    <path d="M6 26A18 18 0 0 0 34 26A26 26 0 0 1 6 26Z" fill="#e2ad2b"/>
+                    <g fill="#1b2070">
+                        <ellipse cx="20" cy="9" rx="2.6" ry="1.8"/>
+                        <ellipse cx="12" cy="15" rx="1.8" ry="2.5" transform="rotate(30 12 15)"/>
+                        <ellipse cx="28" cy="15" rx="1.8" ry="2.5" transform="rotate(-30 28 15)"/>
+                        <ellipse cx="20" cy="20" rx="1.9" ry="2.6"/>
+                        <ellipse cx="11" cy="24" rx="1.6" ry="2.4"/>
+                        <ellipse cx="29" cy="24" rx="1.6" ry="2.4"/>
+                        <ellipse cx="20" cy="31" rx="2.6" ry="1.8"/>
+                    </g>
+                </svg>
+                <span t-out="website.name"/>
+            </a>
+        </xpath>
+    </template>
+
+    <template id="club_footer_copyright" inherit_id="website.footer_copyright_company_name" name="Club Footer Copyright" priority="99">
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="o_footer_copyright_name me-2">© <t t-out="website.name"/> · Pickleball Club</span>
+        </xpath>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Site footer, in the club theme.
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_footer" inherit_id="website.footer_custom" name="Club Footer" priority="99">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="o_pbw_footer" t-if="not no_footer">
+                <t t-set="_club_member" t-value="user_id._is_internal() or user_id.has_group('pickleball_website.group_club_member')"/>
+                <div class="container">
+                    <div class="row g-4">
+                        <div class="col-lg-5">
+                            <div class="o_pbw_footer_brand">
+                                <svg class="o_pbw_chevrons" viewBox="0 0 96 40" aria-hidden="true">
+                                    <polyline points="6,6 20,20 6,34"/><polyline points="36,6 50,20 36,34"/><polyline points="66,6 80,20 66,34"/>
+                                </svg>
+                                <span t-out="website.name"/>
+                            </div>
+                            <p class="o_pbw_footer_text">A pickleball team that plays hard and splits the bill fairly.
+                                Schedule, results, rankings and court fees — all in one place.</p>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <h6>The club</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="/club">Home</a></li>
+                                <t t-if="user_id._is_public()">
+                                    <li><a href="/club/register">Sign up</a></li>
+                                    <li><a href="/web/login?redirect=/club/me">Log in</a></li>
+                                </t>
+                                <t t-elif="_club_member">
+                                    <li><a href="/club/schedule">Schedule</a></li>
+                                    <li><a href="/club/players">Players</a></li>
+                                    <li><a href="/club/rankings">Rankings</a></li>
+                                </t>
+                            </ul>
+                        </div>
+                        <div t-if="_club_member" class="col-6 col-lg-4">
+                            <h6>Members</h6>
+                            <ul class="list-unstyled">
+                                <li><a href="/club/me">My page</a></li>
+                                <li><a href="/club/matches">Match results</a></li>
+                                <li><a href="/club/finance">My finance</a></li>
+                                <li><a href="/my/security">Change password</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

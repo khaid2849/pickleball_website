@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="club_rankings" name="Club: Rankings">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Rankings</t>
+            <t t-set="page_title">Who's on top?</t>
+            <t t-set="page_subtitle">Members who have played, ranked. OVR combines the six ratings of the player card.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <!-- Podium -->
+                    <div t-if="len(players) &gt;= 3" class="o_pbw_podium o_pbw_podium_compact mb-5">
+                        <t t-foreach="players[:3]" t-as="member">
+                            <a t-attf-href="/club/players/{{ member.id }}" t-attf-class="o_pbw_podium_spot o_pbw_podium_{{ member_index + 1 }}">
+                                <span class="o_pbw_podium_rank" t-out="member_index + 1"/>
+                                <t t-call="pickleball_website.avatar"><t t-set="size" t-value="'lg'"/></t>
+                                <b class="o_pbw_podium_name" t-out="member.name"/>
+                                <span class="o_pbw_podium_value">
+                                    <t t-if="by == 'winrate'"><t t-out="round(member.win_rate)"/>%</t>
+                                    <t t-elif="by == 'wins'"><t t-out="member.total_wins"/> wins</t>
+                                    <t t-elif="by == 'bet'" t-out="vnd(member.bet_net_total, signed=True)"/>
+                                    <t t-else="">OVR <t t-out="member.card_overall"/></t>
+                                </span>
+                                <span class="o_pbw_podium_block"/>
+                            </a>
+                        </t>
+                    </div>
+
+                    <div class="o_pbw_toolbar">
+                        <div class="o_pbw_filter" role="group" aria-label="Rank by">
+                            <span class="o_pbw_muted me-1">Rank by:</span>
+                            <t t-foreach="sorts" t-as="option">
+                                <a t-attf-href="/club/rankings?by={{ option[0] }}" t-attf-class="{{ 'active' if by == option[0] else '' }}" t-out="option[1]"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="o_pbw_panel p-0">
+                        <div class="table-responsive">
+                            <table class="table o_pbw_table o_pbw_table_hover o_pbw_standings mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Player</th>
+                                        <th class="text-center">OVR</th>
+                                        <th class="text-center">Played</th>
+                                        <th class="text-center">W</th>
+                                        <th class="text-center">L</th>
+                                        <th class="text-center">Win %</th>
+                                        <th class="text-center d-none d-md-table-cell">Form</th>
+                                        <th class="text-end">Bets</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="players" t-as="member" t-attf-class="{{ 'o_pbw_row_me' if member == me else '' }}">
+                                        <td class="text-center"><span t-attf-class="o_pbw_rank o_pbw_rank_{{ member_index + 1 if member_index &lt; 3 else 'n' }}" t-out="member_index + 1"/></td>
+                                        <td>
+                                            <a t-attf-href="/club/players/{{ member.id }}" class="o_pbw_player_cell">
+                                                <t t-call="pickleball_website.avatar"/>
+                                                <span>
+                                                    <b t-out="member.name"/>
+                                                    <small t-attf-class="o_pbw_tier_text o_pbw_tier_{{ member.card_tier or 'bronze' }}" t-out="(member.card_tier or 'bronze').upper()"/>
+                                                </span>
+                                            </a>
+                                        </td>
+                                        <td class="text-center"><b class="o_pbw_ovr_badge" t-out="member.card_overall"/></td>
+                                        <td class="text-center" t-out="member.total_matches"/>
+                                        <td class="text-center" t-out="member.total_wins"/>
+                                        <td class="text-center" t-out="member.total_losses"/>
+                                        <td class="text-center fw-bold"><t t-out="round(member.win_rate)"/>%</td>
+                                        <td class="text-center d-none d-md-table-cell">
+                                            <t t-call="pickleball_website.form_dots"><t t-set="results" t-value="member.card_recent_results"/></t>
+                                        </td>
+                                        <td t-attf-class="text-end text-nowrap fw-bold {{ 'o_pbw_pos' if member.bet_net_total &gt; 0 else ('o_pbw_neg' if member.bet_net_total &lt; 0 else '') }}"
+                                            t-out="vnd(member.bet_net_total, signed=True) if member.bet_net_total else '0đ'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p t-if="unranked" class="o_pbw_muted mt-3">
+                        No match yet: <t t-foreach="unranked" t-as="member"><a t-attf-href="/club/players/{{ member.id }}" t-out="member.name"/><t t-if="not member_last">, </t></t>
+                    </p>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

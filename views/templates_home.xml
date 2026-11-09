@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Number tile. Params: value, icon; body = label. -->
+    <template id="stat_tile" name="Club: Stat Tile">
+        <div t-attf-class="o_pbw_stat_tile {{ 'o_pbw_stat_tile_light' if light else '' }}">
+            <i t-attf-class="fa {{ icon }}"/>
+            <b t-out="value"/>
+            <span t-out="0"/>
+        </div>
+    </template>
+
+    <!-- Public club home page ("/" through website.homepage_url = /club). -->
+    <template id="club_home" name="Pickleball Club Home">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_head_title">Pickleball club</t>
+            <t t-set="no_photo" t-value="not is_club_member"/>
+
+            <!-- Hero poster -->
+            <section class="o_pbw_hero o_pbw_hero_home">
+                <div class="o_pbw_hero_deco" aria-hidden="true">
+                    <svg class="o_pbw_hero_chevrons" viewBox="0 0 96 40">
+                        <polyline points="6,6 20,20 6,34"/><polyline points="36,6 50,20 36,34"/><polyline points="66,6 80,20 66,34"/>
+                    </svg>
+                    <span class="o_pbw_hero_dots"/>
+                    <span class="o_pbw_hero_ring"/>
+                    <span class="o_pbw_hero_stripe"/>
+                    <span class="o_pbw_hero_stripe o_pbw_hero_stripe_2"/>
+                </div>
+                <div class="container position-relative">
+                    <div class="row align-items-center g-5">
+                        <div class="col-lg-7">
+                            <span class="o_pbw_kicker o_pbw_kicker_light">Pickleball club</span>
+                            <h1 class="o_pbw_display">
+                                <span class="o_pbw_ribbon" t-out="website.name"/>
+                            </h1>
+                            <p class="o_pbw_hero_lead">Play hard — split the bill fairly.
+                                The whole team's schedule, results, rankings and court fees, updated after every session.</p>
+                            <div class="o_pbw_hero_actions">
+                                <t t-if="is_club_member">
+                                    <a href="/club/me" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-user-circle me-2"/>Go to my page</a>
+                                    <a href="/club/schedule" class="btn o_pbw_btn o_pbw_btn_ghost">Schedule</a>
+                                </t>
+                                <t t-else="">
+                                    <a href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-sign-in me-2"/>Member login</a>
+                                    <a href="#club-about" class="btn o_pbw_btn o_pbw_btn_ghost">Learn more</a>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="o_pbw_next">
+                                <span class="o_pbw_next_label"><i class="fa fa-bolt"/> Next session</span>
+                                <t t-if="next_session">
+                                    <div class="o_pbw_next_body">
+                                        <t t-call="pickleball_website.date_block">
+                                            <t t-set="day" t-value="next_session.date"/>
+                                            <t t-set="accent" t-value="True"/>
+                                        </t>
+                                        <div class="o_pbw_next_info">
+                                            <b><t t-out="hm(next_session.time_start)"/> – <t t-out="hm(next_session.time_end)"/></b>
+                                            <span><i class="fa fa-map-marker"/> <t t-out="next_session.court_id.name"/></span>
+                                            <span><i class="fa fa-users"/> <t t-out="next_session.total_player_count"/> players signed up</span>
+                                        </div>
+                                    </div>
+                                    <a t-if="is_club_member" t-attf-href="/club/schedule/{{ next_session.id }}" class="o_pbw_next_link">See details <i class="fa fa-arrow-right"/></a>
+                                </t>
+                                <p t-else="" class="o_pbw_next_empty">Nothing scheduled yet — the next session shows up here as soon as a court is booked.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Club numbers -->
+            <section class="o_pbw_stats_band">
+                <div class="container">
+                    <div class="row g-3">
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="stats['members']"/><t t-set="icon" t-value="'fa-users'"/>Members</t>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="stats['sessions']"/><t t-set="icon" t-value="'fa-calendar-check-o'"/>Sessions played</t>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="stats['matches']"/><t t-set="icon" t-value="'fa-flag-checkered'"/>Matches played</t>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="stats['courts']"/><t t-set="icon" t-value="'fa-map-marker'"/>Courts conquered</t>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top players -->
+            <section t-if="top_players" class="o_pbw_section">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Hall of fame</t>
+                        <t t-set="title">Top players</t>
+                        <t t-set="link" t-value="'/club/rankings' if is_club_member else None"/>
+                        <t t-set="link_label">Rankings</t>
+                    </t>
+                    <div class="o_pbw_podium">
+                        <t t-foreach="top_players" t-as="member">
+                            <div t-attf-class="o_pbw_podium_spot o_pbw_podium_{{ member_index + 1 }}">
+                                <span class="o_pbw_podium_rank" t-out="member_index + 1"/>
+                                <t t-call="pickleball_website.player_card">
+                                    <t t-set="href" t-value="'/club/players/%s' % member.id if is_club_member else None"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Latest results -->
+            <section t-if="last_matches" class="o_pbw_section o_pbw_section_alt">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker" t-value="'%s, %s' % (weekday_name(last_session.date), fmt_date(last_session.date))"/>
+                        <t t-set="title">Latest results</t>
+                        <t t-set="link" t-value="'/club/matches' if is_club_member else None"/>
+                        <t t-set="link_label">All results</t>
+                    </t>
+                    <div class="o_pbw_match_list">
+                        <t t-foreach="last_matches" t-as="row">
+                            <t t-call="pickleball_website.match_row"/>
+                        </t>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the club works -->
+            <section id="club-about" class="o_pbw_section">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">How the team works</t>
+                        <t t-set="title">Three steps per session</t>
+                    </t>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="o_pbw_step">
+                                <span class="o_pbw_step_no">1</span>
+                                <i class="fa fa-calendar-plus-o o_pbw_step_icon"/>
+                                <h3>Book &amp; sign up</h3>
+                                <p>Whoever books the court sends the booking screenshot to the bot and the session is created. Players add their names.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="o_pbw_step">
+                                <span class="o_pbw_step_no">2</span>
+                                <i class="fa fa-bolt o_pbw_step_icon"/>
+                                <h3>Play &amp; record</h3>
+                                <p>Doubles all session long, every match and bet recorded. Scores, form and player card ratings update automatically.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="o_pbw_step">
+                                <span class="o_pbw_step_no">3</span>
+                                <i class="fa fa-money o_pbw_step_icon"/>
+                                <h3>Automatic bill split</h3>
+                                <p>Court, balls and drinks are split evenly. A bank transfer with your name clears your debt automatically through Sepay.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to action -->
+            <section t-if="not is_club_member" class="o_pbw_cta">
+                <div class="container">
+                    <div class="o_pbw_cta_inner">
+                        <div>
+                            <h2>Are you on the team?</h2>
+                            <p>Log in to see your player card, match history and what you owe.</p>
+                        </div>
+                        <a href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_dark">Log in <i class="fa fa-arrow-right ms-2"/></a>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Public showcase home page (visitors): made-up sample data only,
+         everything pushes to create an account.
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_home_public" name="Pickleball Club">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_head_title">Pickleball club</t>
+            <t t-set="no_photo" t-value="True"/>
+
+            <section class="o_pbw_hero o_pbw_hero_home">
+                <div class="o_pbw_hero_deco" aria-hidden="true">
+                    <svg class="o_pbw_hero_chevrons" viewBox="0 0 96 40">
+                        <polyline points="6,6 20,20 6,34"/><polyline points="36,6 50,20 36,34"/><polyline points="66,6 80,20 66,34"/>
+                    </svg>
+                    <span class="o_pbw_hero_dots"/>
+                    <span class="o_pbw_hero_ring"/>
+                    <span class="o_pbw_hero_stripe"/>
+                    <span class="o_pbw_hero_stripe o_pbw_hero_stripe_2"/>
+                </div>
+                <div class="container position-relative">
+                    <div class="row align-items-center g-5">
+                        <div class="col-lg-7">
+                            <span class="o_pbw_kicker o_pbw_kicker_light">Pickleball club</span>
+                            <h1 class="o_pbw_display"><span class="o_pbw_ribbon" t-out="website.name"/></h1>
+                            <p class="o_pbw_hero_lead">Join the team that plays hard and splits the bill fairly.
+                                Your own player card, live rankings, every match result and automatic court fee splits — all in one place.</p>
+                            <div class="o_pbw_hero_actions">
+                                <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-user-plus me-2"/>Create my account</a>
+                                <a href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_ghost">Log in</a>
+                            </div>
+                            <ul class="o_pbw_hero_checks">
+                                <li><i class="fa fa-check"/> Free for team members</li>
+                                <li><i class="fa fa-check"/> Vietnamese &amp; English</li>
+                                <li><i class="fa fa-check"/> Works on your phone</li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-5 d-flex justify-content-center">
+                            <div class="o_pbw_showcase_card">
+                                <span class="o_pbw_sample_badge">Sample</span>
+                                <t t-call="pickleball_website.player_card"><t t-set="member" t-value="demo_players[1]"/></t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Selling points -->
+            <section class="o_pbw_stats_band">
+                <div class="container">
+                    <div class="row g-3">
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'6'"/><t t-set="icon" t-value="'fa-bar-chart'"/>Ratings on your card</t>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'4'"/><t t-set="icon" t-value="'fa-diamond'"/>Card tiers to climb</t>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'100%'"/><t t-set="icon" t-value="'fa-calculator'"/>Automatic bill split</t>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'24/7'"/><t t-set="icon" t-value="'fa-telegram'"/>Telegram &amp; Zalo bot</t>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Player cards -->
+            <section class="o_pbw_section">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Your player card</t>
+                        <t t-set="title">Every player gets a card</t>
+                    </t>
+                    <div class="row align-items-center g-5">
+                        <div class="col-lg-4">
+                            <p class="o_pbw_lead_dark">Win rate, form, experience, attendance, betting and fair play: six ratings,
+                                recalculated after every session, give your overall rating — and your card tier.</p>
+                            <ul class="o_pbw_tier_list">
+                                <li><span class="o_pbw_tier_badge o_pbw_tier_bronze">BRONZE</span> Getting started</li>
+                                <li><span class="o_pbw_tier_badge o_pbw_tier_silver">SILVER</span> OVR 65 and up</li>
+                                <li><span class="o_pbw_tier_badge o_pbw_tier_gold">GOLD</span> OVR 75 and up</li>
+                                <li><span class="o_pbw_tier_badge o_pbw_tier_icon">ICON</span> OVR 85 and up — the legends</li>
+                            </ul>
+                            <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary mt-3">Get my card</a>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="o_pbw_podium">
+                                <t t-foreach="demo_players" t-as="member">
+                                    <div t-attf-class="o_pbw_podium_spot o_pbw_podium_{{ member_index + 1 }}">
+                                        <t t-call="pickleball_website.player_card"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <p class="o_pbw_sample_note"><i class="fa fa-info-circle"/> Sample players — sign up to see the real team.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="o_pbw_section o_pbw_section_alt">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Members area</t>
+                        <t t-set="title">Everything about the team</t>
+                    </t>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-calendar"/><h3>Schedule</h3>
+                                <p>Next sessions with time, courts and who's coming — and the history of every session played.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-trophy"/><h3>Rankings</h3>
+                                <p>A real league table: overall rating, wins, win rate, form and bet winnings.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-flag-checkered"/><h3>Match results</h3>
+                                <p>Every doubles match on a scoreboard, session by session, with your partners and opponents.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-money"/><h3>Your money, private</h3>
+                                <p>What you owe or are owed, your payments and bank transfers — visible to you only.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-qrcode"/><h3>Pay in one scan</h3>
+                                <p>A VietQR with the exact amount: transfer it and your debt is cleared automatically.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-comments"/><h3>Bot in the group chat</h3>
+                                <p>Ask the Telegram or Zalo bot for the next session, your balance or your player card.</p></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Locked rankings preview -->
+            <section class="o_pbw_section">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Rankings</t>
+                        <t t-set="title">Who's on top?</t>
+                    </t>
+                    <div class="o_pbw_locked">
+                        <div class="o_pbw_panel p-0 o_pbw_locked_content" aria-hidden="true">
+                            <div class="table-responsive">
+                                <table class="table o_pbw_table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Player</th>
+                                            <th class="text-center">OVR</th>
+                                            <th class="text-center">Played</th>
+                                            <th class="text-center">W</th>
+                                            <th class="text-center">Win %</th>
+                                            <th class="text-center">Form</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="demo_rows" t-as="row">
+                                            <td class="text-center"><span t-attf-class="o_pbw_rank o_pbw_rank_{{ row_index + 1 if row_index &lt; 3 else 'n' }}" t-out="row_index + 1"/></td>
+                                            <td>
+                                                <span class="o_pbw_player_cell">
+                                                    <span t-attf-class="o_pbw_avatar o_pbw_tier_{{ row[1] }}" t-out="initials(row[0])"/>
+                                                    <span><b t-out="row[0]"/><small t-attf-class="o_pbw_tier_text o_pbw_tier_{{ row[1] }}" t-out="row[1].upper()"/></span>
+                                                </span>
+                                            </td>
+                                            <td class="text-center"><b class="o_pbw_ovr_badge" t-out="row[2]"/></td>
+                                            <td class="text-center" t-out="row[3]"/>
+                                            <td class="text-center" t-out="row[4]"/>
+                                            <td class="text-center fw-bold"><t t-out="row[5]"/>%</td>
+                                            <td class="text-center"><t t-call="pickleball_website.form_dots"><t t-set="results" t-value="row[6]"/></t></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="o_pbw_locked_overlay">
+                            <i class="fa fa-lock"/>
+                            <h3>Members only</h3>
+                            <p>Create your account to see the team's real rankings, results and schedule.</p>
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary">Create my account</a>
+                                <a href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_dark">Log in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Steps -->
+            <section class="o_pbw_section o_pbw_section_alt">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Joining takes a minute</t>
+                        <t t-set="title">Three steps to get in</t>
+                    </t>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="o_pbw_step">
+                                <span class="o_pbw_step_no">1</span>
+                                <i class="fa fa-user-plus o_pbw_step_icon"/>
+                                <h3>Create your account</h3>
+                                <p>Pick a username and a password, give your email and, if you like, your phone number.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="o_pbw_step">
+                                <span class="o_pbw_step_no">2</span>
+                                <i class="fa fa-id-badge o_pbw_step_icon"/>
+                                <h3>Find your name</h3>
+                                <p>Already playing with us? Pick your name in the team list. New? We create your player profile.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="o_pbw_step">
+                                <span class="o_pbw_step_no">3</span>
+                                <i class="fa fa-check-circle o_pbw_step_icon"/>
+                                <h3>Confirm &amp; play</h3>
+                                <p>Confirm your email (new players) or wait for the admin's OK (existing members) — then you're in.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="o_pbw_cta o_pbw_cta_spaced">
+                <div class="container">
+                    <div class="o_pbw_cta_inner">
+                        <div>
+                            <h2>Ready to join the team?</h2>
+                            <p>Create your account now — your player card is waiting.</p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_dark">Create my account <i class="fa fa-arrow-right ms-2"/></a>
+                            <a href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_light">Log in</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

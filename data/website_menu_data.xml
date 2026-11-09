@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top menu of every website (created under the default main menu,
+         Odoo copies them into each website's menu). Only shown to approved
+         members and internal users: visitors only see the home page. -->
+    <record id="menu_club_schedule" model="website.menu">
+        <field name="name">Schedule</field>
+        <field name="url">/club/schedule</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
+        <field name="sequence">20</field>
+    </record>
+    <record id="menu_club_players" model="website.menu">
+        <field name="name">Players</field>
+        <field name="url">/club/players</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
+        <field name="sequence">30</field>
+    </record>
+    <record id="menu_club_rankings" model="website.menu">
+        <field name="name">Rankings</field>
+        <field name="url">/club/rankings</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
+        <field name="sequence">40</field>
+    </record>
+    <record id="menu_club_matches" model="website.menu">
+        <field name="name">Results</field>
+        <field name="url">/club/matches</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
+        <field name="sequence">50</field>
+    </record>
+    <record id="menu_club_finance" model="website.menu">
+        <field name="name">Finance</field>
+        <field name="url">/club/finance</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
+        <field name="sequence">60</field>
+    </record>
+</odoo>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Squad: player cards grid with tier filter and sort
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_players" name="Club: Players">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Squad</t>
+            <t t-set="page_title">Players</t>
+            <t t-set="page_subtitle">Every member's player card — ratings update after each session.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="o_pbw_toolbar">
+                        <div class="o_pbw_filter" role="group" aria-label="Card tier">
+                            <a t-attf-href="/club/players?sort={{ sort }}" t-attf-class="{{ 'active' if not tier else '' }}">All</a>
+                            <t t-foreach="tiers" t-as="option">
+                                <a t-attf-href="/club/players?sort={{ sort }}&amp;tier={{ option[0] }}"
+                                   t-attf-class="o_pbw_filter_{{ option[0] }} {{ 'active' if tier == option[0] else '' }}" t-out="option[1]"/>
+                            </t>
+                        </div>
+                        <div class="o_pbw_filter" role="group" aria-label="Sort">
+                            <span class="o_pbw_muted me-1">Sort by:</span>
+                            <t t-foreach="sorts" t-as="option">
+                                <a t-attf-href="/club/players?sort={{ option[0] }}{{ '&amp;tier=%s' % tier if tier else '' }}"
+                                   t-attf-class="{{ 'active' if sort == option[0] else '' }}" t-out="option[1]"/>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div t-if="players" class="o_pbw_card_grid">
+                        <t t-foreach="players" t-as="member">
+                            <t t-call="pickleball_website.player_card">
+                                <t t-set="href" t-value="'/club/players/%s' % member.id"/>
+                            </t>
+                        </t>
+                    </div>
+                    <div t-else="" class="o_pbw_panel o_pbw_empty">
+                        <i class="fa fa-id-card-o"/>
+                        <h3>No player in this tier</h3>
+                        <a href="/club/players" class="btn o_pbw_btn o_pbw_btn_primary">See all</a>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- One rating with its bar. Params: code, value, label; body = explanation. -->
+    <template id="rating_meter" name="Club: Rating Meter">
+        <div class="col-md-6">
+            <div class="o_pbw_meter">
+                <div class="o_pbw_meter_head">
+                    <span><b t-out="code"/> <t t-out="label"/></span>
+                    <b class="o_pbw_meter_value" t-out="value"/>
+                </div>
+                <div class="o_pbw_meter_bar"><i t-attf-style="width: {{ value }}%"
+                     t-attf-class="{{ 'o_pbw_meter_hi' if value &gt;= 75 else ('o_pbw_meter_mid' if value &gt;= 55 else 'o_pbw_meter_lo') }}"/></div>
+                <small t-out="0"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Player profile
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_player" name="Club: Player">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker"><t t-if="rank">Rank #<t t-out="rank"/> / <t t-out="ranked_count"/></t><t t-else="">Player</t></t>
+            <t t-set="page_title" t-value="player.name"/>
+            <t t-set="page_subtitle" t-value="player_subtitle"/>
+            <t t-set="hero_extra">
+                <div class="o_pbw_hero_facts">
+                    <div><b t-out="player.card_overall"/><span>OVR</span></div>
+                    <div><b t-out="player.total_matches"/><span>Matches</span></div>
+                    <div><b><t t-out="round(player.win_rate)"/>%</b><span>Win rate</span></div>
+                    <div><b t-out="sessions_played"/><span>Sessions</span></div>
+                </div>
+            </t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <a href="/club/players" class="o_pbw_back mb-4 d-inline-block"><i class="fa fa-arrow-left"/> Squad</a>
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-xl-3 d-flex justify-content-center">
+                            <div class="o_pbw_sticky">
+                                <t t-call="pickleball_website.player_card"><t t-set="member" t-value="player"/></t>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-xl-9">
+                            <!-- Ratings explained -->
+                            <div class="o_pbw_panel">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-bar-chart"/> Ratings</h3>
+                                    <span t-attf-class="o_pbw_tier_badge o_pbw_tier_{{ player.card_tier or 'bronze' }}" t-out="(player.card_tier or 'bronze').upper()"/>
+                                </div>
+                                <div class="row g-3">
+                                    <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'WIN'"/><t t-set="value" t-value="player.card_win"/><t t-set="label">Win rate</t>Over all matches (pulled towards 50% while there are few).</t>
+                                    <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'FRM'"/><t t-set="value" t-value="player.card_form"/><t t-set="label">Form</t>Win rate over the last 10 matches.</t>
+                                    <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'EXP'"/><t t-set="value" t-value="player.card_exp"/><t t-set="label">Experience</t>Number of matches played.</t>
+                                    <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'ATT'"/><t t-set="value" t-value="player.card_att"/><t t-set="label">Attendance</t>Sessions joined over the last 90 days.</t>
+                                    <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'BET'"/><t t-set="value" t-value="player.card_bet"/><t t-set="label">Betting</t>50 means broke even; higher means winning bets.</t>
+                                    <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'PAY'"/><t t-set="value" t-value="player.card_pay"/><t t-set="label">Fair play</t>99 means no unpaid debt; lower with more and older debts.</t>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-4">
+                                    <t t-call="pickleball_website.stat_tile"><t t-set="light" t-value="True"/><t t-set="value" t-value="'%s-%s' % (player.total_wins, player.total_losses)"/><t t-set="icon" t-value="'fa-flag-checkered'"/>Won - Lost</t>
+                                </div>
+                                <div class="col-md-4">
+                                    <t t-call="pickleball_website.stat_tile"><t t-set="light" t-value="True"/><t t-set="value" t-value="vnd(player.bet_net_total, signed=True)"/><t t-set="icon" t-value="'fa-money'"/>Bet winnings</t>
+                                </div>
+                                <div t-if="sees_money(player)" class="col-md-4">
+                                    <t t-set="_balance" t-value="round(player.balance or 0)"/>
+                                    <t t-call="pickleball_website.stat_tile">
+                                        <t t-set="light" t-value="True"/>
+                                        <t t-set="icon" t-value="'fa-balance-scale'"/>
+                                        <t t-set="value"><t t-if="_balance &lt; 0">Owes <t t-out="vnd(-_balance)"/></t><t t-elif="_balance &gt; 0">Team owes <t t-out="vnd(_balance)"/></t><t t-else="">All paid</t></t>
+                                        Court fees
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-flag-checkered"/> Last 10 matches</h3>
+                                    <t t-call="pickleball_website.form_dots"><t t-set="results" t-value="player.card_recent_results"/></t>
+                                </div>
+                                <t t-call="pickleball_website.my_matches_table"><t t-set="rows" t-value="matches"/></t>
+                            </div>
+
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-calendar-check-o"/> Recent sessions</h3>
+                                    <span class="o_pbw_muted"><t t-out="sessions_played"/> sessions</span>
+                                </div>
+                                <div t-if="sessions" class="o_pbw_session_chips">
+                                    <a t-foreach="sessions" t-as="session" t-attf-href="/club/schedule/{{ session.id }}" class="o_pbw_session_chip">
+                                        <b t-out="session.date.strftime('%d/%m')"/>
+                                        <span t-out="session.court_id.name"/>
+                                    </a>
+                                </div>
+                                <p t-else="" class="text-muted mb-0">No session played yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sent to a new person who signed up on the club website: the
+             link (ctx confirm_url) confirms their email and activates them. -->
+        <record id="mail_template_website_signup_confirm" model="mail.template">
+            <field name="name">Club Website: Confirm Sign-up</field>
+            <field name="model_id" ref="pickleball-team.model_pickleball_member"/>
+            <field name="subject">{{ object.env.company.name }} — xác nhận email / confirm your email</field>
+            <field name="email_from">{{ (object.env.company.email_formatted or user.email_formatted) }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:24px; background:#fbf6ec; font-family:Montserrat,Arial,sans-serif; color:#1b2070;">
+    <div style="max-width:560px; margin:0 auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 0 rgba(27,32,112,0.12);">
+        <div style="padding:22px 28px; background:#3d55e8; color:#ffffff;">
+            <span style="display:inline-block; padding:6px 16px; background:#ec5f4b; font-size:20px; font-weight:900; text-transform:uppercase;">
+                <t t-out="object.env['website'].get_current_website().name or object.env.company.name"/>
+            </span>
+        </div>
+        <div style="padding:28px;">
+            <p style="font-size:18px; font-weight:800; margin:0 0 12px;">Xin chào <t t-out="object.name"/>!</p>
+            <p style="margin:0 0 20px; line-height:1.6;">
+                Cảm ơn bạn đã đăng ký tài khoản thành viên. Bấm nút dưới đây để xác nhận email
+                và bắt đầu dùng khu thành viên của đội.
+            </p>
+            <p style="margin:0 0 24px;">
+                <a t-att-href="ctx.get('confirm_url')"
+                   style="display:inline-block; padding:12px 24px; background:#ec5f4b; color:#ffffff; border-radius:10px; font-weight:800; text-decoration:none; text-transform:uppercase;">
+                    Xác nhận email
+                </a>
+            </p>
+            <p style="margin:0 0 6px; color:#5d6290; font-size:13px;">
+                Thanks for signing up! Click the button above to confirm your email.
+                The link is valid for 48 hours. If you didn't sign up, just ignore this email.
+            </p>
+            <p style="margin:12px 0 0; color:#5d6290; font-size:12px; word-break:break-all;">
+                <t t-out="ctx.get('confirm_url')"/>
+            </p>
+        </div>
+    </div>
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

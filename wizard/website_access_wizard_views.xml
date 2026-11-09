@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pickleball_website_access_wizard_form" model="ir.ui.view">
+        <field name="name">pickleball.website.access.wizard.form</field>
+        <field name="model">pickleball.website.access.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Grant Website Access">
+                <field name="state" invisible="1"/>
+                <div class="alert alert-info" role="status" invisible="state != 'draft'">
+                    Each member gets a portal account to log in to the club website.
+                    Check or change the suggested logins and passwords, then click
+                    <strong>Grant Access</strong>. Existing accounts keep their password
+                    unless you type a new one.
+                </div>
+                <div class="alert alert-success" role="status" invisible="state != 'done'">
+                    <strong>Access granted.</strong> Send each member their login and password
+                    (they can change the password on the website, under My Account &gt; Security).
+                    Passwords are not shown again after you close this window.
+                </div>
+                <field name="line_ids" readonly="state == 'done'">
+                    <list editable="bottom" create="false" delete="true">
+                        <!-- force_save: readonly fields are not sent on save otherwise -->
+                        <field name="member_id" readonly="1" force_save="1"/>
+                        <field name="login"/>
+                        <field name="password" placeholder="(unchanged)"/>
+                        <field name="existing_account" string="Has Account" widget="boolean"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_grant" type="object" string="Grant Access"
+                            class="btn-primary" invisible="state != 'draft'" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"
+                            invisible="state != 'draft'" data-hotkey="x"/>
+                    <button string="Close" class="btn-primary" special="cancel"
+                            invisible="state != 'done'" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- "Action" menu on the members list/form -->
+    <record id="action_pickleball_website_access_wizard" model="ir.actions.act_window">
+        <field name="name">Grant Website Access</field>
+        <field name="res_model">pickleball.website.access.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="pickleball-team.model_pickleball_member"/>
+        <field name="binding_view_types">list,form,kanban</field>
+        <field name="groups_id" eval="[(4, ref('base.group_erp_manager'))]"/>
+    </record>
+
+</odoo>

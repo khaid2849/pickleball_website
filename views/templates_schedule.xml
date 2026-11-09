@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Schedule: upcoming sessions + past sessions (paged)
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_schedule" name="Club: Schedule">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Season</t>
+            <t t-set="page_title">Schedule</t>
+            <t t-set="page_subtitle">Upcoming sessions and every session played so far.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Coming up</t>
+                        <t t-set="title">Next sessions</t>
+                    </t>
+                    <div t-if="upcoming" class="row g-4">
+                        <div t-foreach="upcoming" t-as="session" class="col-md-6 col-xl-4">
+                            <a t-attf-href="/club/schedule/{{ session.id }}" class="o_pbw_fixture">
+                                <t t-call="pickleball_website.date_block">
+                                    <t t-set="day" t-value="session.date"/>
+                                    <t t-set="accent" t-value="session_first"/>
+                                </t>
+                                <div class="o_pbw_fixture_body">
+                                    <t t-call="pickleball_website.session_status"/>
+                                    <b><t t-out="hm(session.time_start)"/> – <t t-out="hm(session.time_end)"/></b>
+                                    <span><i class="fa fa-map-marker"/> <t t-out="session.court_id.name"/>
+                                        <t t-if="session.total_court_count &gt; 1">(<t t-out="session.total_court_count"/> courts)</t></span>
+                                    <span><i class="fa fa-users"/> <t t-out="session.total_player_count"/> players</span>
+                                </div>
+                                <i class="fa fa-chevron-right o_pbw_fixture_go"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div t-else="" class="o_pbw_panel o_pbw_empty">
+                        <i class="fa fa-calendar-o"/>
+                        <h3>No upcoming session</h3>
+                        <p>The next session shows up here as soon as someone books a court.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="o_pbw_section o_pbw_section_alt">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Played</t>
+                        <t t-set="title">Past sessions</t>
+                    </t>
+                    <div t-if="past" class="o_pbw_panel p-0">
+                        <div class="table-responsive">
+                            <table class="table o_pbw_table o_pbw_table_hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Court</th>
+                                        <th class="text-center">Players</th>
+                                        <th class="text-center">Matches</th>
+                                        <th class="text-end">Total cost</th>
+                                        <th class="text-end">Per player</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="past" t-as="session" class="o_pbw_row_link">
+                                        <td class="text-nowrap">
+                                            <a t-attf-href="/club/schedule/{{ session.id }}" class="fw-bold">
+                                                <t t-out="weekday_name(session.date)"/>, <t t-out="fmt_date(session.date)"/>
+                                            </a>
+                                        </td>
+                                        <td class="text-nowrap"><t t-out="hm(session.time_start)"/>–<t t-out="hm(session.time_end)"/></td>
+                                        <td t-out="session.court_id.name"/>
+                                        <td class="text-center" t-out="session.total_player_count"/>
+                                        <td class="text-center" t-out="len(session.match_bet_ids.filtered('winner')) or '—'"/>
+                                        <td class="text-end text-nowrap" t-out="vnd(session.total_expense)"/>
+                                        <td class="text-end text-nowrap" t-out="vnd(session.total_expense / session.total_player_count) if session.total_player_count else '—'"/>
+                                        <td class="text-center"><t t-call="pickleball_website.session_status"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p t-else="" class="text-muted">No sessions yet.</p>
+                    <div class="o_pbw_pager"><t t-call="website.pager"/></div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Session detail: players, matches, costs, settlements
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_session" name="Club: Session">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Session · <t t-out="weekday_name(session.date)"/></t>
+            <t t-set="page_title" t-value="fmt_date(session.date)"/>
+            <t t-set="page_subtitle" t-value="'%s – %s · %s' % (hm(session.time_start), hm(session.time_end), ' + '.join(courts.mapped('name')))"/>
+            <t t-set="hero_extra">
+                <div class="o_pbw_hero_facts">
+                    <div><b t-out="session.total_player_count"/><span>Players</span></div>
+                    <div><b t-out="len(matches)"/><span>Matches</span></div>
+                    <div><b t-out="vnd(session.total_expense)"/><span>Total cost</span></div>
+                    <div><b t-out="vnd(per_person)"/><span>Per player</span></div>
+                </div>
+            </t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                        <a href="/club/schedule" class="o_pbw_back"><i class="fa fa-arrow-left"/> Schedule</a>
+                        <span class="ms-auto"><t t-call="pickleball_website.session_status"/></span>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-7">
+                            <!-- Matches -->
+                            <div class="o_pbw_panel">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-flag-checkered"/> Matches</h3>
+                                </div>
+                                <div t-if="matches" class="o_pbw_match_list">
+                                    <t t-foreach="matches" t-as="row">
+                                        <t t-call="pickleball_website.match_row"><t t-set="compact" t-value="True"/></t>
+                                    </t>
+                                </div>
+                                <p t-else="" class="text-muted mb-0">No match recorded for this session.</p>
+                            </div>
+
+                            <!-- Settlements: the whole split for admins, own share for members -->
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3 t-if="is_admin"><i class="fa fa-balance-scale"/> Bill split</h3>
+                                    <h3 t-else=""><i class="fa fa-balance-scale"/> My share</h3>
+                                    <span t-if="is_admin and settlements" class="o_pbw_muted">
+                                        <t t-out="session.settlement_paid_count"/>/<t t-out="len(settlements)"/> settled
+                                    </span>
+                                </div>
+                                <div t-if="settlements" class="table-responsive">
+                                    <table class="table o_pbw_table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Member</th>
+                                                <th class="text-end">Amount</th>
+                                                <th class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="settlements" t-as="settlement" class="o_pbw_settlement_row">
+                                                <td><t t-call="pickleball_website.player_chip"><t t-set="member" t-value="settlement.member_id"/></t></td>
+                                                <td t-attf-class="text-end text-nowrap fw-bold {{ 'o_pbw_neg' if settlement.amount &lt; 0 else 'o_pbw_pos' }}">
+                                                    <t t-if="settlement.amount &lt; 0">Pays <t t-out="vnd(-settlement.amount)"/></t>
+                                                    <t t-else="">Gets <t t-out="vnd(settlement.amount)"/></t>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span t-if="settlement.is_paid" class="o_pbw_pill o_pbw_pill_settled">
+                                                        <i class="fa fa-check"/> Done<t t-if="settlement.payment_date"> · <t t-out="settlement.payment_date.strftime('%d/%m')"/></t>
+                                                    </span>
+                                                    <span t-else="" class="o_pbw_pill o_pbw_pill_unpaid">Pending</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p t-elif="is_admin or session.state != 'settled'" class="text-muted mb-0">This session's bill hasn't been split yet.</p>
+                                <p t-else="" class="text-muted mb-0">You have nothing to pay or receive for this session.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <!-- Players -->
+                            <div class="o_pbw_panel">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-users"/> Players</h3>
+                                    <span class="o_pbw_muted"><t t-out="session.total_player_count"/> players</span>
+                                </div>
+                                <div class="o_pbw_roster">
+                                    <t t-foreach="session.participant_ids" t-as="member">
+                                        <a t-attf-href="/club/players/{{ member.id }}" class="o_pbw_roster_item">
+                                            <t t-call="pickleball_website.avatar"/>
+                                            <span t-out="member.name"/>
+                                            <i t-if="member == session.booker_id" class="fa fa-ticket" title="Booked the court"/>
+                                        </a>
+                                    </t>
+                                </div>
+                                <div t-if="session.guest_line_ids" class="o_pbw_guests">
+                                    <t t-foreach="session.guest_line_ids" t-as="guest">
+                                        <span><i class="fa fa-user-plus"/> <t t-out="guest.guest_count"/> guest(s) of <b t-out="guest.member_id.name"/>
+                                            <t t-if="guest.notes">(<t t-out="guest.notes"/>)</t></span>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Costs -->
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-file-text-o"/> Costs</h3>
+                                    <b t-out="vnd(session.total_expense)"/>
+                                </div>
+                                <ul t-if="expenses" class="o_pbw_costs">
+                                    <li t-foreach="expenses" t-as="expense">
+                                        <span class="o_pbw_cost_icon"><i t-attf-class="fa {{ expense_icons.get(expense.expense_type, 'fa-tag') }}"/></span>
+                                        <span class="o_pbw_cost_text">
+                                            <b t-out="expense.description or expense_types.get(expense.expense_type)"/>
+                                            <small t-if="expense.payer_id">Paid by <t t-out="expense.payer_id.name"/></small>
+                                        </span>
+                                        <b class="text-nowrap" t-out="vnd(expense.amount)"/>
+                                    </li>
+                                </ul>
+                                <p t-else="" class="text-muted mb-0">No costs yet.</p>
+                            </div>
+
+                            <!-- Venue -->
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-map-marker"/> Venue</h3>
+                                </div>
+                                <t t-foreach="courts" t-as="court">
+                                    <div class="o_pbw_venue">
+                                        <b t-out="court.name"/>
+                                        <span t-if="court.address" t-out="court.address"/>
+                                        <a t-if="court.phone" t-attf-href="tel:{{ court.phone }}"><i class="fa fa-phone"/> <t t-out="court.phone"/></a>
+                                    </div>
+                                </t>
+                                <p class="o_pbw_muted mb-0 mt-2">Booked by <b t-out="session.booker_id.name"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Match results, grouped by session (paged)
+         ════════════════════════════════════════════════════════════════ -->
+    <template id="club_matches" name="Club: Matches">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">On court</t>
+            <t t-set="page_title">Match results</t>
+            <t t-set="page_subtitle">Every recorded match, newest first.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <t t-if="blocks">
+                        <div t-foreach="blocks" t-as="block" class="o_pbw_matchday">
+                            <div class="o_pbw_matchday_head">
+                                <t t-call="pickleball_website.date_block">
+                                    <t t-set="day" t-value="block['session'].date"/>
+                                </t>
+                                <div>
+                                    <h3><a t-attf-href="/club/schedule/{{ block['session'].id }}" t-out="block['session'].court_id.name"/></h3>
+                                    <span class="o_pbw_muted"><t t-out="len(block['matches'])"/> matches · <t t-out="block['session'].total_player_count"/> players</span>
+                                </div>
+                            </div>
+                            <div class="o_pbw_match_list">
+                                <t t-foreach="block['matches']" t-as="row">
+                                    <t t-call="pickleball_website.match_row"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="o_pbw_pager"><t t-call="website.pager"/></div>
+                    </t>
+                    <div t-else="" class="o_pbw_panel o_pbw_empty">
+                        <i class="fa fa-flag-checkered"/>
+                        <h3>No results yet</h3>
+                        <p>Results show up here once matches are recorded in a session.</p>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

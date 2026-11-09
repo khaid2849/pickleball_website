@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Finance.
+         Members: only their own balance, debts, history and bank transfers.
+         Admins (internal users): the whole team as well. -->
+    <template id="club_finance" name="Club: Finance">
+        <t t-call="pickleball_website.club_layout">
+            <t t-if="is_admin">
+                <t t-set="page_kicker">Team finance</t>
+                <t t-set="page_title">Fair and square</t>
+                <t t-set="page_subtitle">Who owes the team and whom the team owes (admin view).</t>
+                <t t-set="hero_extra">
+                    <div class="o_pbw_hero_facts">
+                        <div><b t-out="vnd(total_owed_to_team)"/><span>To collect</span></div>
+                        <div><b t-out="len(debtors)"/><span>Members owing</span></div>
+                        <div><b t-out="vnd(total_owed_by_team)"/><span>Team owes</span></div>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-set="page_kicker">My finance</t>
+                <t t-set="page_title">Fair and square</t>
+                <t t-set="page_subtitle">Your court fees, payments and bank transfers.</t>
+                <t t-set="hero_extra">
+                    <div class="o_pbw_hero_facts">
+                        <div><b t-out="vnd(my_debt)"/><span>To pay</span></div>
+                        <div><b t-out="len(my_unpaid)"/><span>Unpaid sessions</span></div>
+                        <div><b t-out="vnd(my_paid_total)"/><span>Paid so far</span></div>
+                    </div>
+                </t>
+            </t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row g-4">
+                        <!-- Me -->
+                        <div t-if="me" t-attf-class="{{ 'col-lg-5 order-lg-2' if is_admin else 'col-lg-5' }}">
+                            <t t-call="pickleball_website.balance_panel">
+                                <t t-set="member" t-value="me"/>
+                                <t t-set="debt" t-value="my_debt"/>
+                            </t>
+                            <div t-if="team_qr_url and my_debt &gt; 0.5" class="o_pbw_panel mt-4 text-center">
+                                <div class="o_pbw_panel_head justify-content-center"><h3><i class="fa fa-qrcode"/> Team QR code</h3></div>
+                                <img t-att-src="team_qr_url" alt="Bank transfer QR code" class="o_pbw_qr" loading="lazy"/>
+                            </div>
+                            <div t-if="my_transfers and not is_admin" class="o_pbw_panel mt-4">
+                                <t t-call="pickleball_website.my_transfers_panel"/>
+                            </div>
+                        </div>
+
+                        <div t-if="me and not is_admin" class="col-lg-7">
+                            <div class="o_pbw_panel">
+                                <t t-call="pickleball_website.my_history_panel"/>
+                            </div>
+                        </div>
+
+                        <!-- Team (admins only) -->
+                        <div t-if="is_admin" t-attf-class="{{ 'col-lg-7 order-lg-1' if me else 'col-12' }}">
+                            <div class="o_pbw_panel">
+                                <div class="o_pbw_panel_head">
+                                    <h3><i class="fa fa-exclamation-circle"/> Owing the team</h3>
+                                    <span class="o_pbw_muted"><t t-out="len(debtors)"/> members</span>
+                                </div>
+                                <div t-if="debtors" class="table-responsive">
+                                    <table class="table o_pbw_table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Member</th>
+                                                <th>Owing since</th>
+                                                <th class="text-end">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="debtors" t-as="debtor" t-attf-class="{{ 'o_pbw_row_me' if debtor['member'] == me else '' }}">
+                                                <td><t t-call="pickleball_website.player_chip"><t t-set="member" t-value="debtor['member']"/></t></td>
+                                                <td class="text-nowrap" t-out="fmt_date(debtor['since']) or '—'"/>
+                                                <td class="text-end text-nowrap fw-bold o_pbw_neg" t-out="vnd(debtor['owes'])"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div t-else="" class="o_pbw_empty o_pbw_empty_inline">
+                                    <i class="fa fa-check-circle"/>
+                                    <h3>Nobody owes the team — great!</h3>
+                                </div>
+                            </div>
+
+                            <div t-if="owed_members" class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head"><h3><i class="fa fa-reply"/> The team owes</h3></div>
+                                <div class="table-responsive">
+                                    <table class="table o_pbw_table mb-0">
+                                        <tbody>
+                                            <tr t-foreach="owed_members" t-as="member">
+                                                <td><t t-call="pickleball_website.player_chip"/></td>
+                                                <td class="text-end text-nowrap fw-bold o_pbw_pos" t-out="vnd(member.balance)"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="o_pbw_panel mt-4">
+                                <div class="o_pbw_panel_head"><h3><i class="fa fa-check"/> Latest payments</h3></div>
+                                <ul t-if="recent_paid" class="o_pbw_ledger">
+                                    <li t-foreach="recent_paid" t-as="settlement">
+                                        <t t-call="pickleball_website.player_chip"><t t-set="member" t-value="settlement.member_id"/></t>
+                                        <small class="o_pbw_muted text-nowrap">
+                                            <t t-out="settlement.session_date and settlement.session_date.strftime('%d/%m')"/>
+                                            <t t-if="settlement.payment_date"> → <t t-out="settlement.payment_date.strftime('%d/%m')"/></t>
+                                        </small>
+                                        <span class="text-nowrap fw-bold" t-out="vnd(-settlement.amount)"/>
+                                    </li>
+                                </ul>
+                                <p t-else="" class="text-muted mb-0">None yet.</p>
+                            </div>
+
+                            <div t-if="me" class="o_pbw_panel mt-4">
+                                <t t-call="pickleball_website.my_history_panel"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="my_history_panel" name="Club: My Settlements">
+        <div class="o_pbw_panel_head"><h3><i class="fa fa-list"/> My sessions</h3></div>
+        <ul t-if="my_history" class="o_pbw_ledger">
+            <li t-foreach="my_history" t-as="settlement">
+                <a t-attf-href="/club/schedule/{{ settlement.session_id.id }}">
+                    <b t-out="fmt_date(settlement.session_date)"/>
+                    <small t-out="settlement.session_id.court_id.name"/>
+                </a>
+                <span t-attf-class="text-nowrap fw-bold {{ 'o_pbw_neg' if settlement.amount &lt; 0 else 'o_pbw_pos' }}"
+                      t-out="vnd(settlement.amount, signed=True)"/>
+                <span t-if="settlement.is_paid" class="o_pbw_pill o_pbw_pill_settled" title="Settled"><i class="fa fa-check"/></span>
+                <span t-else="" class="o_pbw_pill o_pbw_pill_unpaid">Unpaid</span>
+            </li>
+        </ul>
+        <p t-else="" class="text-muted mb-0">Nothing yet.</p>
+    </template>
+
+    <template id="my_transfers_panel" name="Club: My Bank Transfers">
+        <div class="o_pbw_panel_head"><h3><i class="fa fa-university"/> My bank transfers</h3></div>
+        <ul class="o_pbw_ledger">
+            <li t-foreach="my_transfers" t-as="transfer">
+                <span>
+                    <b t-out="transfer.transaction_date and transfer.transaction_date.strftime('%d/%m/%Y')"/>
+                    <small t-out="transfer.gateway"/>
+                </span>
+                <span class="text-nowrap fw-bold o_pbw_pos" t-out="vnd(transfer.amount)"/>
+                <span t-attf-class="o_pbw_pill {{ 'o_pbw_pill_settled' if transfer.state == 'matched' else 'o_pbw_pill_draft' }}"
+                      t-out="transfer_states.get(transfer.state)"/>
+            </li>
+        </ul>
+    </template>
+
+</odoo>
