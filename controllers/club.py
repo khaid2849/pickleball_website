@@ -113,8 +113,9 @@ def initials(name):
 
 DEMO_PLAYERS = [
     # name, tier, gender, jersey, style, dupr, ovr, (WIN, FRM, EXP, ATT, BET, PAY), W, L, form
-    ('Minh Quân', 'gold', 'male', 9, 'power', 3.85, 84, (82, 88, 91, 95, 74, 99), 41, 17, 'WWLWW'),
+    # First = middle of the sample podium: Gold | Icon | Silver.
     ('Lan Anh', 'icon', 'female', 7, 'dink', 4.10, 88, (86, 92, 89, 99, 81, 99), 46, 12, 'WWWWL'),
+    ('Minh Quân', 'gold', 'male', 9, 'power', 3.85, 84, (82, 88, 91, 95, 74, 99), 41, 17, 'WWLWW'),
     ('Đức Huy', 'silver', 'male', 21, 'all', 3.40, 72, (68, 74, 80, 71, 58, 92), 29, 21, 'LWWLW'),
 ]
 DEMO_RANKING = [

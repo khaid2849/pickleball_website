@@ -220,7 +220,7 @@
                         <div class="col-lg-5 d-flex justify-content-center">
                             <div class="o_pbw_showcase_card">
                                 <span class="o_pbw_sample_badge">Sample</span>
-                                <t t-call="pickleball_website.player_card"><t t-set="member" t-value="demo_players[1]"/></t>
+                                <t t-call="pickleball_website.player_card"><t t-set="member" t-value="demo_players[0]"/></t>
                             </div>
                         </div>
                     </div>
@@ -267,7 +267,7 @@
                             <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary mt-3">Get my card</a>
                         </div>
                         <div class="col-lg-8">
-                            <div class="o_pbw_podium">
+                            <div class="o_pbw_podium o_pbw_podium_sample">
                                 <t t-foreach="demo_players" t-as="member">
                                     <div t-attf-class="o_pbw_podium_spot o_pbw_podium_{{ member_index + 1 }}">
                                         <t t-call="pickleball_website.player_card"/>

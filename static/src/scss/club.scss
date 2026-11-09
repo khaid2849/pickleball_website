@@ -1876,8 +1876,31 @@ $pbw-tiers: (
     }
 }
 
+// Sample cards of the public home page: the three cards on one row (Gold |
+// Icon | Silver), a bit smaller so they fit next to the tier list.
+.o_pbw_podium_sample {
+    flex-wrap: nowrap;
+    gap: 16px;
+
+    .o_pb_card {
+        zoom: 0.85;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .o_pbw_podium_sample .o_pb_card {
+        zoom: 0.76;
+    }
+}
+
 // Small screens: the podium stacks — show it in rank order.
 @media (max-width: 767.98px) {
+    .o_pbw_podium_sample {
+        flex-wrap: wrap;
+
+        .o_pb_card {
+            zoom: 1;
+        }
+    }
     .o_pbw_podium_spot.o_pbw_podium_1,
     .o_pbw_podium_spot.o_pbw_podium_2,
     .o_pbw_podium_spot.o_pbw_podium_3 {
