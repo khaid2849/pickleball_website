@@ -163,7 +163,8 @@
                                 <li><a href="/club/me">My page</a></li>
                                 <li><a href="/club/matches">Match results</a></li>
                                 <li><a href="/club/finance">My finance</a></li>
-                                <li><a href="/my/security">Change password</a></li>
+                                <!-- Members: confirmed by email (Edit my profile); admins: Odoo's page. -->
+                                <li><a t-att-href="'/my/security' if user_id._is_internal() else '/club/me/edit#pbw_password'">Change password</a></li>
                             </ul>
                         </div>
                     </div>

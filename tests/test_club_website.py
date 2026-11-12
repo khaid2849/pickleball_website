@@ -184,6 +184,46 @@ class TestClubPages(ClubDataMixin, HttpCase):
         self.assertEqual(self.url_open('/club/players').status_code, 403)
         self.assertEqual(self.url_open(f'/club/photo/{self.an.id}').status_code, 404)
 
+    def test_player_cards_link_to_profiles(self):
+        self.authenticate(self.login, self.password)
+        page = self.url_open('/club/players').text
+        self.assertRegex(page, rf'<a (?=[^>]*href="[^"]*/club/players/{self.binh.id}")[^>]*class="o_pbw_card_link o_pbw_card_link_active"')
+
+    def _post_login(self, login, password):
+        self.authenticate(None, None)
+        page = self.url_open('/web/login')
+        csrf_token = re.search(r'name="csrf_token" value="([^"]+)"', page.text).group(1)
+        return self.url_open('/web/login', data={
+            'login': login, 'password': password, 'csrf_token': csrf_token,
+        }, allow_redirects=False)
+
+    def test_login_with_email(self):
+        self.assertIn('Username or email', self.url_open('/en/web/login').text)
+        user = self.an.user_id
+        user.email = 'Web.An@Example.com'
+        for login in (user.login, 'web.an@example.com', ' WEB.AN@example.com '):
+            response = self._post_login(login, self.password)
+            self.assertIn(response.status_code, (302, 303), login)
+            self.assertTrue(response.headers['Location'].endswith('/club/me'), login)
+        self.assertEqual(self._post_login('web.an@example.com', 'wrong-password').status_code, 200)
+
+    def test_login_email_must_be_unique(self):
+        Users = self.env['res.users']
+        user = self.an.user_id
+        user.email = 'web.shared@example.com'
+        self.assertEqual(Users._get_login_domain('web.shared@example.com'), [('id', '=', user.id)])
+        # Two accounts with the same email: the email logs nobody in.
+        self._grant(self.binh)
+        self.binh.user_id.email = 'web.shared@example.com'
+        self.assertFalse(Users.search(Users._get_login_domain('web.shared@example.com')))
+        # The username always wins over an email.
+        self.binh.user_id.login = 'web.shared@example.com'
+        self.assertEqual(Users.search(Users._get_login_domain('web.shared@example.com')), self.binh.user_id)
+        # Archived accounts are not found by their email.
+        self.binh.user_id.login = 'web.binh'
+        self.binh.user_id.active = False
+        self.assertEqual(Users.search(Users._get_login_domain('web.shared@example.com')), user)
+
     def test_login_lands_on_dashboard(self):
         page = self.url_open('/web/login')
         csrf_token = re.search(r'name="csrf_token" value="([^"]+)"', page.text).group(1)

@@ -143,7 +143,13 @@
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="players" t-as="member" t-attf-class="{{ 'o_pbw_row_me' if member == me else '' }}">
-                                        <td class="text-center"><span t-attf-class="o_pbw_rank o_pbw_rank_{{ member_index + 1 if member_index &lt; 3 else 'n' }}" t-out="member_index + 1"/></td>
+                                        <t t-set="move" t-value="moves.get(member.id)"/>
+                                        <td class="text-center">
+                                            <span class="o_pbw_rank_cell">
+                                                <span t-attf-class="o_pbw_rank o_pbw_rank_{{ member_index + 1 if member_index &lt; 3 else 'n' }}" t-out="member_index + 1"/>
+                                                <t t-if="move" t-call="pickleball_website.rank_move"><t t-set="move" t-value="move['rank']"/></t>
+                                            </span>
+                                        </td>
                                         <td>
                                             <a t-attf-href="/club/players/{{ member.id }}" class="o_pbw_player_cell">
                                                 <t t-call="pickleball_website.avatar"/>
@@ -153,21 +159,42 @@
                                                 </span>
                                             </a>
                                         </td>
-                                        <td class="text-center"><b class="o_pbw_ovr_badge" t-out="member.card_overall"/></td>
+                                        <td class="text-center">
+                                            <b class="o_pbw_ovr_badge" t-out="member.card_overall"/>
+                                            <t t-if="move" t-call="pickleball_website.stat_delta"><t t-set="delta" t-value="move['ovr']"/></t>
+                                        </td>
                                         <td class="text-center" t-out="member.total_matches"/>
                                         <td class="text-center" t-out="member.total_wins"/>
                                         <td class="text-center" t-out="member.total_losses"/>
-                                        <td class="text-center fw-bold"><t t-out="round(member.win_rate)"/>%</td>
+                                        <td class="text-center fw-bold">
+                                            <t t-out="round(member.win_rate)"/>%
+                                            <t t-if="move" t-call="pickleball_website.stat_delta">
+                                                <t t-set="delta" t-value="move['win_rate']"/>
+                                                <t t-set="text" t-value="('%g' % abs(move['win_rate'])) + '%'"/>
+                                            </t>
+                                        </td>
                                         <td class="text-center d-none d-md-table-cell">
                                             <t t-call="pickleball_website.form_dots"><t t-set="results" t-value="member.card_recent_results"/></t>
                                         </td>
-                                        <td t-attf-class="text-end text-nowrap fw-bold {{ 'o_pbw_pos' if member.bet_net_total &gt; 0 else ('o_pbw_neg' if member.bet_net_total &lt; 0 else '') }}"
-                                            t-out="vnd(member.bet_net_total, signed=True) if member.bet_net_total else '0đ'"/>
+                                        <td class="text-end text-nowrap">
+                                            <b t-attf-class="{{ 'o_pbw_pos' if member.bet_net_total &gt; 0 else ('o_pbw_neg' if member.bet_net_total &lt; 0 else '') }}"
+                                               t-out="vnd(member.bet_net_total, signed=True) if member.bet_net_total else '0đ'"/>
+                                            <t t-if="move" t-call="pickleball_website.stat_delta">
+                                                <t t-set="delta" t-value="move['bet']"/>
+                                                <t t-set="text" t-value="vnd(abs(move['bet']))"/>
+                                            </t>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <p t-if="moves" class="o_pbw_muted o_pbw_moves_note mt-3">
+                        <i class="fa fa-caret-up o_pbw_pos"/><i class="fa fa-caret-down o_pbw_neg me-1"/>
+                        <span>Changes since before the session of</span>
+                        <a t-attf-href="/club/schedule/{{ moves_session.id }}" t-out="fmt_date(moves_session.date)"/>:
+                        <span>places in the ranking, OVR, win rate and bets.</span>
+                    </p>
                     <p t-if="unranked" class="o_pbw_muted mt-3">
                         No match yet: <t t-foreach="unranked" t-as="member"><a t-attf-href="/club/players/{{ member.id }}" t-out="member.name"/><t t-if="not member_last">, </t></t>
                     </p>

@@ -41,5 +41,128 @@
 </div>
             </field>
         </record>
+
+        <!-- Sent when an admin approves a member's website sign-up ("I'm
+             already a member"): their account is open. ctx login_url. -->
+        <record id="mail_template_website_signup_approved" model="mail.template">
+            <field name="name">Club Website: Sign-up Approved</field>
+            <field name="model_id" ref="pickleball-team.model_pickleball_member"/>
+            <field name="subject">{{ object.env.company.name }} — tài khoản đã được duyệt / your account is approved</field>
+            <field name="email_from">{{ (object.env.company.email_formatted or user.email_formatted) }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:24px; background:#fbf6ec; font-family:Montserrat,Arial,sans-serif; color:#1b2070;">
+    <div style="max-width:560px; margin:0 auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 0 rgba(27,32,112,0.12);">
+        <div style="padding:22px 28px; background:#3d55e8; color:#ffffff;">
+            <span style="display:inline-block; padding:6px 16px; background:#ec5f4b; font-size:20px; font-weight:900; text-transform:uppercase;">
+                <t t-out="object.env['website'].get_current_website().name or object.env.company.name"/>
+            </span>
+        </div>
+        <div style="padding:28px;">
+            <p style="font-size:18px; font-weight:800; margin:0 0 12px;">Chào mừng <t t-out="object.name"/> vào đội! 🎉</p>
+            <p style="margin:0 0 16px; line-height:1.6;">
+                Tài khoản website của bạn đã được duyệt. Giờ bạn có thể đăng nhập để xem thẻ cầu thủ,
+                lịch thi đấu, bảng xếp hạng và tài chính của mình.
+            </p>
+            <p style="margin:0 0 20px; padding:12px 16px; background:#fbf6ec; border-radius:10px; line-height:1.6;">
+                Tên đăng nhập / Username: <b t-out="object.user_id.login"/><br/>
+                Email: <b t-out="object.user_id.email"/>
+            </p>
+            <p style="margin:0 0 24px;">
+                <a t-att-href="ctx.get('login_url')"
+                   style="display:inline-block; padding:12px 24px; background:#ec5f4b; color:#ffffff; border-radius:10px; font-weight:800; text-decoration:none; text-transform:uppercase;">
+                    Đăng nhập
+                </a>
+            </p>
+            <p style="margin:0; color:#5d6290; font-size:13px;">
+                Your club website account is approved: log in with your username or email
+                and the password you chose when signing up.
+            </p>
+        </div>
+    </div>
+</div>
+            </field>
+        </record>
+
+        <!-- Sent when a member asks for a new password on "Edit my profile":
+             it only applies once they open the link (ctx confirm_url,
+             valid_minutes) and confirm. -->
+        <record id="mail_template_website_password_confirm" model="mail.template">
+            <field name="name">Club Website: Confirm Password Change</field>
+            <field name="model_id" ref="pickleball-team.model_pickleball_member"/>
+            <field name="subject">{{ object.env.company.name }} — xác nhận đổi mật khẩu / confirm your new password</field>
+            <field name="email_from">{{ (object.env.company.email_formatted or user.email_formatted) }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:24px; background:#fbf6ec; font-family:Montserrat,Arial,sans-serif; color:#1b2070;">
+    <div style="max-width:560px; margin:0 auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 0 rgba(27,32,112,0.12);">
+        <div style="padding:22px 28px; background:#3d55e8; color:#ffffff;">
+            <span style="display:inline-block; padding:6px 16px; background:#ec5f4b; font-size:20px; font-weight:900; text-transform:uppercase;">
+                <t t-out="object.env['website'].get_current_website().name or object.env.company.name"/>
+            </span>
+        </div>
+        <div style="padding:28px;">
+            <p style="font-size:18px; font-weight:800; margin:0 0 12px;">Xin chào <t t-out="object.name"/>!</p>
+            <p style="margin:0 0 20px; line-height:1.6;">
+                Bạn vừa yêu cầu đổi mật khẩu tài khoản website của đội
+                (tên đăng nhập <b t-out="object.user_id.login"/>). Mật khẩu mới chỉ có hiệu lực
+                sau khi bạn bấm nút dưới đây và xác nhận.
+            </p>
+            <p style="margin:0 0 24px;">
+                <a t-att-href="ctx.get('confirm_url')"
+                   style="display:inline-block; padding:12px 24px; background:#ec5f4b; color:#ffffff; border-radius:10px; font-weight:800; text-decoration:none; text-transform:uppercase;">
+                    Xác nhận đổi mật khẩu
+                </a>
+            </p>
+            <p style="margin:0 0 6px; color:#5d6290; font-size:13px;">
+                Liên kết có hiệu lực trong <t t-out="ctx.get('valid_minutes')"/> phút. Nếu không phải bạn yêu cầu,
+                hãy bỏ qua email này: mật khẩu của bạn sẽ không thay đổi — và nên báo cho admin của đội.
+            </p>
+            <p style="margin:0 0 6px; color:#5d6290; font-size:13px;">
+                You asked for a new password on the club website. Click the button above to confirm it
+                (valid for <t t-out="ctx.get('valid_minutes')"/> minutes). Didn't ask for it? Ignore this email:
+                your password stays the same.
+            </p>
+            <p style="margin:12px 0 0; color:#5d6290; font-size:12px; word-break:break-all;">
+                <t t-out="ctx.get('confirm_url')"/>
+            </p>
+        </div>
+    </div>
+</div>
+            </field>
+        </record>
+
+        <!-- Sent once the new password applies (ctx changed_at). -->
+        <record id="mail_template_website_password_changed" model="mail.template">
+            <field name="name">Club Website: Password Changed</field>
+            <field name="model_id" ref="pickleball-team.model_pickleball_member"/>
+            <field name="subject">{{ object.env.company.name }} — mật khẩu đã được đổi / your password was changed</field>
+            <field name="email_from">{{ (object.env.company.email_formatted or user.email_formatted) }}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin:0; padding:24px; background:#fbf6ec; font-family:Montserrat,Arial,sans-serif; color:#1b2070;">
+    <div style="max-width:560px; margin:0 auto; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 6px 0 rgba(27,32,112,0.12);">
+        <div style="padding:22px 28px; background:#3d55e8; color:#ffffff;">
+            <span style="display:inline-block; padding:6px 16px; background:#ec5f4b; font-size:20px; font-weight:900; text-transform:uppercase;">
+                <t t-out="object.env['website'].get_current_website().name or object.env.company.name"/>
+            </span>
+        </div>
+        <div style="padding:28px;">
+            <p style="font-size:18px; font-weight:800; margin:0 0 12px;">Mật khẩu của bạn đã được đổi 🔒</p>
+            <p style="margin:0 0 16px; line-height:1.6;">
+                Mật khẩu tài khoản <b t-out="object.user_id.login"/> đã được đổi lúc
+                <b t-out="ctx.get('changed_at')"/>. Các thiết bị khác đã bị đăng xuất: hãy đăng nhập lại bằng mật khẩu mới.
+            </p>
+            <p style="margin:0 0 6px; color:#5d6290; font-size:13px;">
+                Không phải bạn đổi? Báo ngay cho admin của đội để khoá tài khoản.
+            </p>
+            <p style="margin:0; color:#5d6290; font-size:13px;">
+                The password of your club website account was changed. If it wasn't you, tell the team admin right away.
+            </p>
+        </div>
+    </div>
+</div>
+            </field>
+        </record>
     </data>
 </odoo>

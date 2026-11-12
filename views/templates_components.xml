@@ -12,9 +12,16 @@
         <t t-set="_positions" t-value="{'all': 'ALL', 'dink': 'DNK', 'power': 'PWR', 'net': 'NET', 'def': 'DEF'}"/>
         <t t-set="_balance" t-value="round(member.balance or 0)"/>
         <t t-set="_photo" t-value="not no_photo and photo_url(member)"/>
-        <t t-set="_tag" t-value="'a' if href else 'div'"/>
-        <t t-tag="_tag" t-att-href="href" t-attf-class="o_pbw_card_link {{ 'o_pbw_card_link_active' if href else '' }}"
-           t-att-aria-label="member.name if href else None">
+        <a t-if="href" t-att-href="href" class="o_pbw_card_link o_pbw_card_link_active" t-att-aria-label="member.name">
+            <t t-call="pickleball_website.player_card_body"/>
+        </a>
+        <div t-else="" class="o_pbw_card_link">
+            <t t-call="pickleball_website.player_card_body"/>
+        </div>
+    </template>
+
+    <!-- The card itself, inside player_card's link (or plain block). -->
+    <template id="player_card_body" name="Club: Player Card Body">
         <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} {{ '' if member.active else 'o_pb_card_archived' }}">
             <svg class="o_pb_deco o_pb_deco_chevrons" viewBox="0 0 96 40" aria-hidden="true">
                 <polyline points="6,6 20,20 6,34"/>
@@ -83,7 +90,6 @@
                 </t>
             </div>
         </div>
-        </t>
     </template>
 
     <!-- Drawn player (no photo): long hair for female members. Param: member. -->
@@ -144,6 +150,30 @@
             </t>
         </span>
         <span t-else="" class="text-muted small">—</span>
+    </template>
+
+    <!-- Places gained/lost in a ranking. Param: move (int, None = newcomer). -->
+    <template id="rank_move" name="Club: Rank Move">
+        <span t-if="move is None" class="o_pbw_move o_pbw_move_new" title="New in the ranking">NEW</span>
+        <span t-elif="move &gt; 0" class="o_pbw_move o_pbw_move_up" title="Places gained">
+            <i class="fa fa-caret-up"/><t t-out="move"/>
+        </span>
+        <span t-elif="move &lt; 0" class="o_pbw_move o_pbw_move_down" title="Places lost">
+            <i class="fa fa-caret-down"/><t t-out="-move"/>
+        </span>
+        <span t-else="" class="o_pbw_move o_pbw_move_same" title="Same place"><i class="fa fa-minus"/></span>
+    </template>
+
+    <!-- Change of a figure. Params: delta (number), text (optional, shown
+         instead of the number, e.g. an amount). -->
+    <template id="stat_delta" name="Club: Stat Delta">
+        <small t-if="delta &gt; 0" class="o_pbw_delta o_pbw_delta_up">
+            <i class="fa fa-caret-up"/><t t-out="text or ('%g' % delta)"/>
+        </small>
+        <small t-elif="delta &lt; 0" class="o_pbw_delta o_pbw_delta_down">
+            <i class="fa fa-caret-down"/><t t-out="text or ('%g' % -delta)"/>
+        </small>
+        <small t-else="" class="o_pbw_delta o_pbw_delta_same" title="No change"><i class="fa fa-minus"/></small>
     </template>
 
     <!-- Calendar-style date block. Param: day (date), accent (bool). -->

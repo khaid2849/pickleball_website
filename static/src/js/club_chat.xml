@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="pickleball_website.ClubChat">
+        <div class="o_pbw_chat" t-att-class="{ 'o_pbw_chat_open': state.open }">
+            <div t-if="state.open" class="o_pbw_chat_panel" role="dialog" aria-label="Club chat">
+                <div class="o_pbw_chat_header">
+                    <div class="o_pbw_chat_avatar" aria-hidden="true"><i class="fa fa-comments"/></div>
+                    <div class="o_pbw_chat_heading">
+                        <strong>Club assistant</strong>
+                        <small t-if="state.tab === 'admin'">Your messages go straight to the admins</small>
+                        <small t-else="">Answers in seconds, any time</small>
+                    </div>
+                    <button t-if="state.tab === 'assistant' and state.loaded" type="button"
+                            class="o_pbw_chat_icon_btn" title="New conversation" aria-label="New conversation"
+                            t-on-click="newConversation">
+                        <i class="fa fa-refresh"/>
+                    </button>
+                    <button type="button" class="o_pbw_chat_icon_btn" title="Close" aria-label="Close"
+                            t-on-click="toggle">
+                        <i class="fa fa-times"/>
+                    </button>
+                </div>
+
+                <div t-if="state.info?.admin_chat" class="o_pbw_chat_tabs" role="tablist">
+                    <button type="button" role="tab" t-att-aria-selected="state.tab === 'assistant' ? 'true' : 'false'"
+                            t-att-class="{ active: state.tab === 'assistant' }" t-on-click="() => this.switchTab('assistant')">
+                        <i class="fa fa-magic me-1"/>Assistant
+                    </button>
+                    <button type="button" role="tab" t-att-aria-selected="state.tab === 'admin' ? 'true' : 'false'"
+                            t-att-class="{ active: state.tab === 'admin' }" t-on-click="() => this.switchTab('admin')">
+                        <i class="fa fa-user-circle me-1"/>Talk to an admin
+                        <span t-if="state.unread" class="o_pbw_chat_badge" t-esc="state.unread"/>
+                    </button>
+                </div>
+
+                <!-- Assistant: frequent questions + AI -->
+                <t t-if="state.tab === 'assistant'">
+                    <div class="o_pbw_chat_body" t-ref="scroll">
+                        <div t-if="!state.loaded and !state.error" class="o_pbw_chat_loading">
+                            <i class="fa fa-circle-o-notch fa-spin"/>
+                        </div>
+                        <div t-if="state.error" class="o_pbw_chat_msg o_pbw_chat_msg_bot o_pbw_chat_msg_error">
+                            <div class="o_pbw_chat_bubble" t-esc="state.error"/>
+                        </div>
+                        <t t-foreach="state.messages" t-as="message" t-key="message.key">
+                            <div t-att-class="{
+                                    'o_pbw_chat_msg': true,
+                                    'o_pbw_chat_msg_me': message.from === 'me',
+                                    'o_pbw_chat_msg_bot': message.from === 'bot',
+                                    'o_pbw_chat_msg_error': message.error }">
+                                <div class="o_pbw_chat_bubble">
+                                    <t t-out="format(message.text)"/>
+                                    <div t-if="message.image" class="o_pbw_chat_image">
+                                        <img t-att-src="message.image" alt="" loading="lazy" t-on-error="hideImage"/>
+                                    </div>
+                                    <div t-if="message.actions.length" class="o_pbw_chat_actions">
+                                        <a t-foreach="message.actions" t-as="action" t-key="action_index"
+                                           t-att-href="action.url" class="o_pbw_chat_action">
+                                            <t t-esc="action.label"/><i class="fa fa-angle-right ms-1"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="message.faqs and isLast(message)" class="o_pbw_chat_faqs">
+                                <button t-foreach="faqs" t-as="faq" t-key="faq.key" type="button"
+                                        class="o_pbw_chat_faq" t-att-disabled="state.busy"
+                                        t-on-click="() => this.askFaq(faq)">
+                                    <i t-attf-class="fa {{ faq.icon }}"/><span t-esc="faq.label"/>
+                                </button>
+                                <button t-if="state.info?.admin_chat" type="button" class="o_pbw_chat_faq o_pbw_chat_faq_admin"
+                                        t-on-click="() => this.switchTab('admin')">
+                                    <i class="fa fa-user-circle"/><span>Talk to an admin</span>
+                                </button>
+                            </div>
+                        </t>
+                        <div t-if="state.busy" class="o_pbw_chat_msg o_pbw_chat_msg_bot">
+                            <div class="o_pbw_chat_bubble o_pbw_chat_typing"><span/><span/><span/></div>
+                        </div>
+                    </div>
+                    <form class="o_pbw_chat_composer" t-on-submit.prevent="ask">
+                        <textarea t-ref="input" rows="1" maxlength="1000" t-model="state.input"
+                                  t-att-disabled="!canAsk"
+                                  t-att-placeholder="askPlaceholder"
+                                  t-on-keydown="onInputKeydown"/>
+                        <button type="submit" class="o_pbw_chat_send" title="Send" aria-label="Send"
+                                t-att-disabled="!canAsk or state.busy or !state.input.trim()">
+                            <i class="fa fa-paper-plane"/>
+                        </button>
+                    </form>
+                </t>
+
+                <!-- Talk to an admin (Discuss conversation) -->
+                <t t-else="">
+                    <div class="o_pbw_chat_body" t-ref="scroll">
+                        <div class="o_pbw_chat_notice">
+                            <i class="fa fa-lock me-1"/>
+                            Only you and the admins<t t-if="adminNames"> (<t t-esc="adminNames"/>)</t> see this conversation.
+                            They answer here as soon as they can.
+                        </div>
+                        <div t-if="!state.adminMessages.length" class="o_pbw_chat_empty">
+                            <i class="fa fa-paper-plane-o"/>
+                            <p>Write your question: a session, a payment, your card…</p>
+                        </div>
+                        <div t-foreach="state.adminMessages" t-as="message" t-key="message.id"
+                             t-att-class="{
+                                'o_pbw_chat_msg': true,
+                                'o_pbw_chat_msg_me': message.mine,
+                                'o_pbw_chat_msg_bot': !message.mine }">
+                            <div t-if="!message.mine" class="o_pbw_chat_author" t-esc="message.author"/>
+                            <div class="o_pbw_chat_bubble"><t t-out="format(message.text)"/></div>
+                            <div class="o_pbw_chat_time" t-esc="formatTime(message.date)"/>
+                        </div>
+                    </div>
+                    <div t-if="state.adminError" class="o_pbw_chat_error" t-esc="state.adminError"/>
+                    <form class="o_pbw_chat_composer" t-on-submit.prevent="sendToAdmin">
+                        <textarea t-ref="input" rows="1" maxlength="2000" t-model="state.adminInput"
+                                  placeholder="Message to the admins…" t-on-keydown="onInputKeydown"/>
+                        <button type="submit" class="o_pbw_chat_send" title="Send" aria-label="Send"
+                                t-att-disabled="state.sending or !state.adminInput.trim()">
+                            <i class="fa fa-paper-plane"/>
+                        </button>
+                    </form>
+                </t>
+            </div>
+
+            <button type="button" class="o_pbw_chat_launcher" t-on-click="toggle"
+                    t-att-aria-label="launcherLabel"
+                    t-att-aria-expanded="state.open ? 'true' : 'false'">
+                <i t-attf-class="fa {{ state.open ? 'fa-times' : 'fa-comments' }}"/>
+                <span t-if="state.unread and !state.open" class="o_pbw_chat_badge" t-esc="state.unread"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

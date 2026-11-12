@@ -1,6 +1,6 @@
 {
     'name': 'Pickleball Club Website',
-    'version': '18.0.1.10.0',
+    'version': '18.0.1.11.0',
     'category': 'Website',
     'summary': 'Members-only club website: schedule, player cards, rankings, matches and finance',
     'description': """
@@ -16,6 +16,9 @@ member player cards:
 - Session page: admins build the matches by dragging players into teams
 - Website accounts for members (portal users linked to pickleball.member),
   granted by an admin with the "Grant Website Access" wizard
+- Chat bubble for logged-in members: instant answers to frequent questions,
+  the team's AI assistant, and a conversation with the admins (Discuss)
+- Password change from "Edit my profile", confirmed by email
     """,
     'author': 'Khaid',
     'depends': ['website', 'portal', 'auth_signup', 'mail', 'pickleball-team'],
@@ -35,7 +38,10 @@ member player cards:
         'views/templates_rankings.xml',
         'views/templates_finance.xml',
         'views/templates_register.xml',
+        'views/templates_profile.xml',
         'views/templates_tournament.xml',
+        'views/templates_chat.xml',
+        'views/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [
@@ -45,6 +51,9 @@ member player cards:
             'pickleball_website/static/src/scss/match_builder.scss',
             'pickleball_website/static/src/js/session_match_builder.js',
             'pickleball_website/static/src/js/session_match_builder.xml',
+            'pickleball_website/static/src/scss/club_chat.scss',
+            'pickleball_website/static/src/js/club_chat.js',
+            'pickleball_website/static/src/js/club_chat.xml',
         ],
     },
     'post_init_hook': 'post_init_hook',

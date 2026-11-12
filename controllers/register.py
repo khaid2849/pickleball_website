@@ -62,6 +62,8 @@ class ClubRegister(http.Controller):
         # authenticate() checks the password with its own cursor: the new
         # account must be committed first (same as auth_signup's sign-up).
         request.env.cr.commit()
+        if member.website_state == 'pending_approval':
+            member._website_notify_bot_managers(request.httprequest.host_url)
         try:
             request.session.authenticate(request.db, {
                 'login': form['login'], 'password': password, 'type': 'password'})

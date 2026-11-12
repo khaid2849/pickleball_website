@@ -248,17 +248,7 @@ class PickleballClub(http.Controller):
 
     @staticmethod
     def _sort_players(members, key):
-        if key == 'name':
-            return members.sorted(lambda m: (m.name or '').lower())
-        if key == 'matches':
-            return members.sorted(lambda m: (-m.total_matches, -m.card_overall))
-        if key == 'winrate':
-            return members.sorted(lambda m: (-m.card_win, -m.total_matches))
-        if key == 'wins':
-            return members.sorted(lambda m: (-m.total_wins, -m.win_rate))
-        if key == 'bet':
-            return members.sorted(lambda m: (-m.bet_net_total, -m.card_overall))
-        return members.sorted(lambda m: (-m.card_overall, -m.card_win, (m.name or '').lower()))
+        return members._sort_for_ranking(key)
 
     def _match_rows(self, bets, member=None):
         """Matches as dicts for the scoreboard template. With `member`, adds
@@ -574,9 +564,13 @@ class PickleballClub(http.Controller):
             return self._club_pair_rankings(by)
         by = by if by in dict(RANKING_SORTS) else 'ovr'
         members = self._active_members()
+        players = self._sort_players(members.filtered('total_matches'), by)
+        moves_session, moves = players._get_ranking_moves(by)
         values = self._values(
             'rankings',
-            players=self._sort_players(members.filtered('total_matches'), by),
+            players=players,
+            moves=moves,
+            moves_session=moves_session,
             unranked=members.filtered(lambda m: not m.total_matches),
             by=by, sorts=[(key, str(label)) for key, label in RANKING_SORTS],
             kind='players',

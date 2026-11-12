@@ -199,6 +199,13 @@
 
     <!-- Link to the club sign-up under the login form. -->
     <template id="club_login_sign_up" inherit_id="web.login" name="Club: Login Sign Up Link" priority="99">
+        <!-- Log in with the username or the email (res.users._get_login_domain). -->
+        <xpath expr="//label[@for='login']" position="replace">
+            <label for="login" class="form-label d-flex justify-content-between">Username or email</label>
+        </xpath>
+        <xpath expr="//input[@id='login']" position="attributes">
+            <attribute name="placeholder">Username or email</attribute>
+        </xpath>
         <xpath expr="//div[hasclass('oe_login_buttons')]" position="after">
             <p class="mt-3 text-center o_pbw_login_signup">
                 No account yet? <a href="/club/register">Create one</a>

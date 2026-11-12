@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Chat bubble of the club website, on every page, for logged-in
+         members (approved account) and admins. Pages can hide it with
+         no_pickleball_chat. -->
+    <template id="club_chat_bubble" inherit_id="website.layout" name="Club: Chat Bubble">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <t t-if="not no_pickleball_chat and not editable and not request.env.user._is_public() and request.env.user._pickleball_website_chat_enabled()">
+                <owl-component name="pickleball_website.club_chat"
+                               t-att-props="json.dumps({'userId': request.env.user.id})"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

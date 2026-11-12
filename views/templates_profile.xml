@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Image field of the profile form (photo / payment QR code).
+         Params: upload (input name), remove (checkbox name), current (image url), round, label, help. -->
+    <template id="profile_image_field" name="Club: Profile Image Field">
+        <div class="o_pbw_image_field">
+            <div t-attf-class="o_pbw_image_preview {{ 'o_pbw_image_preview_round' if round else '' }}">
+                <img t-if="current" t-att-src="current" t-att-alt="label" loading="lazy"/>
+                <i t-else="" t-attf-class="fa {{ icon }}"/>
+            </div>
+            <div class="o_pbw_image_inputs">
+                <label t-att-for="'pbw_%s' % upload" class="form-label" t-out="label"/>
+                <input type="file" t-att-id="'pbw_%s' % upload" t-att-name="upload" accept="image/png,image/jpeg,image/webp,image/gif"
+                       t-attf-class="form-control {{ 'is-invalid' if errors.get(upload) else '' }}"/>
+                <div class="form-text" t-out="help"/>
+                <t t-call="pickleball_website.register_error"><t t-set="name" t-value="upload"/></t>
+                <div t-if="current" class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input" t-att-id="'pbw_%s' % remove" t-att-name="remove" value="1"/>
+                    <label class="form-check-label" t-att-for="'pbw_%s' % remove">Remove</label>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="club_profile_edit" name="Club: Edit My Profile">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">My page</t>
+            <t t-set="page_title">Edit my profile</t>
+            <t t-set="page_subtitle">Your details, your photo and how teammates pay you back.</t>
+
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row g-4">
+                        <div class="col-lg-4 col-xl-3 d-flex flex-column align-items-center">
+                            <div class="o_pbw_sticky">
+                                <t t-call="pickleball_website.player_card">
+                                    <t t-set="member" t-value="me"/>
+                                    <t t-set="href" t-value="'/club/players/%s' % me.id"/>
+                                </t>
+                                <div class="o_pbw_panel o_pbw_locked_note mt-3">
+                                    <h4><i class="fa fa-lock"/> Managed by the team</h4>
+                                    <p>Your card ratings (OVR, WIN, FRM…), DUPR, debts and payments, and the Telegram/Zalo links
+                                        are kept by the admins. Something wrong? Tell them.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 col-xl-9">
+                            <div t-if="saved" class="alert alert-success" role="status">
+                                <i class="fa fa-check-circle me-2"/>Your profile is saved.
+                            </div>
+                            <div t-if="errors" class="alert alert-danger" role="alert">
+                                <i class="fa fa-exclamation-triangle me-2"/>Some fields need fixing: nothing was saved.
+                                <ul class="mb-0 mt-2">
+                                    <li t-foreach="errors.values()" t-as="error" t-out="error"/>
+                                </ul>
+                            </div>
+
+                            <form action="/club/me/edit" method="post" enctype="multipart/form-data"
+                                  class="o_pbw_panel o_pbw_form_panel" novalidate="novalidate">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <h3 class="o_pbw_form_step"><span><i class="fa fa-user"/></span> About me</h3>
+                                <t t-call="pickleball_website.profile_image_field">
+                                    <t t-set="upload" t-value="'photo'"/>
+                                    <t t-set="remove" t-value="'remove_photo'"/>
+                                    <t t-set="current" t-value="photo_url(me)"/>
+                                    <t t-set="round" t-value="True"/>
+                                    <t t-set="icon" t-value="'fa-camera'"/>
+                                    <t t-set="label">Photo</t>
+                                    <t t-set="help">Shown on your player card. Without a photo, the card draws a player.</t>
+                                </t>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-8">
+                                        <label for="pbw_name" class="form-label">Full name</label>
+                                        <input type="text" id="pbw_name" name="name" t-att-value="form.get('name')" required="required"
+                                               maxlength="80" autocomplete="name"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('name') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'name'"/></t>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="pbw_gender" class="form-label">Gender</label>
+                                        <select id="pbw_gender" name="gender"
+                                                t-attf-class="form-select {{ 'is-invalid' if errors.get('gender') else '' }}">
+                                            <option value="male" t-att-selected="form.get('gender') == 'male'">Male</option>
+                                            <option value="female" t-att-selected="form.get('gender') == 'female'">Female</option>
+                                        </select>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'gender'"/></t>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="pbw_play_style" class="form-label">Play style</label>
+                                        <select id="pbw_play_style" name="play_style"
+                                                t-attf-class="form-select {{ 'is-invalid' if errors.get('play_style') else '' }}">
+                                            <option value="">—</option>
+                                            <t t-foreach="play_styles.items()" t-as="style">
+                                                <option t-att-value="style[0]" t-att-selected="form.get('play_style') == style[0]" t-out="style[1]"/>
+                                            </t>
+                                        </select>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'play_style'"/></t>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="pbw_jersey" class="form-label">Jersey number</label>
+                                        <input type="number" id="pbw_jersey" name="jersey_number" min="0" max="99"
+                                               t-att-value="form.get('jersey_number')"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('jersey_number') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'jersey_number'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_email" class="form-label">Email</label>
+                                        <input type="email" id="pbw_email" name="email" t-att-value="form.get('email')" required="required"
+                                               autocomplete="email" t-attf-class="form-control {{ 'is-invalid' if errors.get('email') else '' }}"/>
+                                        <div class="form-text">You can also log in with it.</div>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'email'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_phone" class="form-label">Phone <span class="o_pbw_muted">(optional)</span></label>
+                                        <input type="tel" id="pbw_phone" name="phone" t-att-value="form.get('phone')" autocomplete="tel"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('phone') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'phone'"/></t>
+                                    </div>
+                                </div>
+
+                                <h3 class="o_pbw_form_step mt-5"><span><i class="fa fa-university"/></span> Payment details</h3>
+                                <p class="o_pbw_muted">
+                                    So the team can pay you back, and so your bank transfers clear your debts automatically:
+                                    they are matched on the account number and the holder name.
+                                </p>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="pbw_bank_name" class="form-label">Bank</label>
+                                        <input type="text" id="pbw_bank_name" name="bank_name" t-att-value="form.get('bank_name')" maxlength="60"
+                                               placeholder="Vietcombank, MB, Techcombank…"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('bank_name') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'bank_name'"/></t>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pbw_bank_account" class="form-label">Account number</label>
+                                        <input type="text" id="pbw_bank_account" name="bank_account" t-att-value="form.get('bank_account')"
+                                               inputmode="numeric" maxlength="30" autocomplete="off"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('bank_account') else '' }}"/>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'bank_account'"/></t>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="pbw_bank_holder" class="form-label">Account holder name</label>
+                                        <input type="text" id="pbw_bank_holder" name="bank_holder_name" t-att-value="form.get('bank_holder_name')"
+                                               maxlength="120" placeholder="NGUYEN VAN AN" autocomplete="off"
+                                               t-attf-class="form-control {{ 'is-invalid' if errors.get('bank_holder_name') else '' }}"/>
+                                        <div class="form-text">As your bank prints it. You also pay from another account (e.g. your spouse's)?
+                                            Add its holder name after a comma. Empty = your full name.</div>
+                                        <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'bank_holder_name'"/></t>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <t t-call="pickleball_website.profile_image_field">
+                                        <t t-set="upload" t-value="'qr'"/>
+                                        <t t-set="remove" t-value="'remove_qr'"/>
+                                        <t t-set="current" t-value="qr_url"/>
+                                        <t t-set="round" t-value="False"/>
+                                        <t t-set="icon" t-value="'fa-qrcode'"/>
+                                        <t t-set="label">Payment QR code</t>
+                                        <t t-set="help">The QR code of your bank account, for the team to pay you back.</t>
+                                    </t>
+                                </div>
+
+                                <div class="o_pbw_form_actions">
+                                    <button type="submit" class="btn o_pbw_btn o_pbw_btn_primary">
+                                        <i class="fa fa-check me-2"/>Save
+                                    </button>
+                                    <a href="/club/me" class="o_pbw_muted">Cancel</a>
+                                </div>
+                            </form>
+
+                            <t t-call="pickleball_website.profile_password_form"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- "Password" panel of the profile page: the new password applies once
+         confirmed from the email sent to the account. -->
+    <template id="profile_password_form" name="Club: Profile Password Form">
+        <form id="pbw_password" action="/club/me/password" method="post"
+              class="o_pbw_panel o_pbw_form_panel mt-4" novalidate="novalidate">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <h3 class="o_pbw_form_step"><span><i class="fa fa-key"/></span> Password</h3>
+            <p class="o_pbw_muted">
+                To change your password, enter the current one and the new one. We then email you a link:
+                the new password only applies once you open it and confirm.
+            </p>
+            <div t-if="password_sent" class="alert alert-success" role="status">
+                <i class="fa fa-envelope-o me-2"/>Almost done: we sent a confirmation link to
+                <b t-out="account_email"/>. Open it within an hour to apply your new password (check your spam folder too).
+            </div>
+            <div t-elif="password_pending and not password_errors" class="alert alert-info" role="status">
+                <i class="fa fa-hourglass-half me-2"/>A password change waits for your confirmation: check the email sent to
+                <b t-out="account_email"/>. Asking again sends a new link.
+            </div>
+            <div t-if="password_errors" class="alert alert-danger" role="alert">
+                <i class="fa fa-exclamation-triangle me-2"/>Your password was not changed.
+            </div>
+            <t t-set="errors" t-value="password_errors"/>
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label for="pbw_current_password" class="form-label">Current password</label>
+                    <input type="password" id="pbw_current_password" name="current_password" required="required"
+                           autocomplete="current-password"
+                           t-attf-class="form-control {{ 'is-invalid' if errors.get('current_password') else '' }}"/>
+                    <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'current_password'"/></t>
+                </div>
+                <div class="col-md-6">
+                    <label for="pbw_new_password" class="form-label">New password</label>
+                    <input type="password" id="pbw_new_password" name="new_password" required="required" minlength="8"
+                           autocomplete="new-password"
+                           t-attf-class="form-control {{ 'is-invalid' if errors.get('new_password') else '' }}"/>
+                    <div class="form-text">At least 8 characters.</div>
+                    <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'new_password'"/></t>
+                </div>
+                <div class="col-md-6">
+                    <label for="pbw_confirm_password" class="form-label">Repeat the new password</label>
+                    <input type="password" id="pbw_confirm_password" name="confirm_password" required="required"
+                           autocomplete="new-password"
+                           t-attf-class="form-control {{ 'is-invalid' if errors.get('confirm_password') else '' }}"/>
+                    <t t-call="pickleball_website.register_error"><t t-set="name" t-value="'confirm_password'"/></t>
+                </div>
+            </div>
+            <div class="o_pbw_form_actions">
+                <button type="submit" class="btn o_pbw_btn o_pbw_btn_dark">
+                    <i class="fa fa-envelope me-2"/>Change my password
+                </button>
+            </div>
+        </form>
+    </template>
+
+    <!-- Landing of the password confirmation email link.
+         state: confirm (button), done, invalid (unknown or expired link). -->
+    <template id="club_password_confirm" name="Club: Confirm New Password">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">My account</t>
+            <t t-set="page_title" t-if="state == 'invalid'">Link expired</t>
+            <t t-set="page_title" t-elif="state == 'done'">Password changed</t>
+            <t t-set="page_title" t-else="">Confirm your new password</t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div t-if="state == 'confirm'" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-key"/>
+                                <h3>Apply the new password?</h3>
+                                <p><b t-out="member_name"/>, you asked for a new password on the club website.
+                                    Once confirmed, your other devices are logged out.</p>
+                                <form t-attf-action="/club/me/password/confirm/{{ token }}" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn o_pbw_btn o_pbw_btn_primary">
+                                        <i class="fa fa-check me-2"/>Confirm my new password
+                                    </button>
+                                </form>
+                                <p class="o_pbw_muted mt-3 mb-0">You didn't ask for it? Just close this page and tell the team admin.</p>
+                            </div>
+                            <div t-elif="state == 'done'" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-check-circle"/>
+                                <h3>Your new password is active</h3>
+                                <p>Use it from now on. Your other devices were logged out.</p>
+                                <a t-if="logged_in" href="/club/me" class="btn o_pbw_btn o_pbw_btn_primary">My page</a>
+                                <a t-else="" href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_primary">Log in</a>
+                            </div>
+                            <div t-else="" class="o_pbw_panel o_pbw_empty">
+                                <i class="fa fa-chain-broken"/>
+                                <h3>This link is no longer valid</h3>
+                                <p>It was already used, or it expired (links are valid for one hour). Your password did not change:
+                                    ask for a new one from "Edit my profile".</p>
+                                <a href="/club/me/edit#pbw_password" class="btn o_pbw_btn o_pbw_btn_primary">Edit my profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

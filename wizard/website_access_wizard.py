@@ -110,6 +110,10 @@ class PickleballWebsiteAccessWizardLine(models.TransientModel):
         vals = {'login': login, 'active': True}
         if self.password:
             vals['password'] = self.password
+        # The member's email goes on the account (it logs in too), unless
+        # another account already uses it.
+        if member.email and not user.email and not member._website_email_taken(member.email):
+            vals['email'] = member.email
         if user:
             user.write(vals)
             member.sudo().website_state = 'approved'

@@ -45,6 +45,9 @@
                                     <t t-set="member" t-value="me"/>
                                     <t t-set="href" t-value="'/club/players/%s' % me.id"/>
                                 </t>
+                                <a href="/club/me/edit" class="btn o_pbw_btn o_pbw_btn_dark w-100 mt-3">
+                                    <i class="fa fa-pencil me-2"/>Edit my profile
+                                </a>
                             </div>
                         </div>
                         <div class="col-lg-8 col-xl-9">
