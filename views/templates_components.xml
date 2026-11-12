@@ -8,9 +8,11 @@
          Params: member (sudo record), href (optional link), no_photo.
          ════════════════════════════════════════════════════════════════ -->
     <template id="player_card" name="Club: Player Card">
-        <t t-set="_tier" t-value="member.card_tier or 'bronze'"/>
+        <!-- card: pickleball.member._gm_card_view() (optional; computed for
+             the viewer here). Money is already filtered on the server. -->
+        <t t-set="_v" t-value="card or card_view(member)"/>
+        <t t-set="_tier" t-value="_v['tier']"/>
         <t t-set="_positions" t-value="{'all': 'ALL', 'dink': 'DNK', 'power': 'PWR', 'net': 'NET', 'def': 'DEF'}"/>
-        <t t-set="_balance" t-value="round(member.balance or 0)"/>
         <t t-set="_photo" t-value="not no_photo and photo_url(member)"/>
         <a t-if="href" t-att-href="href" class="o_pbw_card_link o_pbw_card_link_active" t-att-aria-label="member.name">
             <t t-call="pickleball_website.player_card_body"/>
@@ -22,8 +24,14 @@
 
     <!-- The card itself, inside player_card's link (or plain block). -->
     <template id="player_card_body" name="Club: Player Card Body">
-        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} {{ '' if member.active else 'o_pb_card_archived' }}">
-            <svg class="o_pb_deco o_pb_deco_chevrons" viewBox="0 0 96 40" aria-hidden="true">
+        <t t-set="_special" t-value="_v['variant'] != _tier"/>
+        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} o_pb_card_step_{{ _v['step'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _special else '' }} {{ '' if member.active else 'o_pb_card_archived' }}"
+             t-att-style="_v['style'] or None">
+            <svg t-if="_v['theme'].get('flame')" class="o_pb_deco o_pb_deco_flame" viewBox="0 0 40 48" aria-hidden="true">
+                <path d="M20 2C24 12 34 16 34 30A14 14 0 0 1 6 30C6 22 11 18 13 12C15 18 18 19 19 18C17 12 18 6 20 2Z"/>
+                <path d="M20 22C22 27 27 29 27 35A7 7 0 0 1 13 35C13 31 16 29 17 26C18 29 20 29 20 28C19 26 19 24 20 22Z"/>
+            </svg>
+            <svg t-else="" class="o_pb_deco o_pb_deco_chevrons" viewBox="0 0 96 40" aria-hidden="true">
                 <polyline points="6,6 20,20 6,34"/>
                 <polyline points="36,6 50,20 36,34"/>
                 <polyline points="66,6 80,20 66,34"/>
@@ -34,21 +42,31 @@
                 <path d="M30 4V18M23 11H37"/>
                 <path d="M44 44L52 30L58 44Z"/>
             </svg>
+            <div t-if="_v['season_number']" class="o_pb_deco o_pb_card_season_no" aria-hidden="true" t-out="_v['season_number']"/>
 
             <div class="o_pb_card_head">
                 <div class="o_pb_card_ovr" title="Overall rating">
-                    <b t-out="member.card_overall"/>
+                    <b t-out="_v['ovr']"/>
+                    <small t-if="_v['ovr_boost']" class="o_pb_card_boost">+<t t-out="_v['ovr_boost']"/></small>
                     <span>OVR</span>
                 </div>
                 <div class="o_pb_card_tags">
-                    <span class="o_pb_card_tag o_pb_card_tag_tier" t-out="_tier.upper()"/>
+                    <span class="o_pb_card_tag o_pb_card_tag_tier" t-out="_v['tier_label']"/>
+                    <span t-if="_v['card_label']" class="o_pb_card_tag o_pb_card_label" t-out="_v['card_label']"/>
                     <span class="o_pb_card_tag" title="Play style" t-out="_positions.get(member.play_style, 'PB')"/>
                     <span t-if="member.dupr_rating" class="o_pb_card_tag" title="DUPR rating">DUPR <t t-out="'%.2f' % member.dupr_rating"/></span>
                 </div>
                 <div class="o_pb_card_icons">
-                    <span t-if="member.is_bot_manager" title="Team captain"><i class="fa fa-star" role="img" aria-label="Captain"/></span>
-                    <span t-if="member.telegram_chat_id" title="Telegram"><i class="fa fa-telegram" role="img" aria-label="Telegram"/></span>
-                    <span t-if="member.zalo_chat_id" title="Zalo"><b>Z</b></span>
+                    <t t-if="_v['badges']">
+                        <span t-foreach="_v['badges']" t-as="badge" t-attf-class="o_pb_card_badge o_pb_card_badge_{{ badge['level'] }}" t-att-title="badge['name']">
+                            <i t-attf-class="fa {{ badge['icon'] }}" role="img" t-att-aria-label="badge['name']"/>
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <span t-if="member.is_bot_manager" title="Team captain"><i class="fa fa-star" role="img" aria-label="Captain"/></span>
+                        <span t-if="member.telegram_chat_id" title="Telegram"><i class="fa fa-telegram" role="img" aria-label="Telegram"/></span>
+                        <span t-if="member.zalo_chat_id" title="Zalo"><b>Z</b></span>
+                    </t>
                 </div>
             </div>
 
@@ -63,30 +81,36 @@
             </div>
 
             <div class="o_pb_card_stats">
-                <t t-foreach="[('WIN', member.card_win), ('FRM', member.card_form), ('EXP', member.card_exp), ('ATT', member.card_att), ('BET', member.card_bet), ('PAY', member.card_pay)]" t-as="stat">
+                <t t-foreach="_v['stats']" t-as="stat">
                     <div class="o_pb_card_stat">
-                        <span class="o_pb_card_stat_label" t-out="stat[0]"/>
-                        <b t-out="stat[1]"/>
-                        <span class="o_pb_card_bar"><i t-attf-style="width: {{ stat[1] }}%"/></span>
+                        <span class="o_pb_card_stat_label" t-out="stat['label']"/>
+                        <b><t t-out="stat['value']"/><small t-if="stat['boost']" class="o_pb_card_boost">+<t t-out="stat['boost']"/></small></b>
+                        <span class="o_pb_card_bar"><i t-attf-style="width: {{ stat['value'] }}%"/></span>
                     </div>
                 </t>
             </div>
 
-            <!-- Money is private: only the member themselves and admins see it. -->
-            <div t-if="sees_money(member)" t-attf-class="o_pb_card_debt o_pb_card_debt_{{ 'owes' if _balance &lt; 0 else ('owed' if _balance &gt; 0 else 'paid') }}">
-                <i t-attf-class="fa {{ 'fa-check-circle' if not _balance else 'fa-money' }}"/>
+            <!-- Money (spec §10): the amount for the member, admins, or when the
+                 member made it public; else only "All paid" when nothing is owed. -->
+            <t t-set="_fin" t-value="_v['finance']"/>
+            <div t-if="_fin" t-attf-class="o_pb_card_debt o_pb_card_debt_{{ _fin['state'] }}">
+                <i t-attf-class="fa {{ 'fa-check-circle' if _fin['state'] == 'paid' else 'fa-money' }}"/>
                 <span class="o_pb_card_debt_label">
-                    <t t-if="_balance &lt; 0">Owes</t>
-                    <t t-elif="_balance &gt; 0">Team owes</t>
+                    <t t-if="_fin['state'] == 'owes'">Owes</t>
+                    <t t-elif="_fin['state'] == 'owed'">Team owes</t>
                     <t t-else="">All paid</t>
                 </span>
-                <b t-if="_balance" t-out="vnd(abs(_balance))"/>
+                <b t-if="_fin['amount']" t-out="vnd(_fin['amount'])"/>
             </div>
 
             <div class="o_pb_card_footer">
-                <span class="o_pb_card_record"><t t-out="member.total_wins"/>W · <t t-out="member.total_losses"/>L</span>
+                <span t-if="_v['rookie']" class="o_pb_card_record o_pb_card_rookie_progress" title="Rookie: matches played">
+                    <t t-out="_v['matches']"/>/<t t-out="_v['rookie_target']"/> matches
+                    <i><b t-attf-style="width: {{ min(100, round(100 * _v['matches'] / (_v['rookie_target'] or 10))) }}%"/></i>
+                </span>
+                <span t-else="" class="o_pb_card_record"><t t-out="_v['wins']"/>W · <t t-out="_v['losses']"/>L</span>
                 <t t-call="pickleball_website.form_dots">
-                    <t t-set="results" t-value="member.card_recent_results"/>
+                    <t t-set="results" t-value="_v['recent']"/>
                 </t>
             </div>
         </div>

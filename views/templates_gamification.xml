@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════════
+         Gamification of the player card (pickleball-team
+         docs/gamification-spec.md): progress, challenges, Evolution, season,
+         album, showcase, badges, duos, rivalries, walkouts.
+         ════════════════════════════════════════════════════════════════ -->
+
+    <!-- Tier progress bar under the card: owner only, never on share images.
+         Param: progress (pickleball.member._gm_progress()). -->
+    <template id="gm_tier_progress" name="Club: Tier Progress">
+        <div t-attf-class="o_pbw_tierprog o_pbw_tier_{{ progress['tier'] }}">
+            <t t-if="progress['next']">
+                <div class="o_pbw_tierprog_line">
+                    <b><t t-out="progress['gap']"/> OVR</b> <i class="fa fa-long-arrow-right"/> <span t-out="progress['next_label']"/>
+                </div>
+                <div class="o_pbw_tierprog_bar" role="progressbar" t-att-aria-valuenow="round(progress['ratio'] * 100)"
+                     aria-valuemin="0" aria-valuemax="100">
+                    <i t-attf-style="width: {{ round(progress['ratio'] * 100) }}%"/>
+                </div>
+                <div class="o_pbw_tierprog_ends">
+                    <span t-out="progress['code_label']"/>
+                    <span t-out="progress['next_label']"/>
+                </div>
+            </t>
+            <div t-else="" class="o_pbw_tierprog_line"><i class="fa fa-diamond"/> <b>ICON</b></div>
+            <p t-if="progress['demoted_from']" class="o_pbw_tierprog_note">
+                Keep your form to get back to <b t-out="progress['demoted_from']"/>.
+            </p>
+            <ul t-if="progress['icon_checklist']" class="o_pbw_tierprog_check">
+                <li t-foreach="progress['icon_checklist']" t-as="item" t-attf-class="{{ 'done' if item['done'] else '' }}">
+                    <i t-attf-class="fa {{ 'fa-check-circle' if item['done'] else 'fa-circle-o' }}"/>
+                    <t t-if="item['key'] == 'ovr'">OVR <t t-out="item['target']"/>+</t>
+                    <t t-elif="item['key'] == 'hold'">Held for <t t-out="item['value']"/>/<t t-out="item['target']"/> days</t>
+                    <t t-else=""><t t-out="item['value']"/>/<t t-out="item['target']"/> matches in 90 days</t>
+                </li>
+            </ul>
+            <p t-if="progress['hint']" class="o_pbw_tierprog_hint"><i class="fa fa-lightbulb-o"/> <t t-out="progress['hint']"/></p>
+        </div>
+    </template>
+
+    <!-- Badge chip with its level border. Params: badge_type, level. -->
+    <template id="gm_badge_chip" name="Club: Badge Chip">
+        <span t-attf-class="o_pbw_badge o_pbw_badge_l{{ level or 0 }}" t-att-title="badge_type.name">
+            <i t-attf-class="fa {{ badge_type.icon }}"/>
+        </span>
+    </template>
+
+    <!-- Duo card. Param: pair (pickleball.duo.pair), card (optional instance). -->
+    <template id="duo_card" name="Club: Duo Card">
+        <t t-set="_a" t-value="pair.member_a_id"/>
+        <t t-set="_b" t-value="pair.member_b_id"/>
+        <t t-set="_colors" t-value="{'bronze': '#e9d0ad', 'silver': '#cfd5de', 'gold': '#f7c948', 'icon': '#4b2c7a'}"/>
+        <div class="o_pb_card o_pb_card_duo o_pb_card_step_2"
+             t-attf-style="background: linear-gradient(105deg, {{ _colors.get(_a.card_display_tier, '#e9d0ad') }} 0 50%, {{ _colors.get(_b.card_display_tier, '#e9d0ad') }} 50% 100%)">
+            <div class="o_pb_card_head">
+                <div class="o_pb_card_ovr" title="Chemistry"><b t-out="pair.chemistry"/><span>CHEM</span></div>
+                <div class="o_pb_card_tags">
+                    <span class="o_pb_card_tag o_pb_card_tag_tier" t-out="dict(pair._fields['duo_tier']._description_selection(request.env)).get(pair.duo_tier) if pair.duo_tier != 'none' else 'DUO'"/>
+                </div>
+            </div>
+            <div class="o_pb_duo_avatars">
+                <t t-foreach="[_a, _b]" t-as="_m">
+                    <t t-set="_photo" t-value="photo_url(_m)"/>
+                    <span><img t-if="_photo" t-att-src="_photo" t-att-alt="_m.name" loading="lazy"/><t t-else="" t-out="initials(_m.name)"/></span>
+                </t>
+            </div>
+            <div class="o_pb_card_ribbon" t-att-title="pair.name"><span t-out="pair.name"/></div>
+            <div class="o_pb_duo_chem"><b t-out="pair.chemistry"/><span>CHEM</span></div>
+            <div class="o_pb_card_footer">
+                <span class="o_pb_card_record"><t t-out="pair.wins"/>W · <t t-out="pair.losses"/>L</span>
+                <t t-call="pickleball_website.form_dots"><t t-set="results" t-value="pair.last5"/></t>
+            </div>
+        </div>
+    </template>
+
+    <!-- ═══ Dashboard ═══ -->
+    <template id="club_dashboard_gamification" inherit_id="pickleball_website.club_dashboard" name="Club: Dashboard Gamification">
+        <xpath expr="//a[@href='/club/me/edit']" position="before">
+            <t t-call="pickleball_website.gm_tier_progress"><t t-set="progress" t-value="gm_progress"/></t>
+            <div class="o_pbw_card_actions">
+                <a href="/club/me/showcase" class="btn o_pbw_btn o_pbw_btn_light"><i class="fa fa-star me-1"/>Showcase</a>
+                <a t-attf-href="/club/players/{{ me.id }}/album" class="btn o_pbw_btn o_pbw_btn_light"><i class="fa fa-th me-1"/>Album</a>
+                <a t-attf-href="/club/api/members/{{ me.id }}/card/share.png" class="btn o_pbw_btn o_pbw_btn_light"
+                   download=""><i class="fa fa-share-alt me-1"/>Share</a>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-call='pickleball_website.balance_panel']" position="after">
+            <div class="row g-3 mt-1">
+                <!-- Season XP -->
+                <div class="col-md-5">
+                    <div class="o_pbw_panel o_pbw_gm_season h-100">
+                        <div class="o_pbw_panel_head">
+                            <h3><i class="fa fa-flag"/> Season</h3>
+                            <a href="/club/season" class="o_pbw_more">Leaderboard <i class="fa fa-arrow-right"/></a>
+                        </div>
+                        <t t-if="gm_season">
+                            <div class="o_pbw_gm_level">
+                                <b>Lv <t t-out="gm_season_stat.level or 1"/></b>
+                                <span><t t-out="gm_season.code"/> · <t t-out="gm_season_stat.xp or 0"/> XP<t t-if="gm_season_stat.rank"> · #<t t-out="gm_season_stat.rank"/></t></span>
+                            </div>
+                            <div class="o_pbw_tierprog_bar"><i t-attf-style="width: {{ min(100, round(100 * (gm_season_stat.level_progress or 0) / gm_config['xp_per_level'])) }}%"/></div>
+                            <small class="o_pbw_muted"><t t-out="gm_config['xp_per_level'] - (gm_season_stat.level_progress or 0)"/> XP to the next level</small>
+                        </t>
+                        <p t-else="" class="o_pbw_muted mb-0">Season 1 starts on <b t-out="gm_config['season_start']"/>: XP, weekly challenges and Evolution open then.</p>
+                    </div>
+                </div>
+                <!-- Weekly challenges -->
+                <div class="col-md-7">
+                    <div class="o_pbw_panel h-100">
+                        <div class="o_pbw_panel_head"><h3><i class="fa fa-bullseye"/> This week's challenges</h3></div>
+                        <ul t-if="gm_challenges" class="o_pbw_gm_challenges">
+                            <li t-foreach="gm_challenges" t-as="challenge" t-attf-class="o_pbw_gm_ch_{{ challenge.difficulty }} {{ 'done' if challenge.state == 'done' else '' }}">
+                                <span class="o_pbw_gm_ch_label">
+                                    <i t-attf-class="fa {{ 'fa-check-circle' if challenge.state == 'done' else 'fa-circle-o' }}"/>
+                                    <t t-out="challenge.label"/>
+                                </span>
+                                <span class="o_pbw_gm_ch_xp">+<t t-out="gm_config['xp']['challenge_' + challenge.difficulty]"/> XP</span>
+                                <div class="o_pbw_tierprog_bar"><i t-attf-style="width: {{ min(100, round(100 * challenge.progress / (challenge.target or 1))) }}%"/></div>
+                                <small><t t-out="challenge.progress"/>/<t t-out="challenge.target"/></small>
+                            </li>
+                        </ul>
+                        <p t-else="" class="o_pbw_muted mb-0">New challenges every Monday during a season.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Evolution -->
+            <div id="o_pbw_evolution" class="o_pbw_panel mt-3">
+                <div class="o_pbw_panel_head"><h3><i class="fa fa-level-up"/> Evolution</h3></div>
+                <t t-if="gm_evolution">
+                    <t t-set="_stages" t-value="gm_evolution.track_id._stage_labels()"/>
+                    <p class="mb-2"><b t-out="gm_evolution.track_id.name"/> — <span class="o_pbw_muted" t-out="gm_evolution.track_id.description"/></p>
+                    <ol class="o_pbw_gm_evo">
+                        <li t-foreach="range(4)" t-as="i" t-attf-class="{{ 'done' if i &lt; gm_evolution.stage else ('current' if i == gm_evolution.stage else '') }}">
+                            <b t-out="i + 1"/>
+                            <span t-out="_stages[i] if i &lt; len(_stages) else ''"/>
+                        </li>
+                    </ol>
+                    <p t-if="gm_evolution.state == 'done'" class="mb-0"><i class="fa fa-trophy"/> EVO card complete!</p>
+                </t>
+                <form t-if="gm_season and (not gm_evolution or gm_evolution.state == 'done')" action="/club/me/evolution" method="post" class="o_pbw_gm_tracks">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <p class="o_pbw_muted mb-2">Pick a track: one stage a week, 4 stages for an EVO card. Switching track loses the progress.</p>
+                    <button t-foreach="gm_tracks" t-as="track" type="submit" name="track_code" t-att-value="track.code"
+                            class="btn o_pbw_btn o_pbw_btn_light me-2 mb-2">
+                        <b t-out="track.name"/> <small t-out="track.description"/>
+                    </button>
+                </form>
+                <p t-if="not gm_season" class="o_pbw_muted mb-0">Evolution tracks open with the season.</p>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ═══ Player profile ═══ -->
+    <template id="club_player_gamification" inherit_id="pickleball_website.club_player" name="Club: Player Gamification">
+        <xpath expr="//div[hasclass('o_pbw_sticky')]" position="inside">
+            <a t-attf-href="/club/players/{{ player.id }}/album" class="btn o_pbw_btn o_pbw_btn_dark w-100 mt-3">
+                <i class="fa fa-th me-2"/>Card album
+            </a>
+        </xpath>
+        <xpath expr="//div[hasclass('o_pbw_panel')]" position="after">
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
+                    <div class="o_pbw_panel h-100">
+                        <div class="o_pbw_panel_head"><h3><i class="fa fa-certificate"/> Badges</h3></div>
+                        <div t-if="gm_badges" class="o_pbw_gm_badges">
+                            <div t-foreach="gm_badges" t-as="row" class="o_pbw_gm_badge">
+                                <t t-call="pickleball_website.gm_badge_chip"><t t-set="badge_type" t-value="row['type']"/><t t-set="level" t-value="row['level']"/></t>
+                                <div>
+                                    <b t-out="row['type'].name"/>
+                                    <small class="o_pbw_muted d-block">
+                                        <t t-out="row['progress']"/> <t t-out="row['type'].description"/>
+                                        <t t-if="row['next']"> · next <t t-out="row['next']"/></t>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <p t-else="" class="o_pbw_muted mb-0">No badge yet.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="o_pbw_panel h-100">
+                        <div class="o_pbw_panel_head"><h3><i class="fa fa-bolt"/> Rivals</h3></div>
+                        <ul t-if="gm_rivals" class="o_pbw_gm_rivals">
+                            <li t-foreach="gm_rivals" t-as="rivalry">
+                                <t t-set="_score" t-value="rivalry._score_for(player)"/>
+                                <t t-call="pickleball_website.player_chip"><t t-set="member" t-value="_score[2]"/></t>
+                                <b class="o_pbw_gm_score"><t t-out="_score[0]"/>–<t t-out="_score[1]"/></b>
+                                <span class="o_pb_card_form">
+                                    <i t-foreach="rivalry.last5 or []" t-as="meeting" t-attf-class="o_pb_card_dot o_pb_card_dot_{{ 'W' if meeting[1] == player.id else 'L' }}"/>
+                                </span>
+                            </li>
+                        </ul>
+                        <p t-else="" class="o_pbw_muted mb-0">A rivalry: 6+ meetings this season, wins within 2.</p>
+                    </div>
+                </div>
+            </div>
+            <div t-if="gm_duos" class="o_pbw_panel mt-3">
+                <div class="o_pbw_panel_head"><h3><i class="fa fa-handshake-o"/> Best duos</h3></div>
+                <div class="table-responsive">
+                    <table class="table o_pbw_table mb-0">
+                        <thead><tr><th>Partner</th><th>CHEM</th><th>W-L</th><th>Form</th></tr></thead>
+                        <tbody>
+                            <tr t-foreach="gm_duos" t-as="pair">
+                                <td><t t-call="pickleball_website.player_chip"><t t-set="member" t-value="pair.member_b_id if pair.member_a_id == player else pair.member_a_id"/></t></td>
+                                <td><b t-out="pair.chemistry"/></td>
+                                <td><t t-out="pair.wins"/>-<t t-out="pair.losses"/></td>
+                                <td><t t-call="pickleball_website.form_dots"><t t-set="results" t-value="pair.last5"/></t></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- ═══ Album ═══ -->
+    <template id="club_album" name="Club: Card Album">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Card album</t>
+            <t t-set="page_title" t-value="player.name"/>
+            <t t-set="page_subtitle">Collection <t t-out="album['owned']"/>/<t t-out="album['total']"/></t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <a t-attf-href="/club/players/{{ player.id }}" class="o_pbw_back mb-3 d-inline-block"><i class="fa fa-arrow-left"/> Profile</a>
+                    <div class="o_pbw_tierprog_bar o_pbw_album_progress mb-4"><i t-attf-style="width: {{ round(100 * album['owned'] / (album['total'] or 1)) }}%"/></div>
+                    <t t-foreach="album['sections']" t-as="section">
+                        <h3 class="o_pbw_album_title" t-out="section['label']"/>
+                        <div class="o_pbw_album_grid">
+                            <t t-foreach="section['slots']" t-as="slot">
+                                <t t-set="_cards" t-value="slot['cards']"/>
+                                <div t-if="_cards" class="o_pbw_album_slot o_pbw_album_owned">
+                                    <details>
+                                        <summary>
+                                            <div class="o_pbw_album_mini">
+                                                <t t-if="section['category'] == 'duo'">
+                                                    <t t-call="pickleball_website.duo_card"><t t-set="pair" t-value="_cards[0].duo_pair_id"/></t>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-call="pickleball_website.player_card">
+                                                        <t t-set="member" t-value="player"/>
+                                                        <t t-set="card" t-value="player._gm_card_view(card=_cards[0], finance=False, frozen=True)"/>
+                                                        <t t-set="no_photo" t-value="False"/>
+                                                    </t>
+                                                </t>
+                                            </div>
+                                            <b class="o_pbw_album_name"><t t-out="slot['type'].name"/><span t-if="len(_cards) &gt; 1" class="o_pbw_album_count">×<t t-out="len(_cards)"/></span></b>
+                                        </summary>
+                                        <ul class="o_pbw_album_detail">
+                                            <li t-foreach="_cards" t-as="instance">
+                                                <b t-out="fmt_date(instance.earned_at.date())"/>
+                                                <span>OVR <t t-out="instance.display_ovr"/></span>
+                                                <code t-out="instance.period_key"/>
+                                                <a t-if="is_owner" t-attf-href="/club/api/members/{{ player.id }}/card/share.png?card={{ instance.id }}" download=""><i class="fa fa-share-alt"/></a>
+                                            </li>
+                                        </ul>
+                                    </details>
+                                </div>
+                                <div t-else="" class="o_pbw_album_slot o_pbw_album_locked">
+                                    <div class="o_pbw_album_shadow"><i class="fa fa-lock"/></div>
+                                    <b class="o_pbw_album_name" t-out="slot['type'].name"/>
+                                    <small t-out="slot['type'].condition"/>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ═══ Showcase settings (owner) ═══ -->
+    <template id="club_showcase" name="Club: Showcase">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">My card</t>
+            <t t-set="page_title">Showcase</t>
+            <t t-set="page_subtitle">The card the team sees, the badges pinned on it, and your money privacy.</t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <a href="/club/me" class="o_pbw_back mb-3 d-inline-block"><i class="fa fa-arrow-left"/> My page</a>
+                    <div t-if="saved" class="alert alert-success" role="status">Saved.</div>
+                    <div t-if="error" class="alert alert-danger" role="alert" t-out="error"/>
+                    <form action="/club/me/showcase" method="post" class="row g-4">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="col-lg-4 d-flex justify-content-center">
+                            <t t-call="pickleball_website.player_card"><t t-set="member" t-value="me"/></t>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="o_pbw_panel">
+                                <div class="o_pbw_panel_head"><h3><i class="fa fa-id-card-o"/> Showcase card</h3></div>
+                                <label class="o_pbw_gm_option">
+                                    <input type="radio" name="card_id" value="" t-att-checked="not me.showcase_card_id"/>
+                                    <span><b>Automatic</b> <small class="o_pbw_muted">best active card, else your tier card</small></span>
+                                </label>
+                                <label t-foreach="cards" t-as="instance" class="o_pbw_gm_option">
+                                    <input type="radio" name="card_id" t-att-value="instance.id" t-att-checked="me.showcase_card_id == instance"/>
+                                    <span><b t-out="instance._gm_label()"/> <small class="o_pbw_muted"><t t-out="fmt_date(instance.earned_at.date())"/><t t-if="instance.active_until"> · until <t t-out="fmt_date(instance.active_until.date())"/></t></small></span>
+                                </label>
+                            </div>
+                            <div class="o_pbw_panel mt-3">
+                                <div class="o_pbw_panel_head"><h3><i class="fa fa-certificate"/> Pinned badges (3 max)</h3></div>
+                                <div t-if="badges" class="o_pbw_gm_badges">
+                                    <label t-foreach="badges" t-as="row" class="o_pbw_gm_badge o_pbw_gm_option">
+                                        <input type="checkbox" name="badges" t-att-value="row['type'].code" t-att-checked="row['pinned']"/>
+                                        <t t-call="pickleball_website.gm_badge_chip"><t t-set="badge_type" t-value="row['type']"/><t t-set="level" t-value="row['level']"/></t>
+                                        <b t-out="row['type'].name"/>
+                                    </label>
+                                </div>
+                                <p t-else="" class="o_pbw_muted mb-0">Earn a badge to pin it on your card.</p>
+                            </div>
+                            <div class="o_pbw_panel mt-3">
+                                <div class="o_pbw_panel_head"><h3><i class="fa fa-lock"/> Money privacy</h3></div>
+                                <label class="o_pbw_gm_option">
+                                    <input type="checkbox" name="show_finance_publicly" value="1" t-att-checked="me.show_finance_publicly"/>
+                                    <span>Show what I owe / am owed to the other members <small class="o_pbw_muted d-block">Off: they only see "All paid" when you owe nothing. Admins always see it.</small></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn o_pbw_btn o_pbw_btn_dark mt-3"><i class="fa fa-check me-2"/>Save</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ═══ Season ═══ -->
+    <template id="club_season" name="Club: Season">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Season</t>
+            <t t-set="page_title"><t t-if="season" t-out="season.code"/><t t-else="">Seasons</t></t>
+            <t t-set="page_subtitle"><t t-if="season"><t t-out="fmt_date(season.date_start)"/> – <t t-out="fmt_date(season.date_end)"/></t><t t-else="">Season 1 starts on <t t-out="season_start"/>.</t></t>
+            <t t-set="hero_extra" t-if="my_stat">
+                <div class="o_pbw_hero_facts">
+                    <div><b>Lv <t t-out="my_stat.level"/></b><span>Level</span></div>
+                    <div><b t-out="my_stat.xp"/><span>XP</span></div>
+                    <div><b>#<t t-out="my_stat.rank"/></b><span>Rank</span></div>
+                </div>
+            </t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div t-if="seasons" class="o_pbw_tabs mb-3">
+                        <a t-foreach="seasons" t-as="s" t-attf-href="/club/season/{{ s.id }}"
+                           t-attf-class="o_pbw_tab {{ 'active' if season and s.id == season.id else '' }}" t-out="s.code"/>
+                    </div>
+                    <div t-if="awards" class="o_pbw_panel mb-4">
+                        <div class="o_pbw_panel_head"><h3><i class="fa fa-trophy"/> Season awards</h3></div>
+                        <div class="o_pbw_gm_awards">
+                            <div t-foreach="awards" t-as="award" class="o_pbw_gm_award">
+                                <small t-out="award.card_type_id.name"/>
+                                <t t-if="award.member_id"><t t-call="pickleball_website.player_chip"><t t-set="member" t-value="award.member_id"/></t></t>
+                                <b t-else="" t-out="award.duo_pair_id.name"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_pbw_panel">
+                        <div class="o_pbw_panel_head"><h3><i class="fa fa-list-ol"/> Leaderboard (XP)</h3></div>
+                        <div t-if="season and season.stat_ids" class="table-responsive">
+                            <table class="table o_pbw_table mb-0">
+                                <thead><tr><th>#</th><th>Player</th><th>Lv</th><th>XP</th><th>W-L</th><th>Sessions</th></tr></thead>
+                                <tbody>
+                                    <tr t-foreach="season.stat_ids" t-as="stat" t-attf-class="{{ 'o_pbw_row_me' if me and stat.member_id == me else '' }}">
+                                        <td><b t-out="stat.rank"/></td>
+                                        <td><t t-call="pickleball_website.player_chip"><t t-set="member" t-value="stat.member_id"/></t></td>
+                                        <td t-out="stat.level"/>
+                                        <td><b t-out="stat.xp"/></td>
+                                        <td><t t-out="stat.wins"/>-<t t-out="stat.losses"/></td>
+                                        <td t-out="stat.sessions"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p t-else="" class="o_pbw_muted mb-0">No season results yet.</p>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ═══ Layout: Season tab, walkout player ═══ -->
+    <template id="club_layout_gamification" inherit_id="pickleball_website.club_layout" name="Club: Layout Gamification">
+        <xpath expr="//a[@href='/club/rankings']/.." position="after">
+            <li>
+                <a href="/club/season" t-attf-class="{{ 'active' if club_tab == 'season' else '' }}">
+                    <i class="fa fa-flag"/><span>Season</span></a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <div t-if="me" class="o_pbw_walkout_root" t-att-data-member-id="me.id"/>
+        </xpath>
+    </template>
+</odoo>

@@ -4583,3 +4583,366 @@ msgid ""
 msgstr ""
 "Hãy đổi mật khẩu trong \"Sửa hồ sơ\" trên website của đội: việc đổi mật khẩu"
 " được xác nhận qua email."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "%(n)s matches played"
+msgstr "Đã chơi %(n)s trận"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "%(n)s sessions attended"
+msgstr "Đã có mặt %(n)s buổi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid ": XP, weekly challenges and Evolution open then."
+msgstr ": XP, thử thách tuần và Evolution mở từ đó."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<i class=\"fa fa-arrow-left\"/> My page"
+msgstr "<i class=\"fa fa-arrow-left\"/> Trang của tôi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_album
+msgid "<i class=\"fa fa-arrow-left\"/> Profile"
+msgstr "<i class=\"fa fa-arrow-left\"/> Hồ sơ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "<i class=\"fa fa-bolt\"/> Rivals"
+msgstr "<i class=\"fa fa-bolt\"/> Kình địch"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-bullseye\"/> This week's challenges"
+msgstr "<i class=\"fa fa-bullseye\"/> Thử thách tuần này"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "<i class=\"fa fa-certificate\"/> Badges"
+msgstr "<i class=\"fa fa-certificate\"/> Huy hiệu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<i class=\"fa fa-certificate\"/> Pinned badges (3 max)"
+msgstr "<i class=\"fa fa-certificate\"/> Huy hiệu ghim (tối đa 3)"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.gm_tier_progress
+msgid "<i class=\"fa fa-diamond\"/> <b>ICON</b>"
+msgstr "<i class=\"fa fa-diamond\"/> <b>ICON</b>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-flag\"/> Season"
+msgstr "<i class=\"fa fa-flag\"/> Mùa giải"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout_gamification
+msgid "<i class=\"fa fa-flag\"/><span>Season</span>"
+msgstr "<i class=\"fa fa-flag\"/><span>Mùa giải</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "<i class=\"fa fa-handshake-o\"/> Best duos"
+msgstr "<i class=\"fa fa-handshake-o\"/> Cặp ăn ý nhất"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<i class=\"fa fa-id-card-o\"/> Showcase card"
+msgstr "<i class=\"fa fa-id-card-o\"/> Card đại diện"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-level-up\"/> Evolution"
+msgstr "<i class=\"fa fa-level-up\"/> Evolution"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "<i class=\"fa fa-list-ol\"/> Leaderboard (XP)"
+msgstr "<i class=\"fa fa-list-ol\"/> Bảng xếp hạng (XP)"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<i class=\"fa fa-lock\"/> Money privacy"
+msgstr "<i class=\"fa fa-lock\"/> Riêng tư thông tin quỹ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-share-alt me-1\"/>Share"
+msgstr "<i class=\"fa fa-share-alt me-1\"/>Chia sẻ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-star me-1\"/>Showcase"
+msgstr "<i class=\"fa fa-star me-1\"/>Đại diện"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-th me-1\"/>Album"
+msgstr "<i class=\"fa fa-th me-1\"/>Album"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "<i class=\"fa fa-th me-2\"/>Card album"
+msgstr "<i class=\"fa fa-th me-2\"/>Album card"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "<i class=\"fa fa-trophy\"/> EVO card complete!"
+msgstr "<i class=\"fa fa-trophy\"/> Card EVO đã hoàn chỉnh!"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "<i class=\"fa fa-trophy\"/> Season awards"
+msgstr "<i class=\"fa fa-trophy\"/> Giải thưởng mùa"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<span><b>Automatic</b> <small class=\"o_pbw_muted\">best active card, else your tier card</small></span>"
+msgstr "<span><b>Tự động</b> <small class=\"o_pbw_muted\">card còn hiệu lực tốt nhất, nếu không thì card tier</small></span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "<span>Level</span>"
+msgstr "<span>Cấp</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "<span>Rank</span>"
+msgstr "<span>Hạng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<span>Show what I owe / am owed to the other members <small class=\"o_pbw_muted d-block\">Off: they only see \"All paid\" when you owe nothing. Admins always see it.</small></span>"
+msgstr "<span>Công khai số tiền tôi nợ / được nợ với thành viên khác <small class=\"o_pbw_muted d-block\">Tắt: họ chỉ thấy \"Đã đóng đủ\" khi bạn không nợ. Admin luôn thấy.</small></span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "<span>XP</span>"
+msgstr "<span>XP</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "A rivalry: 6+ meetings this season, wins within 2."
+msgstr "Kình địch: gặp nhau từ 6 lần trong mùa, số trận thắng chênh không quá 2."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_album
+msgid "Card album"
+msgstr "Album card"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.duo_card
+msgid "Chemistry"
+msgstr "Độ ăn ý"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_album
+msgid "Collection"
+msgstr "Bộ sưu tập"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "Earn a badge to pin it on your card."
+msgstr "Đạt một huy hiệu để ghim lên card."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "Evolution complete"
+msgstr "Hoàn thành Evolution"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "Evolution tracks open with the season."
+msgstr "Track Evolution mở khi mùa giải bắt đầu."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "First match played!"
+msgstr "Trận đầu tiên!"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "First win!"
+msgstr "Trận thắng đầu tiên!"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.gm_tier_progress
+msgid "Held for"
+msgstr "Đã giữ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.gm_tier_progress
+msgid "Keep your form to get back to"
+msgstr "Giữ phong độ để trở lại"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "Leaderboard <i class=\"fa fa-arrow-right\"/>"
+msgstr "Bảng xếp hạng <i class=\"fa fa-arrow-right\"/>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "Lv"
+msgstr "Cấp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "My card"
+msgstr "Card của tôi"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/session_match_builder.xml:0
+msgid "Never played together:"
+msgstr "Chưa từng đánh cùng:"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "New badge level"
+msgstr "Lên cấp huy hiệu"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "New card"
+msgstr "Card mới"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "New challenges every Monday during a season."
+msgstr "Thử thách mới mỗi thứ Hai trong mùa giải."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "New reward"
+msgstr "Phần thưởng mới"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "No badge yet."
+msgstr "Chưa có huy hiệu."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "No season results yet."
+msgstr "Chưa có kết quả mùa giải."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "Pick a track: one stage a week, 4 stages for an EVO card. Switching track loses the progress."
+msgstr "Chọn một track: mỗi tuần một chặng, đủ 4 chặng được card EVO. Đổi track sẽ mất tiến độ."
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "Promoted!"
+msgstr "Lên bậc!"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "Rookie graduated!"
+msgstr "Tân binh tốt nghiệp!"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "Rookie graduated: here is your real card!"
+msgstr "Tân binh tốt nghiệp: đây là card thật của bạn!"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.player_card_body
+msgid "Rookie: matches played"
+msgstr "Rookie: số trận đã chơi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "Saved."
+msgstr "Đã lưu."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "Season 1 starts on"
+msgstr "Mùa 1 bắt đầu ngày"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "Season award"
+msgstr "Giải thưởng mùa"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "Seasons"
+msgstr "Mùa giải"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "See album"
+msgstr "Xem album"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "Sessions"
+msgstr "Buổi"
+
+#. module: pickleball_website
+#. odoo-javascript
+#: code:addons/pickleball_website/static/src/js/club_walkout.js:0
+msgid "Share"
+msgstr "Chia sẻ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "Showcase"
+msgstr "Card đại diện"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "The card the team sees, the badges pinned on it, and your money privacy."
+msgstr "Card cả đội nhìn thấy, huy hiệu ghim trên đó và quyền riêng tư thông tin quỹ của bạn."
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/gamification.py:0
+msgid "Weekly challenge done"
+msgstr "Hoàn thành thử thách tuần"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+msgid "XP to the next level"
+msgstr "XP nữa để lên cấp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.gm_tier_progress
+msgid "days"
+msgstr "ngày"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.gm_tier_progress
+msgid "matches in 90 days"
+msgstr "trận trong 90 ngày"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_player_gamification
+msgid "· next"
+msgstr "· mốc kế"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "· until"
+msgstr "· đến"

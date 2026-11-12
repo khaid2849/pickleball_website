@@ -1,6 +1,6 @@
 {
     'name': 'Pickleball Club Website',
-    'version': '18.0.1.11.0',
+    'version': '18.0.1.12.0',
     'category': 'Website',
     'summary': 'Members-only club website: schedule, player cards, rankings, matches and finance',
     'description': """
@@ -19,6 +19,9 @@ member player cards:
 - Chat bubble for logged-in members: instant answers to frequent questions,
   the team's AI assistant, and a conversation with the admins (Discuss)
 - Password change from "Edit my profile", confirmed by email
+- Player card gamification: tier progress, walkouts, album and showcase
+- Badges, duos, rivals, season leaderboard, weekly challenges, Evolution
+- Card share image and a JSON API under /club/api
     """,
     'author': 'Khaid',
     'depends': ['website', 'portal', 'auth_signup', 'mail', 'pickleball-team'],
@@ -41,6 +44,7 @@ member player cards:
         'views/templates_profile.xml',
         'views/templates_tournament.xml',
         'views/templates_chat.xml',
+        'views/templates_gamification.xml',
         'views/res_config_settings_views.xml',
     ],
     'assets': {
@@ -54,6 +58,8 @@ member player cards:
             'pickleball_website/static/src/scss/club_chat.scss',
             'pickleball_website/static/src/js/club_chat.js',
             'pickleball_website/static/src/js/club_chat.xml',
+            'pickleball_website/static/src/scss/gamification.scss',
+            'pickleball_website/static/src/js/club_walkout.js',
         ],
     },
     'post_init_hook': 'post_init_hook',

@@ -19,6 +19,9 @@ export class SessionMatchBuilder extends Component {
         defaultBet: Number,
         players: Array,
         matches: Array,
+        // Gamification: rivalries of the season, pairs that already played together.
+        rivals: { type: Array, optional: true },
+        partnered: { type: Array, optional: true },
     };
 
     setup() {
@@ -56,6 +59,41 @@ export class SessionMatchBuilder extends Component {
     }
 
     // ── Getters ───────────────────────────────────────────────────────────
+
+    /** "Rivalry: A LONG 5–4 KHẢI" for each rival pair on opposite sides. */
+    rivalBanners(match) {
+        const banners = [];
+        for (const rivalry of this.props.rivals || []) {
+            const aSide = match.team1.includes(rivalry.a) ? 1 : match.team2.includes(rivalry.a) ? 2 : 0;
+            const bSide = match.team1.includes(rivalry.b) ? 1 : match.team2.includes(rivalry.b) ? 2 : 0;
+            if (aSide && bSide && aSide !== bSide) {
+                const a = this.playerById[rivalry.a];
+                const b = this.playerById[rivalry.b];
+                banners.push(
+                    `${_t("Rivalry")}: ${(a.short || a.name).toUpperCase()} ${rivalry.aWins}–${rivalry.bWins} ${(
+                        b.short || b.name
+                    ).toUpperCase()}`
+                );
+            }
+        }
+        return banners;
+    }
+
+    /** Pairs of this session's players who never played on the same side. */
+    get freshPairs() {
+        const done = new Set(this.props.partnered || []);
+        const players = this.props.players.filter((p) => !p.guest);
+        const pairs = [];
+        for (let i = 0; i < players.length; i++) {
+            for (let j = i + 1; j < players.length; j++) {
+                const [a, b] = [players[i], players[j]].sort((x, y) => x.id - y.id);
+                if (!done.has(`${a.id}-${b.id}`)) {
+                    pairs.push(`${a.short || a.name} + ${b.short || b.name}`);
+                }
+            }
+        }
+        return pairs.slice(0, 8);
+    }
 
     get players() {
         return this.props.players;

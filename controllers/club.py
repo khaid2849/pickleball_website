@@ -154,6 +154,21 @@ def demo_players():
     return players
 
 
+def demo_card_view(player):
+    """pickleball.member._gm_card_view() of a sample card."""
+    stats = [('card_win', 'WIN'), ('card_form', 'FRM'), ('card_exp', 'EXP'), ('card_att', 'ATT'),
+             ('card_bet', 'BET'), ('card_pay', 'PAY')]
+    return {
+        'member_id': player.id, 'name': player.name, 'variant': player.card_tier, 'tier': player.card_tier,
+        'code': '', 'tier_label': player.card_tier.upper(), 'step': 2, 'ovr': player.card_overall, 'ovr_boost': 0,
+        'stats': [{'key': key, 'label': label, 'value': getattr(player, key), 'boost': 0} for key, label in stats],
+        'card_type': '', 'card_id': False, 'card_label': '', 'theme': {}, 'style': '', 'month': None,
+        'season_number': False, 'rookie': False, 'rookie_target': 10, 'matches': player.total_wins + player.total_losses,
+        'wins': player.total_wins, 'losses': player.total_losses, 'recent': player.card_recent_results,
+        'badges': [], 'finance': None,
+    }
+
+
 def labels(mapping):
     """{key: lazy label} -> {key: label in the current language}."""
     return {key: str(label) for key, label in mapping.items()}
@@ -199,6 +214,13 @@ class PickleballClub(http.Controller):
             """Whether the viewer may see `member`'s debts and payments."""
             return is_admin or bool(me and member and member.id == me.id)
 
+        def card_view(member, card=None):
+            """The member's card as the viewer may see it (money filtered on
+            the server, pickleball.member._gm_finance_for)."""
+            if isinstance(member, SimpleNamespace):  # sample cards of the public home page
+                return demo_card_view(member)
+            return member._gm_card_view(card=card, viewer=me or None, is_admin=is_admin)
+
         return dict(
             values,
             club_tab=tab,
@@ -206,6 +228,7 @@ class PickleballClub(http.Controller):
             is_admin=is_admin,
             is_club_member=bool(me) or is_admin,
             sees_money=sees_money,
+            card_view=card_view,
             today=fields.Date.context_today(request.env.user),
             vnd=vnd, hm=hm, weekday_name=weekday_name, month_name=month_name, fmt_date=fmt_date,
             short_name=short_name, initials=initials,
@@ -384,8 +407,23 @@ class PickleballClub(http.Controller):
             my_rank=ranking.index(me.id) + 1 if me.id in ranking else 0,
             team_qr_url=self._team_qr_url(),
             my_debt=me._get_outstanding_debt(),
+            **self._gamification_dashboard(me),
         )
         return request.render('pickleball_website.club_dashboard', values)
+
+    @staticmethod
+    def _gamification_dashboard(me):
+        """Tier progress (owner only), weekly challenges, Evolution, season XP."""
+        tracks = request.env['pickleball.evolution.track'].sudo().search([])
+        return {
+            'gm_progress': me._gm_progress(),
+            'gm_challenges': me._gm_challenges(),
+            'gm_evolution': me._gm_evolution(),
+            'gm_tracks': tracks,
+            'gm_season': request.env['pickleball.season'].sudo()._get_current(),
+            'gm_season_stat': me._gm_season_stat(),
+            'gm_config': request.env['pickleball.gamification'].sudo()._gm_config(),
+        }
 
     @http.route('/club/schedule', type='http', auth='user', website=True, sitemap=False)
     def club_schedule(self, page=1, **kwargs):
@@ -446,12 +484,31 @@ class PickleballClub(http.Controller):
                 'short': short_name(member.name),
                 'initials': initials(member.name),
                 'photo': self._photo_url(member),
-                'tier': member.card_tier or 'bronze',
+                'tier': member.card_display_tier or 'bronze',
                 'ovr': member.card_overall,
                 'guest': member not in session.participant_ids,
             } for member in players.sorted(lambda m: (m.name or '').lower())],
             'matches': self._builder_matches(bets),
+            **self._builder_gamification(players),
         }
+
+    @staticmethod
+    def _builder_gamification(players):
+        """Rivalries of the season between these players (banner when they
+        face each other) and the pairs that already played together (the
+        builder suggests the others, for the Social Butterfly badge)."""
+        env = request.env
+        season = env['pickleball.season'].sudo()._get_current()
+        rivals = []
+        if season:
+            for rivalry in env['pickleball.rivalry'].sudo().search([
+                    ('season_id', '=', season.id), ('is_rivalry', '=', True),
+                    ('member_a_id', 'in', players.ids), ('member_b_id', 'in', players.ids)]):
+                rivals.append({'a': rivalry.member_a_id.id, 'b': rivalry.member_b_id.id,
+                               'aWins': rivalry.a_wins, 'bWins': rivalry.b_wins})
+        partnered = [f'{pair.member_a_id.id}-{pair.member_b_id.id}' for pair in env['pickleball.duo.pair'].sudo().search([
+            ('member_a_id', 'in', players.ids), ('member_b_id', 'in', players.ids), ('matches', '>', 0)])]
+        return {'rivals': rivals, 'partnered': partnered}
 
     @staticmethod
     def _builder_matches(bets):
@@ -519,7 +576,7 @@ class PickleballClub(http.Controller):
             return denied
         members = self._active_members()
         if tier in dict(TIERS):
-            members = members.filtered(lambda m: m.card_tier == tier)
+            members = members.filtered(lambda m: m.card_display_tier == tier)
         sort = sort if sort in dict(PLAYER_SORTS) else 'ovr'
         values = self._values(
             'players', players=self._sort_players(members, sort),
@@ -547,6 +604,9 @@ class PickleballClub(http.Controller):
             matches=self._match_rows(self._member_matches(player, limit=10), member=player),
             sessions=sessions,
             sessions_played=self._sessions_played(player),
+            gm_badges=[row for row in player._gm_badges() if row['level']],
+            gm_duos=player._gm_duo_pairs()[:5],
+            gm_rivals=player._gm_rivals(),
             player_subtitle=' · '.join(filter(None, [
                 str(PLAY_STYLES[player.play_style]) if player.play_style in PLAY_STYLES else '',
                 f'DUPR {player.dupr_rating:.2f}' if player.dupr_rating else '',

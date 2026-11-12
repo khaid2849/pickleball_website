@@ -1,0 +1,572 @@
+// ════════════════════════════════════════════════════════════════════════════
+// Gamification of the player card: progress, challenges, Evolution, album,
+// badges, rivals, season, walkout (pickleball-team docs/gamification-spec.md).
+// ════════════════════════════════════════════════════════════════════════════
+
+$gm-navy: #1b2070;
+$gm-blue: #3d55e8;
+$gm-coral: #ec5f4b;
+$gm-yellow: #f7c948;
+$gm-cream: #fbf6ec;
+$gm-green: #1d8a52;
+$gm-muted: #5d6290;
+
+// ── Tier progress (owner only) ──────────────────────────────────────────────
+.o_pbw_tierprog {
+    width: 250px;
+    max-width: 100%;
+    margin: 14px auto 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: #fff;
+    color: $gm-navy;
+    box-shadow: 0 4px 0 rgba(27, 32, 112, 0.12), 0 0 0 1px rgba(27, 32, 112, 0.06);
+    font-size: 0.85rem;
+}
+.o_pbw_tierprog_line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.o_pbw_tierprog_bar {
+    height: 8px;
+    margin: 8px 0 4px;
+    border-radius: 4px;
+    background: rgba(27, 32, 112, 0.1);
+    overflow: hidden;
+
+    i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, $gm-blue, $gm-coral);
+        transition: width 0.6s ease;
+    }
+}
+.o_pbw_tierprog_ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: $gm-muted;
+}
+.o_pbw_tierprog_note,
+.o_pbw_tierprog_hint {
+    margin: 8px 0 0;
+    font-size: 0.78rem;
+    color: $gm-muted;
+}
+.o_pbw_tierprog_hint .fa {
+    color: $gm-yellow;
+}
+.o_pbw_tierprog_check {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.78rem;
+
+    li {
+        color: $gm-muted;
+    }
+    li.done {
+        color: $gm-green;
+        font-weight: 700;
+    }
+}
+.o_pbw_card_actions {
+    display: flex;
+    gap: 6px;
+    width: 250px;
+    max-width: 100%;
+    margin: 12px auto 0;
+
+    .btn {
+        flex: 1;
+        padding: 6px 2px;
+        font-size: 0.66rem;
+        white-space: nowrap;
+    }
+}
+
+// ── Season, challenges, Evolution ───────────────────────────────────────────
+.o_pbw_gm_level {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+
+    b {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: $gm-coral;
+    }
+}
+.o_pbw_gm_challenges {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 2px 10px;
+        padding: 8px 0;
+        border-bottom: 1px dashed rgba(27, 32, 112, 0.12);
+
+        &:last-child {
+            border-bottom: 0;
+        }
+        .o_pbw_tierprog_bar {
+            margin: 0;
+        }
+        small {
+            color: $gm-muted;
+            text-align: right;
+        }
+        &.done .o_pbw_gm_ch_label {
+            color: $gm-green;
+        }
+    }
+}
+.o_pbw_gm_ch_label {
+    font-weight: 700;
+
+    .fa {
+        margin-right: 4px;
+    }
+}
+.o_pbw_gm_ch_xp {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: $gm-coral;
+}
+.o_pbw_gm_ch_easy .o_pbw_tierprog_bar i { background: $gm-green; }
+.o_pbw_gm_ch_medium .o_pbw_tierprog_bar i { background: $gm-blue; }
+.o_pbw_gm_ch_hard .o_pbw_tierprog_bar i { background: $gm-coral; }
+
+.o_pbw_gm_evo {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        padding: 10px;
+        border-radius: 12px;
+        background: $gm-cream;
+        font-size: 0.78rem;
+        color: $gm-muted;
+
+        b {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: rgba(27, 32, 112, 0.1);
+            color: $gm-navy;
+        }
+        &.done {
+            background: $gm-navy;
+            color: #fff;
+
+            b {
+                background: $gm-yellow;
+            }
+        }
+        &.current {
+            box-shadow: inset 0 0 0 2px $gm-coral;
+        }
+    }
+}
+
+// ── Badges, rivals ──────────────────────────────────────────────────────────
+.o_pbw_badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: $gm-navy;
+    color: #fff;
+    box-shadow: inset 0 0 0 3px rgba(27, 32, 112, 0.2);
+
+    &.o_pbw_badge_l1 { box-shadow: inset 0 0 0 3px #c98b4f; }
+    &.o_pbw_badge_l2 { box-shadow: inset 0 0 0 3px #cfd5de; }
+    &.o_pbw_badge_l3 { box-shadow: inset 0 0 0 3px $gm-yellow, 0 0 10px rgba(247, 201, 72, 0.7); }
+}
+.o_pbw_gm_badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+.o_pbw_gm_badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.o_pbw_gm_rivals {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+    }
+}
+.o_pbw_gm_score {
+    margin-left: auto;
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+.o_pbw_gm_option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    cursor: pointer;
+}
+.o_pbw_gm_awards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+.o_pbw_gm_award {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border-radius: 12px;
+    background: $gm-navy;
+    color: #fff;
+
+    small {
+        color: $gm-yellow;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+}
+.o_pbw_tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.o_pbw_tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: #fff;
+    color: $gm-navy;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 3px 0 rgba(27, 32, 112, 0.12);
+
+    &.active {
+        background: $gm-navy;
+        color: #fff;
+    }
+}
+
+// ── Album ───────────────────────────────────────────────────────────────────
+.o_pbw_album_title {
+    margin: 26px 0 12px;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+.o_pbw_album_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+}
+.o_pbw_album_slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+
+    summary {
+        list-style: none;
+        cursor: pointer;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+    }
+}
+.o_pbw_album_mini {
+    width: 150px;
+    height: 268px;
+    overflow: hidden;
+
+    .o_pbw_card_link,
+    > .o_pb_card {
+        transform: scale(0.6);
+        transform-origin: top left;
+        width: 250px;
+    }
+}
+.o_pbw_album_name {
+    display: block;
+    font-size: 0.8rem;
+}
+.o_pbw_album_count {
+    margin-left: 4px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: $gm-coral;
+    color: #fff;
+    font-size: 0.7rem;
+}
+.o_pbw_album_detail {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.72rem;
+
+    li {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        justify-content: center;
+    }
+}
+.o_pbw_album_locked {
+    color: $gm-muted;
+
+    small {
+        font-size: 0.7rem;
+    }
+}
+.o_pbw_album_shadow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 268px;
+    border-radius: 10px;
+    background: repeating-linear-gradient(135deg, rgba(27, 32, 112, 0.08) 0 10px, rgba(27, 32, 112, 0.04) 10px 20px);
+    color: rgba(27, 32, 112, 0.35);
+    font-size: 2rem;
+}
+
+// ── Walkout ─────────────────────────────────────────────────────────────────
+.o_pbw_walkout {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    background: rgba(8, 10, 40, 0);
+    transition: background 0.6s ease;
+    cursor: pointer;
+
+    &.o_pbw_wo_dark {
+        background: rgba(8, 10, 40, 0.92);
+    }
+}
+.o_pbw_wo_stage {
+    position: relative;
+}
+// The card face down: a cover inside the card (no 3D: the card clips its
+// content). Chips, OVR and ribbon rise above it one by one, then it flips.
+.o_pb_card > .o_pbw_wo_cover {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: inherit;
+    background: repeating-linear-gradient(135deg, $gm-navy 0 14px, #26307f 14px 28px);
+    box-shadow: inset 0 0 0 4px $gm-yellow;
+    transition: opacity 0.25s ease 0.25s;
+}
+.o_pbw_wo_card {
+    position: relative;
+    transform: scale(0.92);
+    transition: transform 0.5s ease;
+
+    .o_pb_card_head,
+    .o_pb_card_ribbon {
+        position: relative;
+    }
+    .o_pb_card_tags,
+    .o_pb_card_ovr,
+    .o_pb_card_ribbon {
+        opacity: 0;
+        transition: opacity 0.4s ease, transform 0.5s ease;
+    }
+    .o_pb_card_ribbon {
+        transform: translateX(-120%) skewX(-12deg) rotate(-2deg);
+    }
+}
+.o_pbw_wo_light {
+    position: absolute;
+    z-index: 5;
+    left: -30%;
+    right: -30%;
+    bottom: -40%;
+    height: 40%;
+    background: radial-gradient(ellipse at center, var(--wo-color, #{$gm-yellow}) 0%, transparent 70%);
+    opacity: 0;
+    filter: blur(6px);
+    pointer-events: none;
+}
+.o_pbw_walkout.o_pbw_wo_s2 .o_pbw_wo_light {
+    animation: o_pbw_wo_sweep 1.2s ease-out forwards;
+}
+.o_pbw_walkout.o_pbw_wo_s3 .o_pbw_wo_card {
+    .o_pb_card_head {
+        z-index: 4;
+    }
+    .o_pb_card_tags {
+        opacity: 1;
+    }
+}
+.o_pbw_walkout.o_pbw_wo_s4 .o_pbw_wo_card .o_pb_card_ovr {
+    opacity: 1;
+}
+.o_pbw_walkout.o_pbw_wo_s5 .o_pbw_wo_card .o_pb_card_ribbon {
+    z-index: 4;
+    opacity: 1;
+    transform: skewX(-12deg) rotate(-2deg);
+}
+.o_pbw_walkout.o_pbw_wo_s6 {
+    .o_pbw_wo_card {
+        transform: scale(1.06);
+        animation: o_pbw_wo_flip 0.5s ease;
+    }
+    .o_pb_card > .o_pbw_wo_cover {
+        opacity: 0;
+    }
+}
+@keyframes o_pbw_wo_flip {
+    0% { transform: scale(0.92) scaleX(1); }
+    50% { transform: scale(1) scaleX(0.04); }
+    100% { transform: scale(1.06) scaleX(1); }
+}
+.o_pbw_wo_title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.o_pbw_walkout.o_pbw_wo_s3 .o_pbw_wo_title {
+    opacity: 1;
+}
+.o_pbw_wo_actions {
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+.o_pbw_walkout.o_pbw_wo_s6 .o_pbw_wo_actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+@keyframes o_pbw_wo_sweep {
+    0% { opacity: 0; transform: translateY(0); }
+    40% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-260%); }
+}
+// Reduced motion: a 300 ms fade, nothing else.
+.o_pbw_walkout.o_pbw_wo_reduced {
+    transition: background 0.3s ease;
+
+    .o_pbw_wo_card,
+    .o_pbw_wo_card .o_pb_card_tags,
+    .o_pbw_wo_card .o_pb_card_ovr,
+    .o_pbw_wo_card .o_pb_card_ribbon {
+        animation: none;
+        transition: none;
+        opacity: 1;
+    }
+    .o_pbw_wo_card {
+        transform: none;
+    }
+    .o_pbw_wo_card .o_pb_card_ribbon {
+        transform: skewX(-12deg) rotate(-2deg);
+    }
+    .o_pb_card > .o_pbw_wo_cover,
+    .o_pbw_wo_light {
+        display: none;
+    }
+    .o_pbw_wo_title,
+    .o_pbw_wo_actions {
+        opacity: 1;
+        pointer-events: auto;
+        transition: none;
+    }
+}
+
+// Toasts (badge levels, rookie milestones, challenges)
+.o_pbw_toasts {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1990;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: calc(100vw - 32px);
+}
+.o_pbw_toast {
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: $gm-navy;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.2);
+    animation: o_pbw_toast_in 0.3s ease;
+
+    .fa {
+        margin-right: 6px;
+        color: $gm-yellow;
+    }
+}
+@keyframes o_pbw_toast_in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+}
+
+// Match builder: rivalry banner, pairs never played together
+.o_pbw_builder_rival {
+    margin: 6px 0;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: $gm-coral;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.o_pbw_builder_fresh {
+    margin-top: 8px;
+    font-size: 0.78rem;
+    color: $gm-muted;
+
+    span {
+        display: inline-block;
+        margin: 2px 4px 2px 0;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: $gm-cream;
+        color: $gm-navy;
+        font-weight: 700;
+    }
+}

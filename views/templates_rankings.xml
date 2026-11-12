@@ -155,7 +155,7 @@
                                                 <t t-call="pickleball_website.avatar"/>
                                                 <span>
                                                     <b t-out="member.name"/>
-                                                    <small t-attf-class="o_pbw_tier_text o_pbw_tier_{{ member.card_tier or 'bronze' }}" t-out="(member.card_tier or 'bronze').upper()"/>
+                                                    <small t-attf-class="o_pbw_tier_text o_pbw_tier_{{ member.card_display_tier or 'bronze' }}" t-out="(member.card_display_tier or 'bronze').upper()"/>
                                                 </span>
                                             </a>
                                         </td>

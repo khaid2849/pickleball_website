@@ -92,7 +92,7 @@
                             <div class="o_pbw_panel">
                                 <div class="o_pbw_panel_head">
                                     <h3><i class="fa fa-bar-chart"/> Ratings</h3>
-                                    <span t-attf-class="o_pbw_tier_badge o_pbw_tier_{{ player.card_tier or 'bronze' }}" t-out="(player.card_tier or 'bronze').upper()"/>
+                                    <span t-attf-class="o_pbw_tier_badge o_pbw_tier_{{ player.card_display_tier or 'bronze' }}" t-out="card_view(player)['tier_label']"/>
                                 </div>
                                 <div class="row g-3">
                                     <t t-call="pickleball_website.rating_meter"><t t-set="code" t-value="'WIN'"/><t t-set="value" t-value="player.card_win"/><t t-set="label">Win rate</t>Over all matches (pulled towards 50% while there are few).</t>

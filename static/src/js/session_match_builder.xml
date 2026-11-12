@@ -25,6 +25,10 @@
                     <b>Players</b>
                     <small class="o_pbw_muted">Drag a player into a team, or tap a player then a team.</small>
                 </div>
+                <div t-if="freshPairs.length and !props.locked" class="o_pbw_builder_fresh">
+                    <b>Never played together:</b>
+                    <span t-foreach="freshPairs" t-as="pair" t-key="pair" t-esc="pair"/>
+                </div>
                 <div class="o_pbw_builder_chips" t-on-click.self="onPoolClick">
                     <t t-set="counts" t-value="playCount"/>
                     <button t-foreach="players" t-as="p" t-key="p.id" type="button"
@@ -55,6 +59,9 @@
                             <button type="button" title="Delete match" class="o_pbw_builder_delete"
                                     t-on-click="() => this.removeMatch(match.key)"><i class="fa fa-trash"/></button>
                         </span>
+                    </div>
+                    <div t-foreach="rivalBanners(match)" t-as="banner" t-key="banner" class="o_pbw_builder_rival">
+                        <i class="fa fa-bolt"/> <t t-esc="banner"/>
                     </div>
                     <div class="o_pbw_builder_court">
                         <t t-foreach="['team1', 'team2']" t-as="side" t-key="side">
