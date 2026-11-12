@@ -146,6 +146,7 @@
                             <ul class="list-unstyled">
                                 <li><a href="/club">Home</a></li>
                                 <li><a href="/club/tournaments">Tournaments</a></li>
+                                <li t-if="is_club_member"><a href="/club/cards">Cards</a></li>
                                 <t t-if="user_id._is_public()">
                                     <li><a href="/club/register">Sign up</a></li>
                                     <li><a href="/web/login?redirect=/club/me">Log in</a></li>

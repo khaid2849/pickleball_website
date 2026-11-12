@@ -1,6 +1,6 @@
 {
     'name': 'Pickleball Club Website',
-    'version': '18.0.1.13.0',
+    'version': '18.0.1.15.0',
     'category': 'Website',
     'summary': 'Members-only club website: schedule, player cards, rankings, matches and finance',
     'description': """
@@ -50,6 +50,7 @@ member player cards:
     'assets': {
         'web.assets_frontend': [
             'pickleball-team/static/src/scss/player_card.scss',
+            'pickleball-team/static/src/scss/card_motif.scss',
             'pickleball_website/static/src/scss/club.scss',
             'pickleball_website/static/src/scss/tournament.scss',
             'pickleball_website/static/src/scss/match_builder.scss',
@@ -59,8 +60,11 @@ member player cards:
             'pickleball_website/static/src/js/club_chat.js',
             'pickleball_website/static/src/js/club_chat.xml',
             'pickleball_website/static/src/scss/gamification.scss',
+            'pickleball_website/static/src/js/card_motif.js',
             'pickleball_website/static/src/js/club_walkout.js',
+            'pickleball_website/static/src/js/card_motif_lab.js',
             'pickleball_website/static/src/js/club_showcase.js',
+            'pickleball_website/static/src/js/club_flip.js',
         ],
     },
     'post_init_hook': 'post_init_hook',

@@ -154,10 +154,74 @@ def demo_players():
     return players
 
 
-def demo_card_view(player):
-    """pickleball.member._gm_card_view() of a sample card."""
+# Public home page: the special cards shown on sample players (index in
+# DEMO_PLAYERS), and the OVR of the sample player on each tier step.
+# Two are shown, the others stay hidden (blurred, no name): visitors get a
+# taste, members see them all on /club/cards.
+DEMO_SPECIALS = [('IN_FORM', 1), ('IRON_MAN', 2)]
+DEMO_HIDDEN = [('POTM', 0), ('GIANT_SLAYER', 2), ('SEASON_MVP', 0), ('TOTW', 1)]
+DEMO_LADDER_OVR = [56, 62, 67, 72, 77, 82, 90]
+
+
+def demo_card_view(player, preview=None, label='', ovr=None):
+    """pickleball.member._gm_card_view() of a sample card. preview: a card
+    type's design (pickleball.card.type._gm_preview()); ovr: shift the
+    sample's ratings to that overall."""
     stats = [('card_win', 'WIN'), ('card_form', 'FRM'), ('card_exp', 'EXP'), ('card_att', 'ATT'),
              ('card_bet', 'BET'), ('card_pay', 'PAY')]
+    view = _demo_base_view(player, stats)
+    if ovr is not None:
+        shift_ovr(view, ovr)
+    if preview:
+        apply_preview(view, preview, label, member=player)
+    return view
+
+
+def shift_ovr(view, ovr):
+    """Move a card view's ratings so that its overall is `ovr`."""
+    shift = ovr - view['ovr']
+    view['ovr'] = ovr
+    for stat in view['stats']:
+        stat['value'] = max(1, min(99, stat['value'] + shift))
+    return view
+
+
+def apply_preview(view, preview, label='', member=None):
+    """Dress a card view in a card type's design
+    (pickleball.card.type._gm_preview()), display boost included. member:
+    whose data the card's motif shows (a sample card: nobody's)."""
+    preview = dict(preview)
+    boost = preview.pop('boost', {}) or {}
+    view.update(preview)
+    view['card_label'] = label
+    view['ovr_boost'] = boost.get('ovr', 0)
+    view['ovr'] = min(99, view['ovr'] + view['ovr_boost'])
+    for stat in view['stats']:
+        stat['boost'] = boost.get(stat['key'], 0)
+        stat['value'] = min(99, stat['value'] + stat['boost'])
+    view['season_number'] = 1 if view.get('card_type', '').startswith('SEASON') else False
+    view['rookie'] = False
+    code = view.get('motif_code')
+    if code:
+        if not member or isinstance(member, SimpleNamespace):
+            member = request.env['pickleball.member'].sudo().new(
+                {'jersey_number': getattr(member, 'jersey_number', False)})
+        view['motif_data'] = member._gm_motif_data(code, None, ovr=view['ovr'], month=view.get('month'))
+    return view
+
+
+def demo_label(card_type, today):
+    """Tag of a sample card of `card_type` ("TOTW · W46", "Season MVP 1")."""
+    if card_type.code == 'TOTW':
+        return f'TOTW · W{today.isocalendar()[1]}'
+    if card_type.code == 'POTM':
+        return f'POTM · {today.month}/{today.year}'
+    if card_type.category == 'tier':
+        return ''
+    return f'{card_type.name} 1' if card_type.category == 'season' else card_type.name
+
+
+def _demo_base_view(player, stats):
     return {
         'member_id': player.id, 'name': player.name, 'variant': player.card_tier, 'tier': player.card_tier,
         'code': '', 'tier_label': player.card_tier.upper(), 'step': 2, 'ovr': player.card_overall, 'ovr_boost': 0,
@@ -165,7 +229,7 @@ def demo_card_view(player):
         'card_type': '', 'card_id': False, 'card_label': '', 'theme': {}, 'style': '', 'month': None,
         'season_number': False, 'rookie': False, 'rookie_target': 10, 'matches': player.total_wins + player.total_losses,
         'wins': player.total_wins, 'losses': player.total_losses, 'recent': player.card_recent_results,
-        'badges': [], 'finance': None,
+        'badges': [], 'finance': None, 'motif_code': '', 'motif_data': {},
     }
 
 
@@ -229,6 +293,10 @@ class PickleballClub(http.Controller):
             is_club_member=bool(me) or is_admin,
             sees_money=sees_money,
             card_view=card_view,
+            # CardMotif layer of a card view ('back' / 'front'); size: sm (album),
+            # md (default), lg (walkout, profile)
+            card_motif=lambda view, layer, size=None: request.env['pickleball.gamification'].sudo()._gm_motif(
+                view, layer, size or 'md'),
             today=fields.Date.context_today(request.env.user),
             vnd=vnd, hm=hm, weekday_name=weekday_name, month_name=month_name, fmt_date=fmt_date,
             short_name=short_name, initials=initials,
@@ -353,13 +421,53 @@ class PickleballClub(http.Controller):
 
     # ── Public home page ────────────────────────────────────────────────────
 
+    def _demo_gamification(self):
+        """Sample cards of the public home page: real card designs (special
+        cards, tier steps) on made-up players."""
+        types = request.env['pickleball.card.type'].sudo().search([])
+        by_code = {card_type.code: card_type for card_type in types}
+        players = demo_players()
+        today = fields.Date.context_today(request.env.user)
+        specials = []
+        for code, index in DEMO_SPECIALS:
+            card_type = by_code.get(code)
+            if not card_type:
+                continue
+            label = demo_label(card_type, today)
+            player = players[index]
+            specials.append({
+                'type': card_type, 'member': player,
+                'card': demo_card_view(player, card_type._gm_preview(today.month), label),
+            })
+        hidden = []
+        for code, index in DEMO_HIDDEN:
+            card_type = by_code.get(code)
+            if card_type:
+                # colors only: no tag, no name, no emblem in the page
+                card = demo_card_view(players[index], card_type._gm_preview(today.month))
+                card.update(variant='secret', card_type='', theme={}, season_number=False, motif_code='')
+                hidden.append({'member': players[index], 'card': card})
+        ladder = []
+        steps = types.filtered(lambda t: t.category == 'tier')
+        for card_type, ovr in zip(steps, DEMO_LADDER_OVR):
+            ladder.append({'type': card_type, 'member': players[2],
+                           'card': demo_card_view(players[2], card_type._gm_preview(), ovr=ovr)})
+        return {
+            'demo_specials': specials,
+            'demo_hidden': hidden,
+            'demo_more_count': len(types.filtered(lambda t: t.category != 'tier')) - len(specials),
+            'demo_ladder': ladder,
+            'demo_card_count': len(types),
+            'demo_badge_count': request.env['pickleball.badge.type'].sudo().search_count([]),
+        }
+
     @http.route('/club', type='http', auth='public', website=True, sitemap=True)
     def club_home(self, **kwargs):
         if not (self._is_admin() or self._me()):
             # Visitors (and accounts not approved yet) get the showcase home
             # page, with made-up data only: no real member nor number.
             values = self._values('home', demo_players=demo_players(), demo_rows=DEMO_RANKING,
-                                  card_levels=self._card_level_rows())
+                                  card_levels=self._card_level_rows(), **self._demo_gamification())
             return request.render('pickleball_website.club_home_public', values)
         members = self._active_members()
         played = self._Session.search([('state', 'in', PLAYED_STATES)])
@@ -607,6 +715,7 @@ class PickleballClub(http.Controller):
             gm_badges=[row for row in player._gm_badges() if row['level']],
             gm_duos=player._gm_duo_pairs()[:5],
             gm_rivals=player._gm_rivals(),
+            card_back=player._gm_card_back(self._me() or None),
             player_subtitle=' · '.join(filter(None, [
                 str(PLAY_STYLES[player.play_style]) if player.play_style in PLAY_STYLES else '',
                 f'DUPR {player.dupr_rating:.2f}' if player.dupr_rating else '',

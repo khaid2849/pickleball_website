@@ -221,6 +221,7 @@ msgstr "<i class=\"fa fa-calendar-check-o\"/> Buổi gần đây"
 
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_profile_edit
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
 msgid "<i class=\"fa fa-check me-2\"/>Save"
 msgstr "<i class=\"fa fa-check me-2\"/>Lưu"
 
@@ -580,6 +581,7 @@ msgstr "<span><i class=\"fa fa-user\"/></span> Thông tin cá nhân"
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
 msgid "<span>Matches</span>"
 msgstr "<span>Trận</span>"
 
@@ -641,6 +643,7 @@ msgstr "<span>Buổi chưa đóng</span>"
 
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_player
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
 msgid "<span>Win rate</span>"
 msgstr "<span>Tỉ lệ thắng</span>"
 
@@ -1067,6 +1070,7 @@ msgstr "Sân đã chinh phục"
 
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
 msgid "Create my account"
 msgstr "Tạo tài khoản"
 
@@ -2130,6 +2134,7 @@ msgstr "Lịch thi đấu <i class=\"fa fa-arrow-right\"/>"
 
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_schedule
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
 msgid "Season"
 msgstr "Mùa giải"
 
@@ -4743,6 +4748,7 @@ msgstr "Độ ăn ý"
 
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_album
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
 msgid "Collection"
 msgstr "Bộ sưu tập"
 
@@ -4792,6 +4798,7 @@ msgstr "Bảng xếp hạng <i class=\"fa fa-arrow-right\"/>"
 #. module: pickleball_website
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
 msgid "Lv"
 msgstr "Cấp"
 
@@ -4971,3 +4978,396 @@ msgstr "· đã hết hạn: hiện chỉ số lúc đạt"
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
 msgid "· shown until"
 msgstr "· hiển thị đến"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "<i class=\"fa fa-check\"/> ×"
+msgstr "<i class=\"fa fa-check\"/> ×"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<i class=\"fa fa-clone me-2\"/>See all"
+msgstr "<i class=\"fa fa-clone me-2\"/>Xem cả"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_layout_gamification
+msgid "<i class=\"fa fa-clone\"/><span>Cards</span>"
+msgstr "<i class=\"fa fa-clone\"/><span>Thẻ bài</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<i class=\"fa fa-id-card-o me-2\"/>Start collecting"
+msgstr "<i class=\"fa fa-id-card-o me-2\"/>Bắt đầu sưu tầm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Sample players — the real cards are waiting"
+" in the members' area."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/> Cầu thủ mẫu — card thật đang chờ bạn trong "
+"khu thành viên."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "<small>Boost while shown</small>"
+msgstr "<small>Boost khi hiển thị</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "<small>How to earn it</small>"
+msgstr "<small>Cách đạt</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "<small>On your card</small>"
+msgstr "<small>Trên card của bạn</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "<small>You earned it</small>"
+msgstr "<small>Bạn đã đạt</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
+msgid ""
+"<span class=\"me-auto\"><i class=\"fa fa-info-circle me-1\"/> Shown on a "
+"sample player. Members see the cards on their own player card, and which "
+"ones they own.</span>"
+msgstr ""
+"<span class=\"me-auto\"><i class=\"fa fa-info-circle me-1\"/> Đang hiển thị "
+"trên cầu thủ mẫu. Thành viên sẽ thấy các card trên chính card của mình, kèm "
+"card nào đã sở hữu.</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid ""
+"<span class=\"o_pb_card_back_hint\"><i class=\"fa fa-repeat\"/> Tap to flip "
+"back</span>"
+msgstr ""
+"<span class=\"o_pb_card_back_hint\"><i class=\"fa fa-repeat\"/> Chạm để lật "
+"lại</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span class=\"o_pb_card_back_kicker\">Player file</span>"
+msgstr "<span class=\"o_pb_card_back_kicker\">Hồ sơ thi đấu</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Best partner</span>"
+msgstr "<span>Cặp ăn ý nhất</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Best streak</span>"
+msgstr "<span>Chuỗi thắng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
+msgid "<span>Cards owned</span>"
+msgstr "<span>Card đã có</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Cards</span>"
+msgstr "<span>Card</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Ranking</span>"
+msgstr "<span>Xếp hạng</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Record</span>"
+msgstr "<span>Thành tích</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Rival</span>"
+msgstr "<span>Kình địch</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "<span>Sessions in a row</span>"
+msgstr "<span>Buổi liên tiếp</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "A game around every match"
+msgstr "Mỗi trận đấu là một trò chơi"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"A winning streak, a big week, sixteen sessions in a row, a win against stronger players:\n"
+"                        each earns a card with its own design and a ratings boost while it lasts."
+msgstr ""
+"Chuỗi thắng, một tuần bùng nổ, mười sáu buổi liên tiếp, thắng đội mạnh hơn:\n"
+"                        mỗi thành tích mang về một card với thiết kế riêng và boost chỉ số khi card còn hiển thị."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Album"
+msgstr "Album"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
+msgid "All the cards"
+msgstr "Tất cả card"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Badges"
+msgstr "Huy hiệu"
+
+#. module: pickleball_website
+#: model:website.menu,name:pickleball_website.menu_club_cards
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_footer
+msgid "Cards"
+msgstr "Thẻ bài"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Cards that show off your game"
+msgstr "Card khoe phong độ của bạn"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Cards to collect"
+msgstr "Card để sưu tầm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Chemistry with each partner, Duo cards for the best pairs and rivalries with"
+" the players you meet the most."
+msgstr ""
+"Độ ăn ý với từng đồng đội, card Duo cho các cặp xuất sắc và kình địch với "
+"người bạn gặp nhiều nhất."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Choose the card the team sees: your current tier, or any special, season or "
+"Evolution card you earned."
+msgstr ""
+"Chọn card cả đội nhìn thấy: tier hiện tại, hoặc bất kỳ card đặc biệt, mùa "
+"giải hay Evolution bạn đã đạt."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Duos &amp; rivals"
+msgstr "Cặp đôi &amp; kình địch"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Earn a card and it is revealed on your next visit with a full walkout — then"
+" share it as an image."
+msgstr ""
+"Đạt card mới là lần ghé tiếp theo sẽ có màn walkout mở card — rồi chia sẻ "
+"thành ảnh."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Every 5 OVR is a new step. Like a ranked division, II opens a tier and I tops it:\n"
+"                        your card gets a metal frame, pinstripes and a shine. Icon is for the best players who hold it for two weeks."
+msgstr ""
+"Cứ 5 OVR là một bậc mới. Như hạng đấu trong game, II là bậc mở đầu của tier và I là đỉnh tier:\n"
+"                        card được thêm khung kim loại, vân chéo và ánh sáng. Icon dành cho người giỏi nhất giữ phong độ suốt hai tuần."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
+msgid ""
+"Every card you can earn. Tap a card to turn it over and see how to get it."
+msgstr ""
+"Mọi card bạn có thể đạt. Chạm vào card để lật mặt sau và xem cách đạt."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Every card you earn stays in your album for good, with the ratings you had "
+"that day."
+msgstr ""
+"Mọi card bạn đạt được lưu mãi trong album, kèm chỉ số của bạn ngày hôm đó."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Every session counts"
+msgstr "Buổi nào cũng tính"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "For good, and kept in your album"
+msgstr "Mãi mãi, và được lưu trong album"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "From Bronze II to Icon"
+msgstr "Từ Bronze II đến Icon"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Join the team that plays hard and splits the bill fairly.\n"
+"                                A player card that levels up with every match, special cards to collect, live rankings and automatic court fee splits — all in one place."
+msgstr ""
+"Gia nhập đội chơi hết mình và chia tiền sòng phẳng.\n"
+"                                Card cầu thủ lên cấp sau mỗi trận, card đặc biệt để sưu tầm, bảng xếp hạng trực tiếp và chia tiền sân tự động — tất cả ở một nơi."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Level up"
+msgstr "Lên cấp"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
+msgid "Not earned yet"
+msgstr "Chưa đạt"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "OVR from"
+msgstr "OVR từ"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "OVR to"
+msgstr "OVR nữa để lên"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_cards
+msgid "Owned"
+msgstr "Đã có"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Quarterly seasons with XP, levels, weekly challenges and awards: MVP, Most "
+"Improved, Iron Man of the season."
+msgstr ""
+"Mùa giải theo quý với XP, cấp độ, thử thách tuần và giải thưởng: MVP, Tiến "
+"bộ nhất, Iron Man của mùa."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Seasons &amp; XP"
+msgstr "Mùa giải &amp; XP"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Special cards"
+msgstr "Card đặc biệt"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.flip_card
+msgid "Tap to flip"
+msgstr "Chạm để lật card"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Tier steps to climb"
+msgstr "Bậc tier để leo"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Walkouts"
+msgstr "Walkout"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "While you hold this step"
+msgstr "Khi bạn còn giữ bậc này"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "Your showcase"
+msgstr "Card đại diện"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "badges"
+msgstr "huy hiệu"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"badges with bronze, silver and gold levels: pin your three favourites on "
+"your card."
+msgstr ""
+"huy hiệu với cấp đồng, bạc, vàng: ghim ba huy hiệu yêu thích lên card."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "cards"
+msgstr "card"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "cards to collect in your album."
+msgstr "card để sưu tầm trong album."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "days, then kept in your album"
+msgstr "ngày, sau đó lưu trong album"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+msgid "· CHEM"
+msgstr "· CHEM"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_type
+msgid "× · last on"
+msgstr "× · gần nhất"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "<i class=\"fa fa-unlock-alt me-2\"/>Unlock all"
+msgstr "<i class=\"fa fa-unlock-alt me-2\"/>Mở khoá cả"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span class=\"o_pbw_special_lock\"><i class=\"fa fa-lock\"/><b>?</b></span>\n"
+"                            <b class=\"o_pbw_special_name\">???</b>\n"
+"                            <small class=\"o_pbw_muted\">Members only</small>"
+msgstr ""
+"<span class=\"o_pbw_special_lock\"><i class=\"fa fa-lock\"/><b>?</b></span>\n"
+"                            <b class=\"o_pbw_special_name\">???</b>\n"
+"                            <small class=\"o_pbw_muted\">Chỉ dành cho thành viên</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"<span>Weekly and monthly awards, season trophies, Evolution and Duo cards… "
+"Join to find out how to earn them.</span>"
+msgstr ""
+"<span>Giải thưởng tuần và tháng, cúp mùa giải, card Evolution và Duo… Tham "
+"gia để biết cách đạt được chúng.</span>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid ""
+"Great performances earn special cards, each with its own design and a ratings boost while it lasts.\n"
+"                        Here are two of them — the others stay secret until you join."
+msgstr ""
+"Thi đấu xuất sắc sẽ mang về card đặc biệt, mỗi card một thiết kế riêng và boost chỉ số khi còn hiển thị.\n"
+"                        Đây là hai trong số đó — những card còn lại là bí mật cho tới khi bạn tham gia."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.card_back_member
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_dashboard_gamification
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_season
+msgid "XP"
+msgstr "XP"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
+msgid "secret cards"
+msgstr "card bí mật"

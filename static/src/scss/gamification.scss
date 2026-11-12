@@ -595,3 +595,501 @@ $gm-muted: #5d6290;
     top: 90px;
     align-self: flex-start;
 }
+
+// Public home page: tier ladder and special cards on sample players.
+.o_pbw_gm_home_lead {
+    max-width: 760px;
+    margin-bottom: 28px;
+}
+.o_pbw_ladder {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 6px 4px 18px;
+    scroll-snap-type: x proximity;
+
+    .o_pb_card {
+        zoom: 0.56;
+    }
+}
+.o_pbw_ladder_step {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    scroll-snap-align: start;
+}
+.o_pbw_ladder_arrow {
+    flex: 0 0 auto;
+    align-self: center;
+    margin-top: -30px;
+    font-size: 0.7rem;
+    color: #1b2070;
+    opacity: 0.35;
+}
+.o_pbw_ladder_name,
+.o_pbw_special_name {
+    margin-top: 8px;
+    color: #1b2070;
+    font-weight: 800;
+}
+.o_pbw_special_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 28px 16px;
+
+    .o_pb_card {
+        zoom: 0.68;
+    }
+}
+.o_pbw_special_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    small {
+        max-width: 200px;
+    }
+}
+@media (max-width: 575.98px) {
+    .o_pbw_special_grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        .o_pb_card {
+            zoom: 0.6;
+        }
+    }
+}
+
+// ── Flip cards: tap to turn the card over ─────────────────────────────────
+.o_pbw_flip {
+    position: relative;
+    display: inline-block;
+    border-radius: 14px;
+    perspective: 1400px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible {
+        outline: 3px solid #f7c948;
+        outline-offset: 4px;
+    }
+}
+.o_pbw_flip_inner {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+@media (hover: hover) {
+    .o_pbw_flip:hover .o_pbw_flip_inner {
+        transform: rotateY(-8deg);
+    }
+}
+.o_pbw_flip.o_pbw_flipped .o_pbw_flip_inner {
+    transform: rotateY(180deg);
+}
+.o_pbw_flip_face {
+    position: relative;
+    display: flex;
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    > * {
+        flex: 1;
+    }
+}
+.o_pbw_flip_back {
+    transform: rotateY(180deg);
+}
+// backface-visibility alone is not enough: animated or filtered layers of
+// the card (icon holo, gold glow, sheen) are drawn on their own and showed
+// through mirrored. Hide the face turned away half way through the turn.
+.o_pbw_flip_front,
+.o_pbw_flip_back {
+    transition: visibility 0s linear 0.3s;
+}
+.o_pbw_flip_back,
+.o_pbw_flip.o_pbw_flipped .o_pbw_flip_front {
+    visibility: hidden;
+}
+.o_pbw_flip.o_pbw_flipped .o_pbw_flip_back {
+    visibility: visible;
+}
+.o_pbw_flip_hint {
+    position: absolute;
+    right: 8px;
+    bottom: -12px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1b2070;
+    color: #fff;
+    font-size: 0.72rem;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .o_pbw_flip_inner,
+    .o_pbw_flip_front,
+    .o_pbw_flip_back {
+        transition: none;
+    }
+    .o_pbw_flip:hover .o_pbw_flip_inner {
+        transform: none;
+    }
+    .o_pbw_flip.o_pbw_flipped .o_pbw_flip_inner {
+        transform: rotateY(180deg);
+    }
+}
+
+// Back of a card: same frame and palette as its front.
+.o_pb_card.o_pb_card_back {
+    gap: 10px;
+    height: 100%;
+    font-size: 0.78rem;
+
+    .o_pb_card_back_head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+    }
+    .o_pb_card_back_kicker {
+        font-size: 0.66rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--pb-muted);
+    }
+    .o_pb_card_back_title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 900;
+        line-height: 1.1;
+        color: var(--pb-ink);
+    }
+    .o_pb_card_back_owned {
+        border-color: transparent !important;
+        background: #2fd27a;
+        color: #0b3d22;
+    }
+    .o_pb_card_back_block {
+        small {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.62rem;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--pb-muted);
+        }
+        p {
+            margin: 0;
+            font-weight: 700;
+        }
+    }
+    .o_pb_card_back_chip {
+        display: inline-block;
+        margin: 2px 4px 0 0;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: var(--pb-accent);
+        color: var(--pb-accent-ink);
+        font-weight: 900;
+    }
+    .o_pb_card_back_numbers {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        text-align: center;
+
+        > div {
+            padding: 8px 2px;
+            border-radius: 10px;
+            background: var(--pb-track);
+        }
+        b {
+            display: block;
+            font-size: 1.35rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+        span {
+            font-size: 0.6rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--pb-muted);
+        }
+    }
+    .o_pb_card_back_rows {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px dashed var(--pb-track);
+
+            span {
+                color: var(--pb-muted);
+                white-space: nowrap;
+            }
+            b {
+                overflow: hidden;
+                text-align: right;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
+    .o_pb_card_back_badges {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 5px;
+
+        .o_pb_card_badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+            background: var(--pb-icon);
+            color: #fff;
+            font-size: 0.7rem;
+        }
+        small {
+            margin-left: auto;
+            color: var(--pb-muted);
+        }
+    }
+    .o_pb_card_back_progress {
+        small {
+            display: block;
+            margin-bottom: 3px;
+        }
+        i {
+            display: block;
+            height: 7px;
+            border-radius: 4px;
+            background: var(--pb-track);
+            overflow: hidden;
+        }
+        b {
+            display: block;
+            height: 100%;
+            background: var(--pb-bar);
+        }
+    }
+    .o_pb_card_back_hint {
+        margin-top: auto;
+        font-size: 0.66rem;
+        text-align: center;
+        color: var(--pb-muted);
+    }
+}
+
+// Catalog card back: just the name and how to earn it.
+.o_pb_card.o_pb_card_back.o_pb_card_back_type {
+    justify-content: center;
+    gap: 14px;
+    padding: 28px 22px;
+    text-align: center;
+
+    .o_pb_card_back_title {
+        font-size: 1.5rem;
+    }
+    .o_pb_card_back_text {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+}
+
+// Card catalog
+.o_pbw_cards_section + .o_pbw_cards_section {
+    margin-top: 48px;
+}
+.o_pbw_cards_heading {
+    margin-bottom: 20px;
+    color: #1b2070;
+    font-weight: 900;
+    text-transform: uppercase;
+
+    small {
+        margin-left: 6px;
+        font-size: 0.9rem;
+        opacity: 0.5;
+    }
+}
+.o_pbw_cards_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 32px 16px;
+
+    .o_pbw_flip {
+        zoom: 0.78;
+    }
+}
+.o_pbw_cards_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.o_pbw_cards_name {
+    color: #1b2070;
+    font-weight: 800;
+    text-align: center;
+
+    .fa-check-circle {
+        color: #22a05a;
+    }
+    .fa-lock {
+        opacity: 0.45;
+    }
+}
+.o_pbw_cards_locked .o_pbw_flip_front .o_pb_card {
+    filter: saturate(0.55);
+}
+@media (max-width: 575.98px) {
+    .o_pbw_cards_grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        .o_pbw_flip {
+            zoom: 0.6;
+        }
+    }
+}
+
+// Home page: the special cards visitors may not see yet.
+.o_pbw_special_hidden {
+    position: relative;
+}
+.o_pbw_special_veil {
+    filter: blur(9px) saturate(1.2);
+    opacity: 0.85;
+    pointer-events: none;
+    user-select: none;
+}
+.o_pbw_special_lock {
+    position: absolute;
+    top: 96px;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #1b2070;
+    color: #f7c948;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25), 0 0 0 4px rgba(255, 255, 255, 0.6);
+    transform: translateX(-50%);
+
+    .fa {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+    b {
+        font-size: 2.2rem;
+        font-weight: 900;
+        line-height: 1;
+    }
+}
+.o_pbw_special_more {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 32px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    background: #1b2070;
+    color: #fff;
+
+    b {
+        display: block;
+        font-size: 1.25rem;
+        font-weight: 900;
+        color: #f7c948;
+    }
+    span {
+        opacity: 0.85;
+    }
+}
+
+// Card motif lab (/club/dev/card-motifs)
+.o_pbw_lab_bar {
+    position: sticky;
+    top: 70px;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 4px 0 rgba(27, 32, 112, 0.12), 0 0 0 1px rgba(27, 32, 112, 0.08);
+}
+.o_pbw_lab_switch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+}
+.o_pbw_lab_counter {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+}
+.o_pbw_lab_h {
+    margin: 40px 0 16px;
+    color: #1b2070;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+.o_pbw_lab_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 28px 16px;
+
+    &.o_pbw_lab_grid_sm {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    &.o_pbw_lab_grid_share img {
+        width: 100%;
+        max-width: 270px;
+        height: auto;
+        border-radius: 10px;
+    }
+}
+.o_pbw_lab_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    text-align: center;
+
+    code {
+        font-size: 0.75rem;
+    }
+}

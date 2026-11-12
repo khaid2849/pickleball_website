@@ -84,7 +84,12 @@
                     <div class="row g-4">
                         <div class="col-lg-4 col-xl-3 d-flex justify-content-center">
                             <div class="o_pbw_sticky">
-                                <t t-call="pickleball_website.player_card"><t t-set="member" t-value="player"/></t>
+                                <t t-call="pickleball_website.flip_card">
+                                    <t t-set="member" t-value="player"/>
+                                    <t t-set="back" t-value="card_back"/>
+                                    <t t-set="back_template" t-value="'pickleball_website.card_back_member'"/>
+                                    <t t-set="motif_size" t-value="'lg'"/>
+                                </t>
                             </div>
                         </div>
                         <div class="col-lg-8 col-xl-9">

@@ -242,6 +242,7 @@
                                                         <t t-set="member" t-value="player"/>
                                                         <t t-set="card" t-value="player._gm_card_view(card=_cards[0], finance=False, frozen=True)"/>
                                                         <t t-set="no_photo" t-value="False"/>
+                                                        <t t-set="motif_size" t-value="'sm'"/>
                                                     </t>
                                                 </t>
                                             </div>
@@ -399,12 +400,207 @@
         </t>
     </template>
 
+    <!-- ═══ Flip cards ═══
+         A player card that turns over on tap (club_flip.js). Params: member,
+         card (front view, optional), back_template (xml id of the back) and
+         the back's own params. -->
+    <template id="flip_card" name="Club: Flip Card">
+        <div class="o_pbw_flip" tabindex="0" role="button" aria-pressed="false" title="Tap to flip">
+            <div class="o_pbw_flip_inner">
+                <div class="o_pbw_flip_face o_pbw_flip_front">
+                    <t t-call="pickleball_website.player_card"/>
+                    <span class="o_pbw_flip_hint" aria-hidden="true"><i class="fa fa-repeat"/></span>
+                </div>
+                <div class="o_pbw_flip_face o_pbw_flip_back" aria-hidden="true">
+                    <t t-call="{{ back_template }}"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Back of a member's card: how they play (no contact, no money).
+         Params: member, card (optional), back (pickleball.member._gm_card_back()). -->
+    <template id="card_back_member" name="Club: Card Back (member)">
+        <t t-set="_v" t-value="card or card_view(member)"/>
+        <div t-attf-class="o_pb_card o_pb_card_back o_pb_card_{{ _v['tier'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _v['variant'] != _v['tier'] else '' }}"
+             t-att-style="_v['style'] or None">
+            <div class="o_pb_card_back_head">
+                <span class="o_pb_card_back_kicker">Player file</span>
+                <span class="o_pb_card_tag o_pb_card_tag_tier" t-out="back['tier_label']"/>
+            </div>
+            <div class="o_pb_card_back_numbers">
+                <div><b t-out="back['matches']"/><span>Matches</span></div>
+                <div><b><t t-out="back['win_rate']"/>%</b><span>Win rate</span></div>
+                <div><b t-out="back['best_streak']"/><span>Best streak</span></div>
+            </div>
+            <ul class="o_pb_card_back_rows">
+                <li><span>Record</span><b><t t-out="back['wins']"/>W · <t t-out="back['losses']"/>L</b></li>
+                <li t-if="rank"><span>Ranking</span><b>#<t t-out="rank"/> / <t t-out="ranked_count"/></b></li>
+                <li><span>Sessions in a row</span><b t-out="back['attendance_streak']"/></li>
+                <li t-if="back['partner']"><span>Best partner</span>
+                    <b><t t-out="back['partner']['name']"/> · CHEM <t t-out="back['partner']['chemistry']"/></b></li>
+                <li t-if="back['rival']"><span>Rival</span>
+                    <b><t t-out="back['rival']['name']"/> · <t t-out="back['rival']['wins']"/>-<t t-out="back['rival']['losses']"/></b></li>
+                <li><span>Cards</span><b><t t-out="back['cards_owned']"/> / <t t-out="back['cards_total']"/></b></li>
+                <li t-if="back['season']"><span>Season <t t-out="back['season']['code']"/></span>
+                    <b>Lv <t t-out="back['season']['level']"/> · <t t-out="back['season']['xp']"/> XP</b></li>
+            </ul>
+            <div class="o_pb_card_back_badges">
+                <span t-foreach="back['badges']" t-as="badge" t-attf-class="o_pb_card_badge o_pb_card_badge_{{ badge['level'] }}" t-att-title="badge['name']">
+                    <i t-attf-class="fa {{ badge['icon'] }}" role="img" t-att-aria-label="badge['name']"/>
+                </span>
+                <small><t t-out="back['badge_count']"/> / <t t-out="back['badge_total']"/> badges</small>
+            </div>
+            <div t-if="back['progress']" class="o_pb_card_back_progress">
+                <small><t t-out="back['progress']['gap']"/> OVR to <t t-out="back['progress']['next_label']"/></small>
+                <i><b t-attf-style="width: {{ back['progress']['ratio'] }}%"/></i>
+            </div>
+            <span class="o_pb_card_back_hint"><i class="fa fa-repeat"/> Tap to flip back</span>
+        </div>
+    </template>
+
+    <!-- Back of a card in the catalog: only how to earn it. Params: card
+         (view), item (club_cards row). -->
+    <template id="card_back_type" name="Club: Card Back (card type)">
+        <t t-set="_v" t-value="card"/>
+        <div t-attf-class="o_pb_card o_pb_card_back o_pb_card_back_type o_pb_card_{{ _v['tier'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _v['variant'] != _v['tier'] else '' }}"
+             t-att-style="_v['style'] or None">
+            <h4 class="o_pb_card_back_title" t-out="item['type'].name"/>
+            <p class="o_pb_card_back_text" t-out="item['type'].condition"/>
+            <p t-if="item['info']['ovr_from']" class="o_pb_card_back_text">OVR from <b t-out="item['info']['ovr_from']"/></p>
+        </div>
+    </template>
+
+    <!-- ═══ Card catalog ═══ -->
+    <template id="club_cards" name="Club: Cards">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Collection</t>
+            <t t-set="page_title">All the cards</t>
+            <t t-set="page_subtitle">Every card you can earn. Tap a card to turn it over and see how to get it.</t>
+            <t t-set="hero_extra" t-if="me">
+                <div class="o_pbw_hero_facts">
+                    <div><b><t t-out="owned_count"/> / <t t-out="total_count"/></b><span>Cards owned</span></div>
+                </div>
+            </t>
+            <section class="o_pbw_section">
+                <div class="container">
+                    <div t-foreach="sections" t-as="section" class="o_pbw_cards_section">
+                        <h2 class="o_pbw_cards_heading"><t t-out="section['label']"/> <small t-out="len(section['items'])"/></h2>
+                        <div class="o_pbw_cards_grid">
+                            <div t-foreach="section['items']" t-as="item" t-attf-class="o_pbw_cards_item {{ 'o_pbw_cards_owned' if item['owned'] else '' }} {{ 'o_pbw_cards_locked' if me and not item['owned'] else '' }}">
+                                <t t-call="pickleball_website.flip_card">
+                                    <t t-set="member" t-value="card_member"/>
+                                    <t t-set="card" t-value="item['card']"/>
+                                    <t t-set="back_template" t-value="'pickleball_website.card_back_type'"/>
+                                </t>
+                                <b class="o_pbw_cards_name">
+                                    <i t-if="item['owned']" class="fa fa-check-circle" title="Owned"/>
+                                    <i t-elif="me" class="fa fa-lock" title="Not earned yet"/>
+                                    <t t-out="item['type'].name"/>
+                                </b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <!-- ═══ Card motif lab (admins) ═══
+         Every special card's motif (pickleball-team services/card_motif.py)
+         on sample players: sizes md / sm / share, "once" replay, walkout,
+         missing data, reduced motion and a 48-card page (card_motif_lab.js). -->
+    <template id="club_card_motif_lab" name="Club: Card Motif Lab">
+        <t t-call="pickleball_website.club_layout">
+            <t t-set="page_kicker">Card motif lab</t>
+            <t t-set="page_title">Special card motifs</t>
+            <t t-set="page_subtitle">Sample players and sample data. Admins only.</t>
+            <section class="o_pbw_section o_pbw_motif_lab">
+                <div class="container">
+                    <div class="o_pbw_lab_bar" role="toolbar" aria-label="Lab controls">
+                        <button type="button" class="btn o_pbw_btn o_pbw_btn_dark btn-sm" data-lab="replay-all"><i class="fa fa-repeat me-1"/>Replay all "once" motion</button>
+                        <label class="o_pbw_lab_switch"><input type="checkbox" id="lab_reduced" data-lab="reduced"/> Reduced motion</label>
+                        <span class="o_pbw_lab_counter" aria-live="polite">Looping: <b data-lab="live">0</b> / <b data-lab="total">0</b> motifs on screen</span>
+                    </div>
+
+                    <h2 class="o_pbw_lab_h">Size md (pages) · tap a button to replay or open the walkout</h2>
+                    <div class="o_pbw_lab_grid">
+                        <div t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
+                            <t t-call="pickleball_website.player_card">
+                                <t t-set="member" t-value="item['member']"/>
+                                <t t-set="card" t-value="item['card']"/>
+                                <t t-set="no_photo" t-value="True"/>
+                            </t>
+                            <b t-out="item['type'].name"/>
+                            <code t-out="item['code']"/>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn o_pbw_btn o_pbw_btn_light btn-sm" data-lab="replay">Replay</button>
+                                <button type="button" class="btn o_pbw_btn o_pbw_btn_primary btn-sm" data-lab="walkout" t-att-data-reveal="item['reveal']">Walkout</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="o_pbw_lab_h">Missing data · labels, month, ring and gap hidden</h2>
+                    <div class="o_pbw_lab_grid">
+                        <div t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
+                            <t t-call="pickleball_website.player_card">
+                                <t t-set="member" t-value="item['member']"/>
+                                <t t-set="card" t-value="item['bare']"/>
+                                <t t-set="no_photo" t-value="True"/>
+                            </t>
+                            <code t-out="item['code']"/>
+                        </div>
+                    </div>
+
+                    <h2 class="o_pbw_lab_h">Size sm (album) · background and main accent, no motion</h2>
+                    <div class="o_pbw_lab_grid o_pbw_lab_grid_sm">
+                        <div t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
+                            <div class="o_pbw_album_mini">
+                                <t t-call="pickleball_website.player_card">
+                                    <t t-set="member" t-value="item['member']"/>
+                                    <t t-set="card" t-value="item['card']"/>
+                                    <t t-set="no_photo" t-value="True"/>
+                                    <t t-set="motif_size" t-value="'sm'"/>
+                                </t>
+                            </div>
+                            <code t-out="item['code']"/>
+                        </div>
+                    </div>
+
+                    <h2 class="o_pbw_lab_h">Size share (card image, 1080 × 1350) · static, every detail</h2>
+                    <div class="o_pbw_lab_grid o_pbw_lab_grid_share">
+                        <figure t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
+                            <img t-attf-src="/club/dev/card-motifs/{{ item['code'] }}.png" loading="lazy" width="270" height="338"
+                                 t-att-alt="'Share image: %s' % item['type'].name"/>
+                            <figcaption><code t-out="item['code']"/></figcaption>
+                        </figure>
+                    </div>
+
+                    <h2 class="o_pbw_lab_h">48 cards · only the ones on screen loop (see the counter)</h2>
+                    <div class="o_pbw_lab_grid o_pbw_lab_grid_stress">
+                        <div t-foreach="stress" t-as="item" class="o_pbw_lab_item">
+                            <t t-call="pickleball_website.player_card">
+                                <t t-set="member" t-value="item['member']"/>
+                                <t t-set="card" t-value="item['card']"/>
+                                <t t-set="no_photo" t-value="True"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+
     <!-- ═══ Layout: Season tab, walkout player ═══ -->
     <template id="club_layout_gamification" inherit_id="pickleball_website.club_layout" name="Club: Layout Gamification">
         <xpath expr="//a[@href='/club/rankings']/.." position="after">
             <li>
                 <a href="/club/season" t-attf-class="{{ 'active' if club_tab == 'season' else '' }}">
                     <i class="fa fa-flag"/><span>Season</span></a>
+            </li>
+            <li>
+                <a href="/club/cards" t-attf-class="{{ 'active' if club_tab == 'cards' else '' }}">
+                    <i class="fa fa-clone"/><span>Cards</span></a>
             </li>
         </xpath>
         <xpath expr="//div[@id='wrap']" position="inside">

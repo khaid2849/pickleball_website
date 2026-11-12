@@ -4,6 +4,7 @@ showcase, season pages, share image and walkouts.
 
 Money is filtered here on the server (§10): the card of another member
 never carries an amount the viewer may not see."""
+import copy
 import json
 
 from werkzeug.exceptions import Forbidden, NotFound
@@ -13,7 +14,12 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
 
-from .club import PickleballClub
+from .club import PickleballClub, apply_preview, demo_card_view, demo_label, demo_players, shift_ovr
+
+
+def card_motif_codes():
+    """Codes of the special cards with a motif (pickleball-team services/card_motif.py)."""
+    return ('POTM', 'TOTW', 'IN_FORM', 'IRON_MAN', 'GIANT_SLAYER', 'COMEBACK', 'ROOKIE', 'MONEY_HEIST')
 
 _lt = LazyTranslate(__name__)
 
@@ -266,7 +272,7 @@ class ClubGamification(PickleballClub):
             card = None  # the showcase card
         view = me._gm_card_view(card=card, viewer=me)
         data['card_html'] = str(request.env['ir.ui.view']._render_template(
-            'pickleball_website.player_card', dict(self._values('none'), member=me, card=view)))
+            'pickleball_website.player_card', dict(self._values('none'), member=me, card=view, motif_size='lg')))
         data['old_ovr'] = payload.get('old_ovr')
         data['new_ovr'] = payload.get('new_ovr') or view['ovr']
         data['share_url'] = f'/club/api/members/{me.id}/card/share.png' + (f'?card={card.id}' if card else '')
@@ -315,6 +321,123 @@ class ClubGamification(PickleballClub):
         values = self._values('players', player=player, album=player._gm_album(), is_owner=player == me,
                               duos=player._gm_duo_pairs())
         return request.render('pickleball_website.club_album', values)
+
+    @http.route('/club/cards', type='http', auth='user', website=True, sitemap=False)
+    def club_cards(self, **kwargs):
+        """Every card of the game, by category (members only: visitors get a
+        teaser on the home page). Tap a card to flip it: how to earn it.
+        Members see the cards on their own player card and which ones they own."""
+        denied = self._check_club_access()
+        if denied:
+            return denied
+        me = self._me()
+        Card = request.env['pickleball.card.instance'].sudo()
+        types = request.env['pickleball.card.type'].sudo().search([])
+        today = fields.Date.context_today(request.env.user)
+        owned = {}
+        if me:
+            member = me
+            base = me._gm_card_view(card=Card, finance=False)
+            for card in Card.search([('member_id', '=', me.id)]) | Card.search(
+                    [('duo_pair_id', 'in', me._gm_duo_pairs().ids)]):
+                owned.setdefault(card.card_type_id.id, Card)
+                owned[card.card_type_id.id] |= card
+        else:  # admins without a member profile
+            member = demo_players()[1]
+            base = demo_card_view(member)
+        labels = dict(types._fields['category']._description_selection(request.env))
+        sections = []
+        # tier steps shown at their OVR: 2 above the step's minimum (the
+        # lowest step, from 0: 5 below the next one)
+        tier_from = [t._gm_back_info()['ovr_from'] for t in types if t.category == 'tier']
+        next_from = dict(zip(tier_from, tier_from[1:]))
+        for category in ('tier', 'special', 'season', 'evo', 'duo'):
+            items = []
+            for card_type in types.filtered(lambda t, cat=category: t.category == cat):
+                info = card_type._gm_back_info()
+                view = copy.deepcopy(base)
+                if info['ovr_from'] is not None:
+                    low = info['ovr_from'] or max(next_from.get(0, 60) - 5, 1)
+                    shift_ovr(view, min(99, low + 2))
+                apply_preview(view, card_type._gm_preview(today.month), demo_label(card_type, today), member=member)
+                cards = owned.get(card_type.id, Card)
+                items.append({'type': card_type, 'card': view, 'info': info, 'owned': len(cards),
+                              'last': max(cards.mapped('earned_at')).date() if cards else None})
+            if items:
+                sections.append({'category': category, 'label': labels[category], 'items': items})
+        values = self._values('cards', sections=sections, card_member=member, owned_count=len(owned),
+                              total_count=len(types))
+        return request.render('pickleball_website.club_cards', values)
+
+    # ── Card motif lab (admins): every special card's motif, all sizes ─────
+
+    MOTIF_SAMPLE_DATA = {
+        'POTM': {'month': 11},
+        'IN_FORM': {'streak': 5},
+        'GIANT_SLAYER': {'ovr_gap': 8},
+        'ROOKIE': {'matches': 3},
+    }
+
+    def _motif_lab_cards(self):
+        """One sample card per special card with a motif (sample players,
+        sample data), with and without the optional data."""
+        types = request.env['pickleball.card.type'].sudo().search([('code', 'in', list(card_motif_codes()))])
+        by_code = {card_type.code: card_type for card_type in types}
+        today = fields.Date.context_today(request.env.user)
+        players = demo_players()
+        cards = []
+        for index, code in enumerate(card_motif_codes()):
+            card_type = by_code.get(code)
+            if not card_type:
+                continue
+            player = players[index % len(players)]
+            view = demo_card_view(player, card_type._gm_preview(11), demo_label(card_type, today))
+            sample = self.MOTIF_SAMPLE_DATA.get(code, {})
+            data = dict(view.get('motif_data') or {})
+            if 'streak' in sample:
+                data.update(streak=sample['streak'], streak_label=str(_lt("%s wins in a row")) % sample['streak'])
+            if 'ovr_gap' in sample:
+                data.update(ovr_gap=sample['ovr_gap'], gap_label=f"\u2212{sample['ovr_gap']} OVR")
+            if 'matches' in sample:
+                data.update(matches=sample['matches'], target=10,
+                            rookie_label=str(_lt("%(matches)s/%(target)s matches")) % {
+                                'matches': sample['matches'], 'target': 10})
+            if 'month' in sample:
+                data['month'] = sample['month']
+            view['motif_data'] = data
+            # without the optional data: what a card shows when it is missing
+            bare = dict(view, motif_data={key: value for key, value in data.items() if key in ('ovr', 'serial')})
+            cards.append({'code': code, 'type': card_type, 'member': player, 'card': view, 'bare': bare})
+        return cards
+
+    @http.route('/club/dev/card-motifs', type='http', auth='user', website=True, sitemap=False)
+    def club_card_motif_lab(self, **kwargs):
+        if not self._is_admin():
+            raise NotFound()
+        cards = self._motif_lab_cards()
+        Views = request.env['ir.ui.view']
+        for item in cards:
+            html = Views._render_template('pickleball_website.player_card', dict(
+                self._values('none'), member=item['member'], card=item['card'], no_photo=True, motif_size='lg'))
+            item['reveal'] = json.dumps({
+                'id': 0, 'kind': 'card', 'payload': {}, 'card_html': str(html),
+                'old_ovr': max(item['card']['ovr'] - 3, 1), 'new_ovr': item['card']['ovr'],
+                'share_url': f"/club/dev/card-motifs/{item['code']}.png", 'album_url': '/club/dev/card-motifs',
+            })
+        values = self._values('none', lab_cards=cards, stress=[cards[i % len(cards)] for i in range(48)])
+        return request.render('pickleball_website.club_card_motif_lab', values)
+
+    @http.route('/club/dev/card-motifs/<string:code>.png', type='http', auth='user', sitemap=False)
+    def club_card_motif_png(self, code, size='share', **kwargs):
+        if not self._is_admin():
+            raise NotFound()
+        item = next((card for card in self._motif_lab_cards() if card['code'] == code), None)
+        if not item:
+            raise NotFound()
+        png = request.env['pickleball.gamification'].sudo()._gm_view_png(item['card'], share=size == 'share')
+        if not png:
+            raise NotFound()
+        return request.make_response(png, [('Content-Type', 'image/png'), ('Cache-Control', 'no-store')])
 
     @http.route('/club/me/showcase', type='http', auth='user', website=True, sitemap=False, methods=['GET', 'POST'])
     def club_showcase(self, **post):

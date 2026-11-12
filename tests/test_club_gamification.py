@@ -66,6 +66,44 @@ class TestClubGamification(ClubDataMixin, HttpCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.an.showcase_mode, 'tier')
 
+    def test_card_catalog_and_flip(self):
+        # visitors: no catalog, only a teaser on the home page (most cards hidden)
+        self.assertNotIn('o_pbw_flip_inner', self.url_open('/club/cards').text)
+        home = self.url_open('/club').text
+        self.assertIn('o_pbw_ladder', home)
+        self.assertEqual(home.count('o_pbw_special_hidden'), 4)
+        for secret in ('GIANT_SLAYER', 'o_pb_card_v_giant_slayer', 'o_pb_card_v_potm'):
+            self.assertNotIn(secret, home)
+        # members: every card type, flippable to how to earn it
+        self.an.phone = '0909123456'
+        self.authenticate(self.binh_login, self.binh_password)
+        page = self.url_open('/club/cards')
+        self.assertEqual(page.status_code, 200)
+        count = self.env['pickleball.card.type'].search_count([])
+        self.assertEqual(page.text.count('o_pbw_flip_inner'), count)
+        self.assertIn('o_pb_card_back_type', page.text)
+        # the profile card turns over to the player file, without contact data
+        profile = self.url_open(f'/club/players/{self.an.id}').text
+        back = profile[profile.index('o_pbw_flip_back'):]
+        back = back[:back.index('o_pbw_flip_hint') if 'o_pbw_flip_hint' in back else 4000]
+        self.assertIn('o_pb_card_back_numbers', profile)
+        self.assertNotIn('0909123456', back)
+
+    def test_card_motif_lab_and_layers(self):
+        # members: no lab; their cards carry the motif layers
+        self.authenticate(self.binh_login, self.binh_password)
+        self.assertEqual(self.url_open('/club/dev/card-motifs').status_code, 404)
+        # admins: every motif, sizes md / sm, share images
+        self.authenticate('admin', 'admin')
+        page = self.url_open('/club/dev/card-motifs')
+        self.assertEqual(page.status_code, 200)
+        for code in ('potm', 'totw', 'in_form', 'iron_man', 'giant_slayer', 'comeback', 'rookie', 'money_heist'):
+            self.assertIn(f'o_pb_motif_{code}', page.text)
+        self.assertIn('o_pb_motif_sm', page.text)
+        self.assertIn('o_pb_motif_front', page.text)
+        png = self.url_open('/club/dev/card-motifs/IRON_MAN.png')
+        self.assertEqual(png.headers.get('Content-Type'), 'image/png')
+
     def test_public_cannot_use_api(self):
         response = self.url_open(f'/club/api/members/{self.an.id}/card', allow_redirects=False)
         self.assertNotEqual(response.status_code, 200, "redirected to the login page")

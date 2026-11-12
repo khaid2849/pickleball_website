@@ -9,6 +9,7 @@
  */
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { armMotifs, playMotifs } from "@pickleball_website/js/card_motif";
 
 const STEP_TIMES = [0, 600, 1200, 1800, 2400, 3000];
 const TIER_COLORS = { bronze: "#ec8a4b", silver: "#dfe6f0", gold: "#f7c948", icon: "#b388ff" };
@@ -56,7 +57,7 @@ function countUp(el, from, to, duration) {
     requestAnimationFrame(step);
 }
 
-function playWalkout(reveal) {
+export function playWalkout(reveal) {
     return new Promise((resolve) => {
         const reduced = reducedMotion();
         const overlay = document.createElement("div");
@@ -86,6 +87,7 @@ function playWalkout(reveal) {
         card.className = "o_pbw_wo_card";
         card.innerHTML = reveal.card_html || "";
         stage.append(card, light);
+        armMotifs(card); // the card's motif plays when the card turns over
         const pbCard = card.querySelector(".o_pb_card");
         if (pbCard) {
             const cover = document.createElement("div");
@@ -122,6 +124,7 @@ function playWalkout(reveal) {
             timers.forEach(clearTimeout);
             overlay.classList.add("o_pbw_wo_dark", "o_pbw_wo_s2", "o_pbw_wo_s3", "o_pbw_wo_s4", "o_pbw_wo_s5",
                 "o_pbw_wo_s6");
+            playMotifs(card);
         };
         const close = () => {
             overlay.remove();
@@ -165,6 +168,7 @@ function playWalkout(reveal) {
             () => overlay.classList.add("o_pbw_wo_s5"),
             () => {
                 overlay.classList.add("o_pbw_wo_s6");
+                playMotifs(card);
                 done = true;
             },
         ];

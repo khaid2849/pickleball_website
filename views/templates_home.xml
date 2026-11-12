@@ -201,12 +201,12 @@
                     <span class="o_pbw_hero_stripe o_pbw_hero_stripe_2"/>
                 </div>
                 <div class="container position-relative">
-                    <div class="row align-items-center g-5">
+                    <div class="row align-items-center g-4 g-lg-5">
                         <div class="col-lg-7">
                             <span class="o_pbw_kicker o_pbw_kicker_light">Pickleball club</span>
                             <h1 class="o_pbw_display"><span class="o_pbw_ribbon" t-out="website.name"/></h1>
                             <p class="o_pbw_hero_lead">Join the team that plays hard and splits the bill fairly.
-                                Your own player card, live rankings, every match result and automatic court fee splits — all in one place.</p>
+                                A player card that levels up with every match, special cards to collect, live rankings and automatic court fee splits — all in one place.</p>
                             <div class="o_pbw_hero_actions">
                                 <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-user-plus me-2"/>Create my account</a>
                                 <a href="/web/login?redirect=/club/me" class="btn o_pbw_btn o_pbw_btn_ghost">Log in</a>
@@ -232,10 +232,10 @@
                 <div class="container">
                     <div class="row g-3">
                         <div class="col-6 col-lg-3">
-                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'6'"/><t t-set="icon" t-value="'fa-bar-chart'"/>Ratings on your card</t>
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="str(len(demo_ladder) or 7)"/><t t-set="icon" t-value="'fa-diamond'"/>Tier steps to climb</t>
                         </div>
                         <div class="col-6 col-lg-3">
-                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'4'"/><t t-set="icon" t-value="'fa-diamond'"/>Card tiers to climb</t>
+                            <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="str(demo_card_count)"/><t t-set="icon" t-value="'fa-clone'"/>Cards to collect</t>
                         </div>
                         <div class="col-6 col-lg-3">
                             <t t-call="pickleball_website.stat_tile"><t t-set="value" t-value="'100%'"/><t t-set="icon" t-value="'fa-calculator'"/>Automatic bill split</t>
@@ -254,7 +254,7 @@
                         <t t-set="kicker">Your player card</t>
                         <t t-set="title">Every player gets a card</t>
                     </t>
-                    <div class="row align-items-center g-5">
+                    <div class="row align-items-center g-4 g-lg-5">
                         <div class="col-lg-4">
                             <p class="o_pbw_lead_dark">Win rate, form, experience, attendance, betting and fair play: six ratings,
                                 recalculated after every session, give your overall rating — and your card tier.</p>
@@ -280,8 +280,112 @@
                 </div>
             </section>
 
-            <!-- Features -->
+            <!-- Tier ladder -->
+            <section t-if="demo_ladder" class="o_pbw_section o_pbw_section_alt">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Level up</t>
+                        <t t-set="title">From Bronze II to Icon</t>
+                    </t>
+                    <p class="o_pbw_lead_dark o_pbw_gm_home_lead">Every 5 OVR is a new step. Like a ranked division, II opens a tier and I tops it:
+                        your card gets a metal frame, pinstripes and a shine. Icon is for the best players who hold it for two weeks.</p>
+                    <div class="o_pbw_ladder" role="list">
+                        <t t-foreach="demo_ladder" t-as="step">
+                            <i t-if="not step_first" class="fa fa-chevron-right o_pbw_ladder_arrow" aria-hidden="true"/>
+                            <div class="o_pbw_ladder_step" role="listitem">
+                                <t t-call="pickleball_website.player_card">
+                                    <t t-set="member" t-value="step['member']"/>
+                                    <t t-set="card" t-value="step['card']"/>
+                                </t>
+                                <b class="o_pbw_ladder_name" t-out="step['type'].name"/>
+                                <small class="o_pbw_muted">OVR <t t-out="step['card']['ovr']"/></small>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Special cards -->
+            <section t-if="demo_specials" class="o_pbw_section">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Special cards</t>
+                        <t t-set="title">Cards that show off your game</t>
+                    </t>
+                    <p class="o_pbw_lead_dark o_pbw_gm_home_lead">Great performances earn special cards, each with its own design and a ratings boost while it lasts.
+                        Here are two of them — the others stay secret until you join.</p>
+                    <div class="o_pbw_special_grid">
+                        <div t-foreach="demo_specials" t-as="special" class="o_pbw_special_item">
+                            <t t-call="pickleball_website.player_card">
+                                <t t-set="member" t-value="special['member']"/>
+                                <t t-set="card" t-value="special['card']"/>
+                            </t>
+                            <b class="o_pbw_special_name" t-out="special['type'].name"/>
+                            <small class="o_pbw_muted" t-out="special['type'].condition"/>
+                        </div>
+                        <div t-foreach="demo_hidden" t-as="hidden" class="o_pbw_special_item o_pbw_special_hidden">
+                            <div class="o_pbw_special_veil" aria-hidden="true">
+                                <t t-call="pickleball_website.player_card">
+                                    <t t-set="member" t-value="hidden['member']"/>
+                                    <t t-set="card" t-value="hidden['card']"/>
+                                </t>
+                            </div>
+                            <span class="o_pbw_special_lock"><i class="fa fa-lock"/><b>?</b></span>
+                            <b class="o_pbw_special_name">???</b>
+                            <small class="o_pbw_muted">Members only</small>
+                        </div>
+                    </div>
+                    <div class="o_pbw_special_more">
+                        <div>
+                            <b>+<t t-out="demo_more_count"/> secret cards</b>
+                            <span>Weekly and monthly awards, season trophies, Evolution and Duo cards… Join to find out how to earn them.</span>
+                        </div>
+                        <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-unlock-alt me-2"/>Unlock all <t t-out="demo_card_count"/> cards</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- The game around the sessions -->
             <section class="o_pbw_section o_pbw_section_alt">
+                <div class="container">
+                    <t t-call="pickleball_website.section_title">
+                        <t t-set="kicker">Every session counts</t>
+                        <t t-set="title">A game around every match</t>
+                    </t>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-magic"/><h3>Walkouts</h3>
+                                <p>Earn a card and it is revealed on your next visit with a full walkout — then share it as an image.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-certificate"/><h3>Badges</h3>
+                                <p><t t-out="demo_badge_count"/> badges with bronze, silver and gold levels: pin your three favourites on your card.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-th"/><h3>Album</h3>
+                                <p>Every card you earn stays in your album for good, with the ratings you had that day.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-star"/><h3>Your showcase</h3>
+                                <p>Choose the card the team sees: your current tier, or any special, season or Evolution card you earned.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-flag"/><h3>Seasons &amp; XP</h3>
+                                <p>Quarterly seasons with XP, levels, weekly challenges and awards: MVP, Most Improved, Iron Man of the season.</p></div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="o_pbw_feature"><i class="fa fa-users"/><h3>Duos &amp; rivals</h3>
+                                <p>Chemistry with each partner, Duo cards for the best pairs and rivalries with the players you meet the most.</p></div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="/club/register" class="btn o_pbw_btn o_pbw_btn_primary"><i class="fa fa-id-card-o me-2"/>Start collecting</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="o_pbw_section">
                 <div class="container">
                     <t t-call="pickleball_website.section_title">
                         <t t-set="kicker">Members area</t>
@@ -317,7 +421,7 @@
             </section>
 
             <!-- Locked rankings preview -->
-            <section class="o_pbw_section">
+            <section class="o_pbw_section o_pbw_section_alt">
                 <div class="container">
                     <t t-call="pickleball_website.section_title">
                         <t t-set="kicker">Rankings</t>
@@ -371,7 +475,7 @@
             </section>
 
             <!-- Steps -->
-            <section class="o_pbw_section o_pbw_section_alt">
+            <section class="o_pbw_section">
                 <div class="container">
                     <t t-call="pickleball_website.section_title">
                         <t t-set="kicker">Joining takes a minute</t>

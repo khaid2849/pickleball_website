@@ -25,8 +25,11 @@
     <!-- The card itself, inside player_card's link (or plain block). -->
     <template id="player_card_body" name="Club: Player Card Body">
         <t t-set="_special" t-value="_v['variant'] != _tier"/>
-        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} o_pb_card_step_{{ _v['step'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _special else '' }} {{ '' if member.active else 'o_pb_card_archived' }}"
+        <t t-set="_motif" t-value="_v.get('motif_code')"/>
+        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} o_pb_card_step_{{ _v['step'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _special else '' }} {{ 'o_pb_card_motif' if _motif else '' }} {{ '' if member.active else 'o_pb_card_archived' }}"
              t-att-style="_v['style'] or None">
+            <!-- CardMotif, back layer: above the background, below the avatar -->
+            <t t-if="_motif" t-out="card_motif(_v, 'back', motif_size)"/>
             <svg t-if="_v['theme'].get('flame')" class="o_pb_deco o_pb_deco_flame" viewBox="0 0 40 48" aria-hidden="true">
                 <path d="M20 2C24 12 34 16 34 30A14 14 0 0 1 6 30C6 22 11 18 13 12C15 18 18 19 19 18C17 12 18 6 20 2Z"/>
                 <path d="M20 22C22 27 27 29 27 35A7 7 0 0 1 13 35C13 31 16 29 17 26C18 29 20 29 20 28C19 26 19 24 20 22Z"/>
@@ -39,6 +42,14 @@
                     <rect x="4" y="13" width="8" height="18" rx="3"/>
                     <rect x="60" y="13" width="8" height="18" rx="3"/>
                 </g>
+            </svg>
+            <svg t-elif="_v['theme'].get('emblem') == 'money'" class="o_pb_deco o_pb_deco_money" viewBox="0 0 72 52" aria-hidden="true">
+                <rect class="o_pb_money_note o_pb_money_back" x="4" y="8" width="46" height="26" rx="4" transform="rotate(-12 27 21)"/>
+                <rect class="o_pb_money_note" x="8" y="16" width="46" height="26" rx="4"/>
+                <rect class="o_pb_money_line" x="12" y="20" width="38" height="18" rx="2"/>
+                <circle class="o_pb_money_mark" cx="31" cy="29" r="5"/>
+                <circle class="o_pb_money_coin" cx="58" cy="38" r="11"/>
+                <circle class="o_pb_money_coin_in" cx="58" cy="38" r="6"/>
             </svg>
             <svg t-else="" class="o_pb_deco o_pb_deco_chevrons" viewBox="0 0 96 40" aria-hidden="true">
                 <polyline points="6,6 20,20 6,34"/>
@@ -84,6 +95,8 @@
                 <img t-if="_photo" class="o_pb_card_photo" t-att-src="_photo" t-att-alt="member.name" loading="lazy"/>
                 <t t-else="" t-call="pickleball_website.player_figure"/>
             </div>
+            <!-- CardMotif, front layer: above the avatar, below the ribbon and ratings -->
+            <t t-if="_motif" t-out="card_motif(_v, 'front', motif_size)"/>
 
             <div class="o_pb_card_ribbon" t-att-title="member.name">
                 <span t-out="member.name"/>

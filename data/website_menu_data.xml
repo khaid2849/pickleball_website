@@ -33,6 +33,13 @@
     </record>
     <!-- Tournaments: information only, for everyone (each tournament says
          whether visitors may see it). -->
+    <record id="menu_club_cards" model="website.menu">
+        <field name="name">Cards</field>
+        <field name="url">/club/cards</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="group_ids" eval="[(4, ref('pickleball_website.group_club_member')), (4, ref('base.group_user'))]"/>
+        <field name="sequence">57</field>
+    </record>
     <record id="menu_club_tournaments" model="website.menu">
         <field name="name">Tournaments</field>
         <field name="url">/club/tournaments</field>
