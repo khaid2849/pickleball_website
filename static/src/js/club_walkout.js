@@ -58,6 +58,9 @@ function countUp(el, from, to, duration) {
 }
 
 export function playWalkout(reveal) {
+    if (reveal.kind === "tier_up" && reveal.payload && reveal.payload.new_code === "ICON") {
+        return playIconWalkout(reveal);
+    }
     return new Promise((resolve) => {
         const reduced = reducedMotion();
         const overlay = document.createElement("div");
@@ -173,6 +176,129 @@ export function playWalkout(reveal) {
             },
         ];
         steps.forEach((fn, i) => timers.push(setTimeout(fn, STEP_TIMES[i])));
+    });
+}
+
+// Icon walkout (about 5 s): the member's own constellation appears, its
+// stars join, gather into one point that bursts into gold dust; the gold
+// frame shows, then the chips with the OVR counting up, the name ribbon
+// with its light, the whole card and, last, the owner's engraving.
+const ICON_STEPS = [0, 1100, 2000, 2500, 3100, 3700, 4400, 5000];
+
+export function playIconWalkout(reveal) {
+    return new Promise((resolve) => {
+        const reduced = reducedMotion();
+        const overlay = document.createElement("div");
+        overlay.className = "o_pbw_walkout o_pbw_wo_icon" + (reduced ? " o_pbw_wo_reduced" : "");
+        overlay.setAttribute("role", "dialog");
+        overlay.setAttribute("aria-label", _t("Icon"));
+
+        const title = document.createElement("div");
+        title.className = "o_pbw_wo_title";
+        title.textContent = _t("Icon!");
+        const stage = document.createElement("div");
+        stage.className = "o_pbw_wo_stage";
+        const card = document.createElement("div");
+        card.className = "o_pbw_wo_card";
+        card.innerHTML = reveal.card_html || "";
+        armMotifs(card);
+        stage.append(card);
+
+        const sky = document.createElement("div");
+        sky.className = "o_pbw_woi_sky";
+        const constellation = card.querySelector(".o_pb_m_constellation");
+        if (constellation) {
+            sky.innerHTML = `<svg viewBox="0 0 250 160" aria-hidden="true">${constellation.outerHTML}</svg>`;
+            const lines = sky.querySelector("path");
+            if (lines) {
+                lines.setAttribute("pathLength", "1");
+                lines.classList.add("o_pbw_woi_lines");
+            }
+        }
+        const burst = document.createElement("div");
+        burst.className = "o_pbw_woi_burst";
+        const rain = document.createElement("div");
+        rain.className = "o_pbw_woi_rain";
+        for (let i = 0; i < 60; i++) {
+            const speck = document.createElement("i");
+            speck.style.left = `${Math.random() * 100}%`;
+            speck.style.animationDelay = `${(Math.random() * 0.8).toFixed(2)}s`;
+            speck.style.animationDuration = `${(1.4 + Math.random() * 1.4).toFixed(2)}s`;
+            rain.appendChild(speck);
+        }
+
+        const actions = document.createElement("div");
+        actions.className = "o_pbw_wo_actions";
+        const share = document.createElement("a");
+        share.className = "btn o_pbw_btn o_pbw_btn_light";
+        share.href = reveal.share_url;
+        share.setAttribute("download", "");
+        share.textContent = _t("Share");
+        const album = document.createElement("a");
+        album.className = "btn o_pbw_btn o_pbw_btn_dark";
+        album.href = reveal.album_url;
+        album.textContent = _t("See album");
+        actions.append(share, album);
+        overlay.append(sky, burst, rain, title, stage, actions);
+        document.body.appendChild(overlay);
+
+        const timers = [];
+        let done = false;
+        const ALL = ["o_pbw_wo_dark", "o_pbw_woi_s1", "o_pbw_woi_s2", "o_pbw_woi_s3", "o_pbw_woi_s4",
+            "o_pbw_wo_s3", "o_pbw_wo_s4", "o_pbw_woi_s5", "o_pbw_wo_s5", "o_pbw_woi_s6", "o_pbw_wo_s6",
+            "o_pbw_woi_s7", "o_pbw_woi_s8"];
+        const finish = () => {
+            if (done) {
+                return;
+            }
+            done = true;
+            timers.forEach(clearTimeout);
+            overlay.classList.add(...ALL, "o_pbw_woi_skipped");
+            playMotifs(card);
+        };
+        const close = () => {
+            overlay.remove();
+            markSeen(reveal).then(resolve, resolve);
+        };
+        overlay.addEventListener("click", (ev) => {
+            if (ev.target.closest(".o_pbw_wo_actions")) {
+                markSeen(reveal);
+                return;
+            }
+            if (!done) {
+                finish(); // first tap: skip to the end
+            } else {
+                close();
+            }
+        });
+        document.addEventListener("keydown", (ev) => ev.key === "Escape" && close(), { once: true });
+
+        if (reduced) {
+            requestAnimationFrame(() => overlay.classList.add(...ALL));
+            done = true;
+            return;
+        }
+        const ovr = card.querySelector(".o_pb_card_ovr b");
+        const steps = [
+            () => overlay.classList.add("o_pbw_wo_dark", "o_pbw_woi_s1"), // constellation appears
+            () => overlay.classList.add("o_pbw_woi_s2"), // stars join and brighten
+            () => overlay.classList.add("o_pbw_woi_s3"), // gather into one point
+            () => overlay.classList.add("o_pbw_woi_s4"), // burst, gold dust, the gold frame
+            () => {
+                overlay.classList.add("o_pbw_wo_s3", "o_pbw_wo_s4", "o_pbw_woi_s5"); // chips, OVR
+                countUp(ovr, reveal.old_ovr, reveal.new_ovr, 550);
+            },
+            () => {
+                overlay.classList.add("o_pbw_wo_s5", "o_pbw_woi_s6"); // ribbon and its light
+                playMotifs(card);
+            },
+            () => overlay.classList.add("o_pbw_wo_s6", "o_pbw_woi_s7"), // the whole card
+            () => {
+                overlay.classList.add("o_pbw_woi_s8"); // the engraving, the buttons
+                done = true;
+            },
+        ];
+        steps.forEach((fn, i) => timers.push(setTimeout(fn, ICON_STEPS[i])));
     });
 }
 

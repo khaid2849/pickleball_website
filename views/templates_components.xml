@@ -26,7 +26,7 @@
     <template id="player_card_body" name="Club: Player Card Body">
         <t t-set="_special" t-value="_v['variant'] != _tier"/>
         <t t-set="_motif" t-value="_v.get('motif_code')"/>
-        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} o_pb_card_step_{{ _v['step'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _special else '' }} {{ 'o_pb_card_motif' if _motif else '' }} {{ '' if member.active else 'o_pb_card_archived' }}"
+        <div t-attf-class="o_pb_card o_pb_card_{{ _tier }} o_pb_card_step_{{ _v['step'] }} {{ ('o_pb_card_special o_pb_card_v_' + _v['variant']) if _special else '' }} {{ ('o_pb_card_motif o_pb_card_motif_' + _motif.lower()) if _motif else '' }} {{ '' if member.active else 'o_pb_card_archived' }}"
              t-att-style="_v['style'] or None">
             <!-- CardMotif, back layer: above the background, below the avatar -->
             <t t-if="_motif" t-out="card_motif(_v, 'back', motif_size)"/>
@@ -135,6 +135,8 @@
                     <t t-set="results" t-value="_v['recent']"/>
                 </t>
             </div>
+            <!-- CardMotif, top layer (Icon: gold frame, glitter, foil): above everything -->
+            <t t-if="_motif" t-out="card_motif(_v, 'top', motif_size)"/>
         </div>
     </template>
 

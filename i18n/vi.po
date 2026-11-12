@@ -5371,3 +5371,8 @@ msgstr "XP"
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_home_public
 msgid "secret cards"
 msgstr "card bí mật"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_album
+msgid "Formerly Icon"
+msgstr "Từng là Icon"

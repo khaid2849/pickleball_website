@@ -410,28 +410,59 @@ class ClubGamification(PickleballClub):
             cards.append({'code': code, 'type': card_type, 'member': player, 'card': view, 'bare': bare})
         return cards
 
+    # Icon samples: three members (three skies, three hues), the first one
+    # drawn again (same card), and a lost Icon
+    MOTIF_LAB_ICONS = [
+        ('ICON_A', 9101, 1, False), ('ICON_B', 9102, 2, False), ('ICON_C', 9103, 3, False),
+        ('ICON_A2', 9101, 1, False), ('ICON_LOST', 9102, 2, True),
+    ]
+
+    def _motif_lab_icons(self):
+        icon_type = request.env['pickleball.card.type'].sudo().search([('code', '=', 'ICON')], limit=1)
+        if not icon_type:
+            return []
+        gm = request.env['pickleball.gamification'].sudo()
+        players = demo_players()
+        cards = []
+        for index, (code, member_id, number, former) in enumerate(self.MOTIF_LAB_ICONS):
+            player = players[index % len(players)]
+            view = demo_card_view(player, icon_type._gm_preview(), ovr=91)
+            data = {'member_id': member_id, 'earned_at': '2026-11-12', 'icon_number': number, 'former': former,
+                    'engraving': f'ICON · #{number:02d} · 12.11.2026'}
+            view.update(motif_code='ICON', motif_data=data, style=gm._gm_icon_style(data))
+            label = ' · '.join(filter(None, [f'Member {member_id}', 'lost Icon' if former else '',
+                                             'drawn again' if code == 'ICON_A2' else '']))
+            cards.append({'code': code, 'type': icon_type, 'member': player, 'card': view, 'bare': view,
+                          'label': label, 'former': former})
+        return cards
+
     @http.route('/club/dev/card-motifs', type='http', auth='user', website=True, sitemap=False)
     def club_card_motif_lab(self, **kwargs):
         if not self._is_admin():
             raise NotFound()
+        icons = self._motif_lab_icons()
         cards = self._motif_lab_cards()
         Views = request.env['ir.ui.view']
-        for item in cards:
+        for item in cards + icons:
             html = Views._render_template('pickleball_website.player_card', dict(
                 self._values('none'), member=item['member'], card=item['card'], no_photo=True, motif_size='lg'))
+            icon = item['code'].startswith('ICON')
             item['reveal'] = json.dumps({
-                'id': 0, 'kind': 'card', 'payload': {}, 'card_html': str(html),
+                'id': 0, 'kind': 'tier_up' if icon else 'card',
+                'payload': {'old_code': 'GOLD_I', 'new_code': 'ICON'} if icon else {}, 'card_html': str(html),
                 'old_ovr': max(item['card']['ovr'] - 3, 1), 'new_ovr': item['card']['ovr'],
                 'share_url': f"/club/dev/card-motifs/{item['code']}.png", 'album_url': '/club/dev/card-motifs',
             })
-        values = self._values('none', lab_cards=cards, stress=[cards[i % len(cards)] for i in range(48)])
+        values = self._values('none', lab_cards=cards, lab_icons=icons,
+                              stress=[(cards + icons[:3])[i % (len(cards) + 3)] for i in range(48)])
         return request.render('pickleball_website.club_card_motif_lab', values)
 
     @http.route('/club/dev/card-motifs/<string:code>.png', type='http', auth='user', sitemap=False)
     def club_card_motif_png(self, code, size='share', **kwargs):
         if not self._is_admin():
             raise NotFound()
-        item = next((card for card in self._motif_lab_cards() if card['code'] == code), None)
+        samples = self._motif_lab_cards() + self._motif_lab_icons()
+        item = next((card for card in samples if card['code'] == code), None)
         if not item:
             raise NotFound()
         png = request.env['pickleball.gamification'].sudo()._gm_view_png(item['card'], share=size == 'share')

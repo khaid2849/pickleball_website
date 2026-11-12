@@ -1093,3 +1093,151 @@ $gm-muted: #5d6290;
         font-size: 0.75rem;
     }
 }
+
+// ── Icon walkout (club_walkout.js playIconWalkout) ────────────────────────
+.o_pbw_walkout.o_pbw_wo_icon {
+    overflow: hidden;
+
+    .o_pbw_woi_sky,
+    .o_pbw_woi_burst {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        pointer-events: none;
+    }
+    .o_pbw_woi_sky {
+        width: 82vw;
+        max-width: 560px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+        transition: opacity 0.9s ease, transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+        .o_pbw_woi_lines {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            transition: stroke-dashoffset 0.8s ease, opacity 0.8s ease;
+        }
+    }
+    &.o_pbw_woi_s1 .o_pbw_woi_sky {
+        opacity: 1;
+    }
+    &.o_pbw_woi_s2 .o_pbw_woi_sky .o_pbw_woi_lines {
+        stroke-dashoffset: 0;
+        opacity: 0.9 !important;
+    }
+    &.o_pbw_woi_s3 .o_pbw_woi_sky {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.02);
+    }
+    // the point of light bursting
+    .o_pbw_woi_burst {
+        width: 260px;
+        height: 260px;
+        margin: -130px 0 0 -130px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #fff7d6 0%, rgba(255, 213, 79, 0.85) 25%, rgba(255, 213, 79, 0) 70%);
+        opacity: 0;
+        transform: scale(0.05);
+    }
+    &.o_pbw_woi_s3 .o_pbw_woi_burst {
+        opacity: 1;
+        transition: opacity 0.4s ease;
+    }
+    &.o_pbw_woi_s4 .o_pbw_woi_burst {
+        animation: o_pbw_woi_burst 0.7s ease-out forwards;
+    }
+    // gold dust raining over the screen
+    .o_pbw_woi_rain {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+
+        i {
+            position: absolute;
+            top: -4%;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ffd54f;
+            box-shadow: 0 0 6px #ffe9a8;
+            opacity: 0;
+        }
+    }
+    &.o_pbw_woi_s4:not(.o_pbw_woi_skipped) .o_pbw_woi_rain i {
+        animation-name: o_pbw_woi_rain;
+        animation-timing-function: ease-in;
+        animation-fill-mode: forwards;
+    }
+    // the card: only the gold frame first, then piece by piece
+    .o_pbw_wo_card {
+        opacity: 0;
+        transition: opacity 0.4s ease, transform 0.5s ease;
+    }
+    &.o_pbw_woi_s4 .o_pbw_wo_card {
+        opacity: 1;
+    }
+    &:not(.o_pbw_woi_s7) .o_pb_card {
+        background: transparent !important;
+        filter: none;
+    }
+    .o_pb_card > :not(.o_pb_motif_top):not(.o_pb_card_head):not(.o_pb_card_ribbon) {
+        transition: opacity 0.45s ease;
+    }
+    &:not(.o_pbw_woi_s7) .o_pb_card > :not(.o_pb_motif_top):not(.o_pb_card_head):not(.o_pb_card_ribbon) {
+        opacity: 0;
+    }
+    .o_pb_m_engraving {
+        transition: opacity 0.6s ease;
+    }
+    &:not(.o_pbw_woi_s8) .o_pb_m_engraving {
+        opacity: 0 !important;
+    }
+    &:not(.o_pbw_woi_s8) .o_pbw_wo_actions {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .o_pbw_wo_title {
+        color: #ffd54f;
+        letter-spacing: 0.3em;
+    }
+    &.o_pbw_wo_reduced {
+        .o_pbw_woi_sky,
+        .o_pbw_woi_burst,
+        .o_pbw_woi_rain {
+            display: none;
+        }
+    }
+}
+@keyframes o_pbw_woi_burst {
+    0% { opacity: 1; transform: scale(0.05); }
+    60% { opacity: 0.9; transform: scale(4); }
+    100% { opacity: 0; transform: scale(6); }
+}
+@keyframes o_pbw_woi_rain {
+    0% { opacity: 0; transform: translateY(0); }
+    10% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(105vh); }
+}
+
+// Album: the Icon card stands out of the grid; a lost Icon says so.
+.o_pbw_album_slot.o_pbw_album_icon {
+    padding: 8px 6px;
+    border-radius: 14px;
+    background: radial-gradient(circle at 50% 40%, rgba(255, 213, 79, 0.28), transparent 70%);
+    box-shadow: 0 0 0 2px #ffd54f, 0 0 18px rgba(255, 213, 79, 0.55);
+}
+.o_pbw_album_former {
+    display: block;
+    margin-top: 2px;
+    color: #b8860b;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}

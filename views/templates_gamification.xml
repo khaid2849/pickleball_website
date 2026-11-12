@@ -230,7 +230,7 @@
                         <div class="o_pbw_album_grid">
                             <t t-foreach="section['slots']" t-as="slot">
                                 <t t-set="_cards" t-value="slot['cards']"/>
-                                <div t-if="_cards" class="o_pbw_album_slot o_pbw_album_owned">
+                                <div t-if="_cards" t-attf-class="o_pbw_album_slot o_pbw_album_owned {{ 'o_pbw_album_icon' if slot['type'].code == 'ICON' else '' }}">
                                     <details>
                                         <summary>
                                             <div class="o_pbw_album_mini">
@@ -247,6 +247,11 @@
                                                 </t>
                                             </div>
                                             <b class="o_pbw_album_name"><t t-out="slot['type'].name"/><span t-if="len(_cards) &gt; 1" class="o_pbw_album_count">×<t t-out="len(_cards)"/></span></b>
+                                            <!-- a lost Icon stays in the album, with its number -->
+                                            <t t-if="slot['type'].code == 'ICON' and player.rating_code != 'ICON'">
+                                                <t t-set="_icon_no" t-value="(_cards[0].source or {}).get('icon_number')"/>
+                                                <small class="o_pbw_album_former">Formerly Icon<t t-if="_icon_no"> #<t t-out="'%02d' % _icon_no"/></t></small>
+                                            </t>
                                         </summary>
                                         <ul class="o_pbw_album_detail">
                                             <li t-foreach="_cards" t-as="instance">
@@ -540,6 +545,25 @@
                         </div>
                     </div>
 
+                    <h2 class="o_pbw_lab_h">Icon · hover (desktop) or press and hold (touch) to tilt · three members, one drawn again, one lost</h2>
+                    <div class="o_pbw_lab_grid">
+                        <div t-foreach="lab_icons" t-as="item" class="o_pbw_lab_item">
+                            <t t-call="pickleball_website.player_card">
+                                <t t-set="member" t-value="item['member']"/>
+                                <t t-set="card" t-value="item['card']"/>
+                                <t t-set="no_photo" t-value="True"/>
+                                <t t-set="motif_size" t-value="'lg'"/>
+                            </t>
+                            <b t-out="item['label']"/>
+                            <small t-if="item['former']" class="o_pbw_album_former">Formerly Icon #<t t-out="'%02d' % item['card']['motif_data']['icon_number']"/></small>
+                            <code t-out="item['code']"/>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn o_pbw_btn o_pbw_btn_light btn-sm" data-lab="replay">Replay</button>
+                                <button type="button" class="btn o_pbw_btn o_pbw_btn_primary btn-sm" data-lab="walkout" t-att-data-reveal="item['reveal']">Icon walkout</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <h2 class="o_pbw_lab_h">Missing data · labels, month, ring and gap hidden</h2>
                     <div class="o_pbw_lab_grid">
                         <div t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
@@ -554,7 +578,7 @@
 
                     <h2 class="o_pbw_lab_h">Size sm (album) · background and main accent, no motion</h2>
                     <div class="o_pbw_lab_grid o_pbw_lab_grid_sm">
-                        <div t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
+                        <div t-foreach="lab_cards + lab_icons[:3]" t-as="item" class="o_pbw_lab_item">
                             <div class="o_pbw_album_mini">
                                 <t t-call="pickleball_website.player_card">
                                     <t t-set="member" t-value="item['member']"/>
@@ -569,7 +593,7 @@
 
                     <h2 class="o_pbw_lab_h">Size share (card image, 1080 × 1350) · static, every detail</h2>
                     <div class="o_pbw_lab_grid o_pbw_lab_grid_share">
-                        <figure t-foreach="lab_cards" t-as="item" class="o_pbw_lab_item">
+                        <figure t-foreach="lab_cards + lab_icons[:3]" t-as="item" class="o_pbw_lab_item">
                             <img t-attf-src="/club/dev/card-motifs/{{ item['code'] }}.png" loading="lazy" width="270" height="338"
                                  t-att-alt="'Share image: %s' % item['type'].name"/>
                             <figcaption><code t-out="item['code']"/></figcaption>

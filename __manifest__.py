@@ -1,6 +1,6 @@
 {
     'name': 'Pickleball Club Website',
-    'version': '18.0.1.15.0',
+    'version': '18.0.1.16.0',
     'category': 'Website',
     'summary': 'Members-only club website: schedule, player cards, rankings, matches and finance',
     'description': """
