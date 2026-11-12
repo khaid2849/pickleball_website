@@ -260,9 +260,11 @@ class ClubGamification(PickleballClub):
             data['text'] = text
             return data
         card = reveal.card_instance_id
-        if reveal.kind == 'tier_up':
-            card = None  # the tier card itself: the member's current look
-        view = me._gm_card_view(card=card if card and card.category != 'tier' else None, viewer=me)
+        if reveal.kind == 'tier_up' or card.category == 'tier':
+            card = request.env['pickleball.card.instance']  # empty: the current tier card, whatever the showcase
+        elif not card:
+            card = None  # the showcase card
+        view = me._gm_card_view(card=card, viewer=me)
         data['card_html'] = str(request.env['ir.ui.view']._render_template(
             'pickleball_website.player_card', dict(self._values('none'), member=me, card=view)))
         data['old_ovr'] = payload.get('old_ovr')
@@ -330,9 +332,19 @@ class ClubGamification(PickleballClub):
                 saved = True
             except ValidationError as exc:
                 error = exc.args[0]
-        cards = me.sudo().card_instance_ids.filtered(lambda c: c.is_active or c.category in ('season', 'evo'))
-        values = self._values('me', cards=cards.sorted(lambda c: (-c.card_type_id.priority, c.earned_at),
-                                                       reverse=False),
+        mode = me.showcase_mode or 'auto'
+        if mode == 'card' and not me.showcase_card_id:
+            mode = 'auto'
+        selected = str(me.showcase_card_id.id) if mode == 'card' else ('tier' if mode == 'tier' else '')
+        options = me._gm_showcase_options()
+        # One card per choice, rendered here: the page shows the picked one.
+        previews = {'': me._gm_card_view(viewer=me, showcase_mode='auto'),
+                    'tier': me._gm_card_view(viewer=me, showcase_mode='tier')}
+        for section in options:
+            for instance in section['cards']:
+                previews[str(instance.id)] = me._gm_card_view(card=instance, viewer=me)
+        values = self._values('me', options=options, previews=previews, selected=selected,
+                              tier_label=previews['tier']['tier_label'],
                               badges=[row for row in me._gm_badges() if row['level']], error=error, saved=saved)
         return request.render('pickleball_website.club_showcase', values)
 

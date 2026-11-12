@@ -4946,3 +4946,28 @@ msgstr "· mốc kế"
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
 msgid "· until"
 msgstr "· đến"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<b>Tier card</b>"
+msgstr "<b>Card tier</b>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "<small class=\"o_pbw_muted d-block\">always your current tier card, it follows you up and down</small>"
+msgstr "<small class=\"o_pbw_muted d-block\">luôn là card tier hiện tại của bạn, tự đổi khi lên hoặc xuống bậc</small>"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "Earn a special, season or Evolution card to show it here."
+msgstr "Đạt một card đặc biệt, mùa giải hoặc Evolution để chọn ở đây."
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "· expired: ratings of that time"
+msgstr "· đã hết hạn: hiện chỉ số lúc đạt"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_showcase
+msgid "· shown until"
+msgstr "· hiển thị đến"

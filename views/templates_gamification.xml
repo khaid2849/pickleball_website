@@ -281,22 +281,44 @@
                     <a href="/club/me" class="o_pbw_back mb-3 d-inline-block"><i class="fa fa-arrow-left"/> My page</a>
                     <div t-if="saved" class="alert alert-success" role="status">Saved.</div>
                     <div t-if="error" class="alert alert-danger" role="alert" t-out="error"/>
-                    <form action="/club/me/showcase" method="post" class="row g-4">
+                    <form action="/club/me/showcase" method="post" class="row g-4 o_pbw_gm_showcase_form">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <!-- One card per choice; club_showcase.js shows the picked one. -->
                         <div class="col-lg-4 d-flex justify-content-center">
-                            <t t-call="pickleball_website.player_card"><t t-set="member" t-value="me"/></t>
+                            <div class="o_pbw_gm_showcase_preview">
+                                <div t-foreach="previews.items()" t-as="preview" t-att-data-showcase-preview="preview[0]"
+                                     t-att-class="None if preview[0] == selected else 'd-none'">
+                                    <t t-call="pickleball_website.player_card">
+                                        <t t-set="member" t-value="me"/>
+                                        <t t-set="card" t-value="preview[1]"/>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-8">
                             <div class="o_pbw_panel">
                                 <div class="o_pbw_panel_head"><h3><i class="fa fa-id-card-o"/> Showcase card</h3></div>
                                 <label class="o_pbw_gm_option">
-                                    <input type="radio" name="card_id" value="" t-att-checked="not me.showcase_card_id"/>
+                                    <input type="radio" name="card_id" value="" t-att-checked="selected == ''"/>
                                     <span><b>Automatic</b> <small class="o_pbw_muted">best active card, else your tier card</small></span>
                                 </label>
-                                <label t-foreach="cards" t-as="instance" class="o_pbw_gm_option">
-                                    <input type="radio" name="card_id" t-att-value="instance.id" t-att-checked="me.showcase_card_id == instance"/>
-                                    <span><b t-out="instance._gm_label()"/> <small class="o_pbw_muted"><t t-out="fmt_date(instance.earned_at.date())"/><t t-if="instance.active_until"> · until <t t-out="fmt_date(instance.active_until.date())"/></t></small></span>
+                                <label class="o_pbw_gm_option">
+                                    <input type="radio" name="card_id" value="tier" t-att-checked="selected == 'tier'"/>
+                                    <span><b>Tier card</b> <span class="o_pbw_gm_option_tag" t-out="tier_label"/>
+                                        <small class="o_pbw_muted d-block">always your current tier card, it follows you up and down</small></span>
                                 </label>
+                                <t t-foreach="options" t-as="section">
+                                    <h4 class="o_pbw_gm_option_head" t-out="section['label']"/>
+                                    <label t-foreach="section['cards']" t-as="instance" class="o_pbw_gm_option">
+                                        <input type="radio" name="card_id" t-att-value="instance.id" t-att-checked="selected == str(instance.id)"/>
+                                        <span><b t-out="instance._gm_label()"/>
+                                            <small class="o_pbw_muted"><t t-out="fmt_date(instance.earned_at.date())"/>
+                                                <t t-if="instance.active_until and instance.is_active"> · shown until <t t-out="fmt_date(instance.active_until.date())"/></t>
+                                                <t t-elif="instance.active_until"> · expired: ratings of that time</t>
+                                            </small></span>
+                                    </label>
+                                </t>
+                                <p t-if="not options" class="o_pbw_muted mb-0 mt-2">Earn a special, season or Evolution card to show it here.</p>
                             </div>
                             <div class="o_pbw_panel mt-3">
                                 <div class="o_pbw_panel_head"><h3><i class="fa fa-certificate"/> Pinned badges (3 max)</h3></div>

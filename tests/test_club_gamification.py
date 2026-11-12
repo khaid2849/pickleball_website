@@ -1,3 +1,5 @@
+import re
+
 from odoo.tests import HttpCase, tagged
 
 from .test_club_website import ClubDataMixin
@@ -53,6 +55,16 @@ class TestClubGamification(ClubDataMixin, HttpCase):
         self.authenticate(self.binh_login, self.binh_password)
         page = self.url_open(f'/club/players/{self.an.id}').text
         self.assertNotIn('o_pb_card_debt_owes', page)
+
+    def test_showcase_page_choices(self):
+        self.authenticate(self.an_login, self.an_password)
+        page = self.url_open('/club/me/showcase').text
+        self.assertIn('value="tier"', page)
+        self.assertIn('data-showcase-preview="tier"', page)
+        token = re.search(r'name="csrf_token" value="([^"]+)"', page).group(1)
+        response = self.url_open('/club/me/showcase', data={'card_id': 'tier', 'csrf_token': token})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.an.showcase_mode, 'tier')
 
     def test_public_cannot_use_api(self):
         response = self.url_open(f'/club/api/members/{self.an.id}/card', allow_redirects=False)

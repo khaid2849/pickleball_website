@@ -570,3 +570,28 @@ $gm-muted: #5d6290;
         font-weight: 700;
     }
 }
+
+// Showcase page: choices grouped by card category.
+.o_pbw_gm_option_head {
+    margin: 14px 0 2px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+.o_pbw_gm_option_tag {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: #1b2070;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+.o_pbw_gm_showcase_preview {
+    position: sticky;
+    top: 90px;
+    align-self: flex-start;
+}

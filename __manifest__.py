@@ -1,6 +1,6 @@
 {
     'name': 'Pickleball Club Website',
-    'version': '18.0.1.12.0',
+    'version': '18.0.1.13.0',
     'category': 'Website',
     'summary': 'Members-only club website: schedule, player cards, rankings, matches and finance',
     'description': """
@@ -60,6 +60,7 @@ member player cards:
             'pickleball_website/static/src/js/club_chat.xml',
             'pickleball_website/static/src/scss/gamification.scss',
             'pickleball_website/static/src/js/club_walkout.js',
+            'pickleball_website/static/src/js/club_showcase.js',
         ],
     },
     'post_init_hook': 'post_init_hook',
