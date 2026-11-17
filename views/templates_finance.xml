@@ -132,6 +132,9 @@
                 <a t-attf-href="/club/schedule/{{ settlement.session_id.id }}">
                     <b t-out="fmt_date(settlement.session_date)"/>
                     <small t-out="settlement.session_id.court_id.name"/>
+                    <small t-if="settlement.covered_member_ids" class="o_pbw_cover_note">
+                        <i class="fa fa-handshake-o"/> Incl. <t t-out="', '.join(settlement.covered_member_ids.mapped('name'))"/>
+                    </small>
                 </a>
                 <span t-attf-class="text-nowrap fw-bold {{ 'o_pbw_neg' if settlement.amount &lt; 0 else 'o_pbw_pos' }}"
                       t-out="vnd(settlement.amount, signed=True)"/>

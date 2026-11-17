@@ -160,12 +160,18 @@ class ClubChat(PickleballClub):
         if me and me in session.participant_ids:
             settlement = session.settlement_ids.filtered(lambda s: s.member_id == me)[:1]
             status = _('paid') if settlement.is_paid else _('not paid yet')
+            payer = session._get_cover_payer(me)
+            if payer:
+                lines.append('🤝 ' + _('%s pays your share of this session', payer.name))
             if settlement and settlement.amount < -0.5:
                 lines.append('💸 ' + _('Your share: you owe %(amount)s (%(status)s)',
                                        amount=vnd(-settlement.amount), status=status))
             elif settlement and settlement.amount > 0.5:
                 lines.append('💰 ' + _('The team pays you back %(amount)s (%(status)s)',
                                        amount=vnd(settlement.amount), status=status))
+            if settlement.covered_member_ids:
+                lines.append('🤝 ' + _('Includes the share you pay for %s',
+                                       ', '.join(settlement.covered_member_ids.mapped('name'))))
             mine = self._match_rows(played.filtered(
                 lambda bet: me in bet.team1_member_ids or me in bet.team2_member_ids), me)
             if mine:
@@ -261,6 +267,11 @@ class ClubChat(PickleballClub):
             share = session.settlement_ids.filtered(lambda s: s.member_id == me)[:1]
             if share and abs(share.amount) > 0.5:
                 line += f" · {vnd(share.amount, signed=True)}"
+            if share.covered_member_ids:
+                line += ' (' + _('incl. %s', ', '.join(share.covered_member_ids.mapped('name'))) + ')'
+            payer = session._get_cover_payer(me)
+            if payer:
+                line += ' · ' + _('paid by %s', payer.name)
             lines.append(line)
         return self._answer(lines, [(_('Schedule'), '/club/schedule'), (_('My finance'), '/club/finance')])
 

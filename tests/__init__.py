@@ -8,3 +8,4 @@ from . import test_club_ranking_moves
 from . import test_club_chat
 from . import test_club_password
 from . import test_club_gamification
+from . import test_club_cover

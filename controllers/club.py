@@ -558,9 +558,12 @@ class PickleballClub(http.Controller):
         if not session:
             raise NotFound()
         settlements = session.settlement_ids
+        # Players whose bill another member pays (they have no settlement).
+        covers = session.cover_ids if session.state in PLAYED_STATES else session.cover_ids.browse()
         if not self._is_admin():
             # Members only see their own share of the split.
             settlements = settlements.filtered(lambda s: s.member_id == self._me())
+            covers = covers.filtered(lambda c: c.member_id == self._me())
         values = self._values(
             'schedule',
             session=session,
@@ -570,6 +573,7 @@ class PickleballClub(http.Controller):
             expense_icons=EXPENSE_ICONS,
             expense_types=labels(EXPENSE_TYPES),
             settlements=settlements.sorted(lambda s: (s.amount >= 0, s.amount)),
+            covers=covers,
             per_person=(session.total_expense / session.total_player_count) if session.total_player_count else 0.0,
             match_builder_props=self._match_builder_props(session) if self._is_admin() else None,
         )

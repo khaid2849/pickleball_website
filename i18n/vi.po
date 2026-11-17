@@ -5376,3 +5376,38 @@ msgstr "card bí mật"
 #: model_terms:ir.ui.view,arch_db:pickleball_website.club_album
 msgid "Formerly Icon"
 msgstr "Từng là Icon"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+#: model_terms:ir.ui.view,arch_db:pickleball_website.my_history_panel
+msgid "Incl."
+msgstr "Gồm"
+
+#. module: pickleball_website
+#: model_terms:ir.ui.view,arch_db:pickleball_website.club_session
+msgid "Paid for by"
+msgstr "Được trả hộ bởi"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/chat.py:0
+msgid "%s pays your share of this session"
+msgstr "%s trả hộ phần tiền buổi này của bạn"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/chat.py:0
+msgid "Includes the share you pay for %s"
+msgstr "Đã gồm phần bạn trả hộ cho %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/chat.py:0
+msgid "incl. %s"
+msgstr "gồm %s"
+
+#. module: pickleball_website
+#. odoo-python
+#: code:addons/pickleball_website/controllers/chat.py:0
+msgid "paid by %s"
+msgstr "%s trả hộ"
